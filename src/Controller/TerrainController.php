@@ -29,7 +29,7 @@ class TerrainController extends AbstractController
         $form = $this->createForm(TerrainType::class, $terrain);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) { 
             $entityManager->persist($terrain);
             $entityManager->flush();
 
