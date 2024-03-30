@@ -16,10 +16,7 @@ class ReservationType extends AbstractType
             ->add('datereservation')
             ->add('heurereservation')
             ->add('type')
-            ->add('nomequipe1')
-            ->add('nomequipe2')
-            ->add('idterrain')
-        ;
+            ->add('idterrain');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
