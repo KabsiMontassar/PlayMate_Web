@@ -4,11 +4,13 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * Avis
  *
  * @ORM\Table(name="avis", indexes={@ORM\Index(name="fk_avis_terrain", columns={"terrain_id"})})
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\AvisRepository")
  */
 class Avis
 {

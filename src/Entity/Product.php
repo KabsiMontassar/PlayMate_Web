@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="product", indexes={@ORM\Index(name="product_ibfk_1", columns={"categorie"}), @ORM\Index(name="fk_prr", columns={"idfournisseur"})})
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  */
 class Product
 {

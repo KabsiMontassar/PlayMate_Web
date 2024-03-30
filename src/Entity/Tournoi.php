@@ -4,11 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * Tournoi
  *
  * @ORM\Table(name="tournoi", indexes={@ORM\Index(name="fk_avis_organisateur", columns={"idOrganisateur"})})
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\TournoiRepository")
+
  */
 class Tournoi
 {

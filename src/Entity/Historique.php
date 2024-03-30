@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="historique", indexes={@ORM\Index(name="idReservation", columns={"idReservation"})})
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\HistoriqueRepository")
  */
 class Historique
 {

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="blacklist", indexes={@ORM\Index(name="idReservation", columns={"idReservation"})})
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\BlacklistRepository")
  */
 class Blacklist
 {

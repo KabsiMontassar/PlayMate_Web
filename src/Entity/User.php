@@ -4,11 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ *  
  */
 class User
 {
@@ -104,6 +107,155 @@ class User
      * @ORM\Column(name="isVerified", type="boolean", nullable=false)
      */
     private $isverified;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getAge(): ?int
+    {
+        return $this->age;
+    }
+
+    public function setAge(int $age): static
+    {
+        $this->age = $age;
+
+        return $this;
+    }
+
+    public function getPhone(): ?int
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(int $phone): static
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): static
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDatedecreation(): ?string
+    {
+        return $this->datedecreation;
+    }
+
+    public function setDatedecreation(string $datedecreation): static
+    {
+        $this->datedecreation = $datedecreation;
+
+        return $this;
+    }
+
+    public function getVerificationcode(): ?string
+    {
+        return $this->verificationcode;
+    }
+
+    public function setVerificationcode(string $verificationcode): static
+    {
+        $this->verificationcode = $verificationcode;
+
+        return $this;
+    }
+
+    public function isIsverified(): ?bool
+    {
+        return $this->isverified;
+    }
+
+    public function setIsverified(bool $isverified): static
+    {
+        $this->isverified = $isverified;
+
+        return $this;
+    }
 
 
 }
