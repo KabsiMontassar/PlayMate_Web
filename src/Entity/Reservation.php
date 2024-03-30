@@ -50,19 +50,9 @@ class Reservation
      */
     private $type;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="nomEquipe1", type="string", length=255, nullable=false)
-     */
-    private $nomequipe1;
+   
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="nomEquipe2", type="string", length=255, nullable=true, options={"default"="NULL"})
-     */
-    private $nomequipe2 = 'NULL';
+   
 
     /**
      * @var \Terrain
@@ -127,30 +117,7 @@ class Reservation
         return $this;
     }
 
-    public function getNomequipe1(): ?string
-    {
-        return $this->nomequipe1;
-    }
-
-    public function setNomequipe1(string $nomequipe1): static
-    {
-        $this->nomequipe1 = $nomequipe1;
-
-        return $this;
-    }
-
-    public function getNomequipe2(): ?string
-    {
-        return $this->nomequipe2;
-    }
-
-    public function setNomequipe2(?string $nomequipe2): static
-    {
-        $this->nomequipe2 = $nomequipe2;
-
-        return $this;
-    }
-
+ 
     public function getIdterrain(): ?Terrain
     {
         return $this->idterrain;
