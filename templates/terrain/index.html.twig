@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<title>Terrain index</title>
+
+{% block body %}
+    <h1>Terrain index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Address</th>
+                <th>Gradin</th>
+                <th>Vestiaire</th>
+                <th>Status</th>
+                <th>Nomterrain</th>
+                <th>Prix</th>
+                <th>Duree</th>
+                <th>Gouvernorat</th>
+                <th>Image</th>
+                <th>Video</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for terrain in terrains %}
+            <tr>
+                <td>{{ terrain.id }}</td>
+                <td>{{ terrain.address }}</td>
+                <td>{{ terrain.gradin ? 'Yes' : 'No' }}</td>
+                <td>{{ terrain.vestiaire ? 'Yes' : 'No' }}</td>
+                <td>{{ terrain.status ? 'Yes' : 'No' }}</td>
+                <td>{{ terrain.nomterrain }}</td>
+                <td>{{ terrain.prix }}</td>
+                <td>{{ terrain.duree }}</td>
+                <td>{{ terrain.gouvernorat }}</td>
+                <td>{{ terrain.image }}</td>
+                <td>{{ terrain.video }}</td>
+                <td>
+                    <a href="{{ path('app_terrain_show', {'id': terrain.id}) }}">show</a>
+                    <a href="{{ path('app_terrain_edit', {'id': terrain.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_terrain_new') }}">Create new</a>
+{% endblock %}

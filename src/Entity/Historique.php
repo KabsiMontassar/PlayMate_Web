@@ -23,19 +23,9 @@ class Historique
      */
     private $idhistorique;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="dateReservation", type="string", length=255, nullable=false)
-     */
-    private $datereservation;
+  
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="heureReservation", type="string", length=255, nullable=false)
-     */
-    private $heurereservation;
+   
 
     /**
      * @var \Reservation
@@ -52,29 +42,9 @@ class Historique
         return $this->idhistorique;
     }
 
-    public function getDatereservation(): ?string
-    {
-        return $this->datereservation;
-    }
+    
 
-    public function setDatereservation(string $datereservation): static
-    {
-        $this->datereservation = $datereservation;
-
-        return $this;
-    }
-
-    public function getHeurereservation(): ?string
-    {
-        return $this->heurereservation;
-    }
-
-    public function setHeurereservation(string $heurereservation): static
-    {
-        $this->heurereservation = $heurereservation;
-
-        return $this;
-    }
+   
 
     public function getIdreservation(): ?Reservation
     {

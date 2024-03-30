@@ -1,0 +1,109 @@
+{% extends 'BaseFront.html.twig' %}
+
+{% block title %}Login{% endblock %}
+{% block body %}
+    <!-- Navbar Start -->
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+            <nav class="navbar navbar-expand-xl bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
+                <a href="{{ path('app_Home' , {'id': user.id}) }}" class="navbar-brand">
+                    <h1 class="m-0 text-primary"><span class="text-dark">Play</span>Mate</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
+                    <div class="navbar-nav ml-auto py-0">
+                        <a href="{{ path('app_Home' , {'id': user.id}) }}" class="nav-item nav-link">Accueil</a>
+                        <a href="{{ path('app_Apropos' , {'id': user.id}) }}" class="nav-item nav-link">À propos</a>
+                        <a href="{{ path('app_Service' , {'id': user.id}) }}" class="nav-item nav-link ">Services</a>
+                        <a href="{{ path('app_Reservation' , {'id': user.id}) }}" class="nav-item nav-link ">Réservée</a>
+                        <a href="{{ path('app_Boutique' , {'id': user.id}) }}" class="nav-item nav-link">Boutique</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">Pages</a>
+                            <div class="dropdown-menu border-0 rounded-0 m-0">
+                                <a href="{{ path('app_Terrains' , {'id': user.id}) }}" class="dropdown-item">Nos Terrains</a>
+                                <a href="{{ path('app_Evenement' , {'id': user.id}) }}" class="dropdown-item">Nos Événement</a>
+                            </div>
+                        </div>
+                        <a href="{{ path('app_Contact' , {'id': user.id}) }}" class="nav-item nav-link active">Contact</a>
+                    </div>
+                    <!-- Additional navbar items for small screens -->
+                    <div class="navbar-nav ml-auto d-lg-none">
+                        <a href="{{ path('app_user_profile' , {'id': user.id}) }}" class="nav-item nav-link">Voir profile</a>
+                        <a href="{{ path('app_user_login' , {'id': user.id}) }}" class="nav-item nav-link">Se déconnecter</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Header Start -->
+    <div class="container-fluid page-header">
+        <div class="container">
+            <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+                <h3 class="display-4 text-white text-uppercase">Contact</h3>
+                <div class="d-inline-flex text-white">
+                    <p class="m-0 text-uppercase"><a class="text-white" href="{{ path('app_Home' , {'id': user.id}) }}">Accueil</a></p>
+                    <i class="fa fa-angle-double-right pt-1 px-3"></i>
+                    <p class="m-0 text-uppercase">Contact</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+    <!-- Contact Start -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="text-center mb-3 pb-3">
+                <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Contact</h6>
+                <h1>Questions ou Commentaires ?</h1>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="contact-form bg-white" style="padding: 30px;">
+                        <div id="success"></div>
+                        <form name="sentMessage" id="contactForm" novalidate="novalidate">
+                            <div class="form-row">
+                                <div class="control-group col-sm-6">
+                                    <input type="text" class="form-control p-4" id="name" placeholder="Votre Nom"
+                                        required="required" data-validation-required-message="Veuillez saisir votre nom" />
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                                <div class="control-group col-sm-6">
+                                    <input type="email" class="form-control p-4" id="email" placeholder="Votre Email"
+                                        required="required" data-validation-required-message="Veuillez saisir votre email" />
+                                    <p class="help-block text-danger"></p>
+
+                                </div> 
+                            </div>
+                           
+                            <div class="control-group">
+                                <input type="text" class="form-control p-4" id="subject" placeholder="Sujet"
+                                    required="required"
+                                    data-validation-required-message="Veuillez saisir le sujet de votre message" />
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="control-group">
+                                <textarea class="form-control p-4" id="message" placeholder="Message"
+                                    required="required"
+                                    data-validation-required-message="Veuillez saisir votre message"></textarea>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                          
+                            <div class="text-center">
+                                <button class="btn btn-primary py-3 px-4" type="submit" id="sendMessageButton">Envoyer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Contact End -->
+
+
+   {% endblock %}

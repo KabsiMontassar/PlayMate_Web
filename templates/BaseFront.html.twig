@@ -1,0 +1,134 @@
+
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="{{ asset('Front/img/favicon.ico') }}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"> 
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{ asset('Front/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ asset('Front/css/style.css') }}" rel="stylesheet">
+</head>
+
+<body>
+  <div class="floating-user-icon d-none d-lg-block" >
+        <a href="{{ asset('Front/#') }}" class="dropdown-toggle active" data-toggle="dropdown">
+            <i class="fas fa-user"></i>
+        </a>
+        <div class="dropdown-menu border-0 rounded-0 m-0">
+        {% set imagepath = 'Back/uploads/images/' ~ user.image %}
+            <img src="{{ asset(imagepath) }}" class="mx-auto d-block" style="width: 50px; height: auto;">
+            <h6 class="text-center my-2">{{user.name}}</h6>
+
+            <a href="{{ path('app_user_profile' , {'id': user.id}) }}" class="dropdown-item">Voir profile</a>
+            <a href="{{ path('app_user_login' , {'id': user.id}) }}" class="dropdown-item">Se déconnecter</a>
+        </div>
+    </div>
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-light pt-3 d-none d-lg-block">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 text-center text-lg-left mb-2 mb-lg-0">
+                    <div class="d-inline-flex align-items-center">
+                        <p><i class="fa fa-envelope mr-2"></i>info@example.com</p>
+                        <p class="text-body px-3">|</p>
+                        <p><i class="fa fa-phone-alt mr-2"></i>+012 345 6789</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center text-lg-right">
+                    <div class="d-inline-flex align-items-center">
+                        <a class="text-primary px-3" href="{{ asset('Front/') }}">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="text-primary px-3" href="{{ asset('Front/') }}">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a class="text-primary px-3" href="{{ asset('Front/') }}">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a class="text-primary px-3" href="{{ asset('Front/') }}">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a class="text-primary pl-3" href="{{ asset('Front/') }}">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topbar End -->
+
+     {% block body %}
+       
+       {% endblock %}
+
+ <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-white-50 py-5 px-sm-3 px-lg-5" >
+        <div class="row pt-5">
+            <div class="col-lg-3 col-md-6 mb-5">
+               
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <a href="{{ asset('Front/') }}" class="navbar-brand">
+                    <h1 class="text-primary"><span class="text-white">Play</span>Mate</h1>
+                </a>
+                <p>Sed ipsum clita tempor ipsum ipsum amet sit ipsum lorem amet labore rebum lorem ipsum dolor. No sed vero lorem dolor dolor</p>
+                <h6 class="text-white text-uppercase mt-4 mb-3" style="letter-spacing: 5px;">Suivez-nous</h6>
+                <div class="d-flex justify-content-start">
+                    <a class="btn btn-outline-primary btn-square mr-2" href="{{ asset('Front/#') }}"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-primary btn-square mr-2" href="{{ asset('Front/#') }}"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-primary btn-square mr-2" href="{{ asset('Front/#') }}"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-primary btn-square" href="{{ asset('Front/#') }}"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+           
+          
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Contactez-nous</h5>
+                <p><i class="fa fa-map-marker-alt mr-2"></i>123 Street, New York, USA</p>
+                <p><i class="fa fa-phone-alt mr-2"></i>+012 345 67890</p>
+                <p><i class="fa fa-envelope mr-2"></i>info@example.com</p>
+            </div>
+        </div>
+    </div>
+   
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="{{ asset('Front/#') }}" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('Front/lib/easing/easing.min.js') }}"></script>
+    <script src="{{ asset('Front/lib/tempusdominus/js/moment.min.js') }}"></script>
+    <script src="{{ asset('Front/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+    <script src="{{ asset('Front/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+
+
+    <!-- Template Javascript -->
+    <script src="{{ asset('Front/js/main.js') }}"></script>
+</body>
+
+</html>
