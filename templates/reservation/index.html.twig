@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<title>Reservation index</title>
+
+{% block body %}
+    <h1>Reservation index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Idreservation</th>
+                <th>Isconfirm</th>
+                <th>Datereservation</th>
+                <th>Heurereservation</th>
+                <th>Type</th>
+                <th>Nomequipe1</th>
+                <th>Nomequipe2</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reservation in reservations %}
+            <tr>
+                <td>{{ reservation.idreservation }}</td>
+                <td>{{ reservation.isconfirm ? 'Yes' : 'No' }}</td>
+                <td>{{ reservation.datereservation }}</td>
+                <td>{{ reservation.heurereservation }}</td>
+                <td>{{ reservation.type }}</td>
+                <td>{{ reservation.nomequipe1 }}</td>
+                <td>{{ reservation.nomequipe2 }}</td>
+                <td>
+                    <a href="{{ path('app_reservation_show', {'idreservation': reservation.idreservation}) }}">show</a>
+                    <a href="{{ path('app_reservation_edit', {'idreservation': reservation.idreservation}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_reservation_new') }}">Create new</a>
+{% endblock %}
