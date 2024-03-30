@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<title>Payment</title>
+
+{% block body %}
+    <h1>Payment</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idpayment</th>
+                <td>{{ payment.idpayment }}</td>
+            </tr>
+            <tr>
+                <th>Datepayment</th>
+                <td>{{ payment.datepayment }}</td>
+            </tr>
+            <tr>
+                <th>Horairepayment</th>
+                <td>{{ payment.horairepayment }}</td>
+            </tr>
+            <tr>
+                <th>Payed</th>
+                <td>{{ payment.payed ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_payment_index') }}">back to list</a>
+
+    <a href="{{ path('app_payment_edit', {'idpayment': payment.idpayment}) }}">edit</a>
+
+    {{ include('payment/_delete_form.html.twig') }}
+{% endblock %}
