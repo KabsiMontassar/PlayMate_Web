@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users{% endblock %}
+{% block body %}
+ <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="#" class="logo d-flex align-items-center"> <!-- home -->
+        <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
+        <span class="d-none d-lg-block">PlayMate</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+              {% set imagePath = 'Back/uploads/images/' ~ user.image %}
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item dropdown pe-3">
+
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="{{ asset(imagePath) }}" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{user.Name}}</span>
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>{{user.name}}</h6>
+              <span>{{user.Role}}</span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+          <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_profile', {'id': user.id}) }}">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+          
+
+          
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_login') }}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+
+          </ul>
+        </li>
+
+      </ul>
+    </nav>
+
+  </header>
+ <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+
+  
+      <li class="nav-heading">Pages</li>
+  
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('app_user_profile', {'id': user.id}) }}"> <!-- user pROFILE PAGE -->
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+      </li>
+  
+      
+    </ul>
+  
+  </aside>
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Profile Page</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
+          <li class="breadcrumb-item active">Profile</li>
+          
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile">
+      <div class="row">
+        <div class="col-xl-4">
+
+          <div class="card">
+            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+              <img src="{{  asset(imagePath) }}" alt="Profile" class="rounded-circle">
+              <h2>{{ user.Name }}</h2>
+              <h3>{{ user.Role }}</h3>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-xl-8">
+
+          <div class="card">
+            <div class="card-body pt-3">
+              <!-- Bordered Tabs -->
+              <ul class="nav nav-tabs nav-tabs-bordered">
+
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                </li>
+
+              </ul>
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+
+                  <h5 class="card-title">Profile Details</h5>
+
+           
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Name</div>
+                  <div class="col-lg-9 col-md-8">{{ user.Name }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Email</div>
+                  <div class="col-lg-9 col-md-8">{{ user.Email }}</div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Age</div>
+                  <div class="col-lg-9 col-md-8">{{ user.Age }}</div>
+                </div>
+                 <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Phone</div>
+                  <div class="col-lg-9 col-md-8">{{ user.Phone }}</div>
+                </div>
+                 <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Address</div>
+                  <div class="col-lg-9 col-md-8">{{ user.Address }}</div>
+                </div>
+                
+                </div>
+
+                <div class="tab-pane fade profile-edit pt-1" id="profile-edit">
+
+                                  <h5 class="card-title">Update Profile</h5>
+
+                      {{ include('user/FormTemplates/_formedit.html.twig' , {'button_label': 'Update'} )  }}
+
+                </div>
+
+
+                <div class="tab-pane fade pt-1" id="profile-change-password">
+
+                                  <h5 class="card-title">Update Password</h5>
+
+                  <!-- Change Password Form -->
+                   {{ include('user/FormTemplates/_formpassword.html.twig' , {'button_label': 'Update'} ) }}
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+{% endblock body %}
+
+
+
+

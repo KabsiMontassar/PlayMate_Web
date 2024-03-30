@@ -1,6 +1,6 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
-terrain_index:
-    path: /terrain/
-    controller: App\Controller\TerrainController::index
+index:
+    path: /
+    controller: App\Controller\HomeController::index
