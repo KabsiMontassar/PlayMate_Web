@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<title>Terrain</title>
+
+{% block body %}
+    <h1>Terrain</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ terrain.id }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ terrain.address }}</td>
+            </tr>
+            <tr>
+                <th>Gradin</th>
+                <td>{{ terrain.gradin ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Vestiaire</th>
+                <td>{{ terrain.vestiaire ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ terrain.status ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Nomterrain</th>
+                <td>{{ terrain.nomterrain }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ terrain.prix }}</td>
+            </tr>
+            <tr>
+                <th>Duree</th>
+                <td>{{ terrain.duree }}</td>
+            </tr>
+            <tr>
+                <th>Gouvernorat</th>
+                <td>{{ terrain.gouvernorat }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>{{ terrain.image }}</td>
+            </tr>
+            <tr>
+                <th>Video</th>
+                <td>{{ terrain.video }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_terrain_index') }}">back to list</a>
+
+    <a href="{{ path('app_terrain_edit', {'id': terrain.id}) }}">edit</a>
+
+    {{ include('terrain/_delete_form.html.twig') }}
+{% endblock %}
