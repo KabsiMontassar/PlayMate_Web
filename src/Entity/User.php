@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DateTimeImmutable;
 
 /**
  * User
@@ -97,6 +98,26 @@ class User
      * @ORM\Column(name="VerificationCode", type="string", length=255, nullable=false)
      */
     private $verificationcode;
+
+
+    // construct 
+    public function __construct()
+    {
+        $this->datedecreation = (new DateTimeImmutable())->format('Y-m-d');
+        $this->verificationcode = $this->generateVerificationCode();
+        $this->status = true; 
+    }
+
+    private function generateVerificationCode(): string
+    {
+        $length = 6; // Length of the verification code
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $verificationCode = '';
+        for ($i = 0; $i < $length; $i++) {
+            $verificationCode .= $characters[random_int(0, strlen($characters) - 1)];
+        }
+        return $verificationCode;
+    }
 
     public function getId(): ?int
     {
