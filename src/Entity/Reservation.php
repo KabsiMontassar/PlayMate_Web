@@ -127,5 +127,4 @@ class Reservation
     {
         return $this->datereservation;
     }
-
 }
