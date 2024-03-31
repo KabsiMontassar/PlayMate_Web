@@ -102,12 +102,7 @@ class User
      */
     private $verificationcode;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="isVerified", type="boolean", nullable=false)
-     */
-    private $isverified;
+   
 
     public function __construct()
     {
@@ -264,17 +259,7 @@ class User
         return $this;
     }
 
-    public function isIsverified(): ?bool
-    {
-        return $this->isverified;
-    }
-
-    public function setIsverified(bool $isverified): static
-    {
-        $this->isverified = $isverified;
-
-        return $this;
-    }
+    
 
 
 }

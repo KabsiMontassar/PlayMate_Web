@@ -27,10 +27,10 @@ class HomeController extends AbstractController
     public function Apropos(?int $id, EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(44);
+        $user = $userRepository->find(43);
         // if ($id !== null) {
         //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(44);
+        //     $user = $userRepository->find(43);
         //     if (!$user) {
         //         // User not found, return an empty user object or any default value
         //         $user = new User(); // Assuming User is an entity class
@@ -48,10 +48,10 @@ class HomeController extends AbstractController
     public function Boutique(?int $id, EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(44);
+        $user = $userRepository->find(43);
         // if ($id !== null) {
         //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(44);
+        //     $user = $userRepository->find(43);
         //     if (!$user) {
         //         // User not found, return an empty user object or any default value
         //         $user = new User(); // Assuming User is an entity class
@@ -69,10 +69,10 @@ class HomeController extends AbstractController
     public function Contact(?int $id, EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(44);
+        $user = $userRepository->find(43);
         // if ($id !== null) {
         //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(44);
+        //     $user = $userRepository->find(43);
         //     if (!$user) {
         //         // User not found, return an empty user object or any default value
         //         $user = new User(); // Assuming User is an entity class
@@ -90,10 +90,10 @@ class HomeController extends AbstractController
     public function Evenement(?int $id, EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(44);
+        $user = $userRepository->find(43);
         // if ($id !== null) {
         //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(44);
+        //     $user = $userRepository->find(43);
         //     if (!$user) {
         //         // User not found, return an empty user object or any default value
         //         $user = new User(); // Assuming User is an entity class
@@ -111,7 +111,7 @@ class HomeController extends AbstractController
     public function Home(?int $id, EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(44);
+        $user = $userRepository->find(43);
         return $this->render('Front/index.html.twig', [
             'user' => $user,
         ]);
@@ -120,10 +120,10 @@ class HomeController extends AbstractController
     public function Reservation(?int $id, EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(44);
+        $user = $userRepository->find(43);
         // if ($id !== null) {
         //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(44);
+        //     $user = $userRepository->find(43);
         //     if (!$user) {
         //         // User not found, return an empty user object or any default value
         //         $user = new User(); // Assuming User is an entity class
@@ -141,10 +141,10 @@ class HomeController extends AbstractController
     public function Service(?int $id, EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(44);
+        $user = $userRepository->find(43);
         // if ($id !== null) {
         //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(44);
+        //     $user = $userRepository->find(43);
         //     if (!$user) {
         //         // User not found, return an empty user object or any default value
         //         $user = new User(); // Assuming User is an entity class
@@ -162,10 +162,11 @@ class HomeController extends AbstractController
     public function Terrains(?int $id, EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(44);
+        $user = $userRepository->find(43);
+      //  $terrains = $terrainsRepository->findall();
         // if ($id !== null) {
         //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(44);
+        //     $user = $userRepository->find(43);
         //     if (!$user) {
         //         // User not found, return an empty user object or any default value
         //         $user = new User(); // Assuming User is an entity class
@@ -177,6 +178,7 @@ class HomeController extends AbstractController
         // }
         return $this->render('Front/terrains.html.twig', [
             'user' => $user,
+         //   'terrains' => $terrains,
         ]);
     }
 
