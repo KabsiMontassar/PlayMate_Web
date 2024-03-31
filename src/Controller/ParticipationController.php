@@ -20,7 +20,7 @@ class ParticipationController extends AbstractController
             ->getRepository(Participation::class)
             ->findAll();
 
-        return $this->render('Back/GestionEvenement/participation/index.html.twig', [
+        return $this->render('Back/GestionEvenement/participation/participation.html.twig', [
             'participations' => $participations,
         ]);
     }
@@ -53,7 +53,7 @@ class ParticipationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_participation_edit', methods: ['GET', 'POST'])]
+   /* #[Route('/{id}/edit', name: 'app_participation_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Participation $participation, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ParticipationType::class, $participation);
@@ -69,7 +69,7 @@ class ParticipationController extends AbstractController
             'participation' => $participation,
             'form' => $form,
         ]);
-    }
+    }*/
 
     #[Route('/{id}', name: 'app_participation_delete', methods: ['POST'])]
     public function delete(Request $request, Participation $participation, EntityManagerInterface $entityManager): Response
