@@ -17,7 +17,7 @@ class BlacklistController extends AbstractController
     #[Route('/', name: 'app_blacklist_index', methods: ['GET'])]
     public function index(BlacklistRepository $blacklistRepository): Response
     {
-        return $this->render('blacklist/index.html.twig', [
+        return $this->render('Back/GestionReservation/blacklist/blacklist.html.twig', [
             'blacklists' => $blacklistRepository->findAll(),
         ]);
     }
@@ -36,7 +36,7 @@ class BlacklistController extends AbstractController
             return $this->redirectToRoute('app_blacklist_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('blacklist/new.html.twig', [
+        return $this->renderForm('Back/GestionReservation/blacklist/new.html.twig', [
             'blacklist' => $blacklist,
             'form' => $form,
         ]);
@@ -45,7 +45,7 @@ class BlacklistController extends AbstractController
     #[Route('/{idblacklist}', name: 'app_blacklist_show', methods: ['GET'])]
     public function show(Blacklist $blacklist): Response
     {
-        return $this->render('blacklist/show.html.twig', [
+        return $this->render('Back/GestionReservation/blacklist/show.html.twig', [
             'blacklist' => $blacklist,
         ]);
     }
@@ -62,7 +62,7 @@ class BlacklistController extends AbstractController
             return $this->redirectToRoute('app_blacklist_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('blacklist/edit.html.twig', [
+        return $this->renderForm('Back/GestionReservation/blacklist/edit.html.twig', [
             'blacklist' => $blacklist,
             'form' => $form,
         ]);
@@ -71,7 +71,7 @@ class BlacklistController extends AbstractController
     #[Route('/{idblacklist}', name: 'app_blacklist_delete', methods: ['POST'])]
     public function delete(Request $request, Blacklist $blacklist, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$blacklist->getIdblacklist(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $blacklist->getIdblacklist(), $request->request->get('_token'))) {
             $entityManager->remove($blacklist);
             $entityManager->flush();
         }

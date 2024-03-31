@@ -17,7 +17,7 @@ class ReservationController extends AbstractController
     #[Route('/', name: 'app_reservation_index', methods: ['GET'])]
     public function index(ReservationRepository $reservationRepository): Response
     {
-        return $this->render('reservation/index.html.twig', [
+        return $this->render('Back/GestionReservation/reservation/Reservation.html.twig', [
             'reservations' => $reservationRepository->findAll(),
         ]);
     }
@@ -36,7 +36,7 @@ class ReservationController extends AbstractController
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('reservation/new.html.twig', [
+        return $this->renderForm('Back/GestionReservation/reservation/new.html.twig', [
             'reservation' => $reservation,
             'form' => $form,
         ]);
@@ -45,7 +45,7 @@ class ReservationController extends AbstractController
     #[Route('/{idreservation}', name: 'app_reservation_show', methods: ['GET'])]
     public function show(Reservation $reservation): Response
     {
-        return $this->render('reservation/show.html.twig', [
+        return $this->render('Back/GestionReservation/reservation/show.html.twig', [
             'reservation' => $reservation,
         ]);
     }
@@ -62,7 +62,7 @@ class ReservationController extends AbstractController
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('reservation/edit.html.twig', [
+        return $this->renderForm('Back/GestionReservation/reservation/edit.html.twig', [
             'reservation' => $reservation,
             'form' => $form,
         ]);
@@ -71,7 +71,7 @@ class ReservationController extends AbstractController
     #[Route('/{idreservation}', name: 'app_reservation_delete', methods: ['POST'])]
     public function delete(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reservation->getIdreservation(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reservation->getIdreservation(), $request->request->get('_token'))) {
             $entityManager->remove($reservation);
             $entityManager->flush();
         }
