@@ -27,7 +27,7 @@ class HomeController extends AbstractController
     public function Apropos(?int $id, EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(43);
+        $user = $userRepository->find(id);
         // if ($id !== null) {
         //     $userRepository = $entityManager->getRepository(User::class);
         //     $user = $userRepository->find(43);

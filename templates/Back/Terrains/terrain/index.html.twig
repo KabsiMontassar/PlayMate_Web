@@ -1,11 +1,68 @@
-<!DOCTYPE html>
+{% extends 'BaseBack.html.twig' %}
 
-<title>Terrain index</title>
+{% block title %}Terrain index{% endblock %}
 
 {% block body %}
-    <h1>Terrain index</h1>
+<header id="header" class="header fixed-top d-flex align-items-center">
 
-    <table class="table">
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="#" class="logo d-flex align-items-center"> <!-- home -->
+      <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
+      <span class="d-none d-lg-block">PlayMate</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn"></i>
+  </div><!-- End Logo -->
+
+</header>
+<aside id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+
+
+    <li class="nav-heading">Pages</li>
+
+  
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_user_dashboard') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{ path('app_terrain_index') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Terrain</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Avis</span>
+      </a>
+    </li>
+
+  </ul>
+
+</aside>
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Table Page</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">Pages</li>  
+        <li class="breadcrumb-item active">Table</li>
+
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+
+  <section class="section">
+    <table class="table datatable">
+ 
         <thead>
             <tr>
                 <th>Id</th>
@@ -27,9 +84,9 @@
             <tr>
                 <td>{{ terrain.id }}</td>
                 <td>{{ terrain.address }}</td>
-                <td>{{ terrain.gradin ? 'Yes' : 'No' }}</td>
-                <td>{{ terrain.vestiaire ? 'Yes' : 'No' }}</td>
-                <td>{{ terrain.status ? 'Yes' : 'No' }}</td>
+                <td>{{ terrain.gradin ? 'disponible' : 'indisponible' }}</td>
+                <td>{{ terrain.vestiaire ? 'disponible' : 'indisponible' }}</td>
+                <td>{{ terrain.status ? 'disponible' : 'en travaux' }}</td>
                 <td>{{ terrain.nomterrain }}</td>
                 <td>{{ terrain.prix }}</td>
                 <td>{{ terrain.duree }}</td>
@@ -48,6 +105,7 @@
         {% endfor %}
         </tbody>
     </table>
-
     <a href="{{ path('app_terrain_new') }}">Create new</a>
+  </section>
+</main>
 {% endblock %}

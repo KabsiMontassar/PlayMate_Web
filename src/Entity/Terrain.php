@@ -102,6 +102,11 @@ class Terrain
      */
     private $idprop;
 
+    public function __toString(): string
+    {
+        return $this->id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -240,8 +245,5 @@ class Terrain
     }
 
 
-    public function __toString(): string
-    {
-        return $this->nomterrain;
-    }
+   
 }
