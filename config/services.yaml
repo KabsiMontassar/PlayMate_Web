@@ -23,3 +23,8 @@ parameters:
     image_directory: '%kernel.project_dir%/public/uploads/images'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    # config/services.yaml
+
+    terrain_images_directory: '%kernel.project_dir%/public/uploads/images'
+    terrain_videos_directory: '%kernel.project_dir%/public/uploads/videos'
+

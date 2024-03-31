@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Entity\Terrain;
 
 use App\Form\Login;
 
@@ -159,28 +160,21 @@ class HomeController extends AbstractController
         ]);
     }
     #[Route('/Terrains', name: 'app_Terrains', methods: ['GET', 'POST'])]
-    public function Terrains(?int $id, EntityManagerInterface $entityManager): Response
-    {
-        $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(43);
-      //  $terrains = $terrainsRepository->findall();
-        // if ($id !== null) {
-        //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(43);
-        //     if (!$user) {
-        //         // User not found, return an empty user object or any default value
-        //         $user = new User(); // Assuming User is an entity class
-        //         // You can set default values for the user object if needed
-        //     }
-        // } else {
-        //     // If $id is null (no user ID provided), treat as a guest
-        //     $user = null;
-        // }
-        return $this->render('Front/terrains.html.twig', [
-            'user' => $user,
-         //   'terrains' => $terrains,
-        ]);
-    }
+public function Terrains(?int $id, EntityManagerInterface $entityManager): Response
+{
+    $terrainRepository = $entityManager->getRepository(Terrain::class);
+    $terrains = $terrainRepository->findAll();
+
+    $userRepository = $entityManager->getRepository(User::class);
+    $user = $userRepository->find(43);
+
+    return $this->render('Front/terrains.html.twig', [
+        'user' => $user,
+        'terrains' => $terrains,
+    ]);
+}
+
+
 
 
 

@@ -94,9 +94,12 @@
                 <td>{{ terrain.image }}</td>
                 <td>{{ terrain.video }}</td>
                 <td>
-                    <a href="{{ path('app_terrain_show', {'id': terrain.id}) }}">show</a>
-                    <a href="{{ path('app_terrain_edit', {'id': terrain.id}) }}">edit</a>
-                </td>
+                     <form action="{{ path('app_terrain_delete', {'id': terrain.id}) }}" method="post" onsubmit="return confirm('Voulez-vous supprimer ce terrain?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ terrain.id) }}">
+    <button type="submit" class="btn btn-danger">Supprimer</button>
+</form>
+                    <button onclick="window.location='{{ path('app_terrain_edit', {'id': terrain.id}) }}'" class="btn btn-primary">Modifier</button>
             </tr>
         {% else %}
             <tr>
@@ -105,7 +108,7 @@
         {% endfor %}
         </tbody>
     </table>
-    <a href="{{ path('app_terrain_new') }}">Create new</a>
+    <button onclick="window.location='{{ path('app_terrain_new') }}'" class="btn btn-success">Ajouter</button>
   </section>
 </main>
 {% endblock %}
