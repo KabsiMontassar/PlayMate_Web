@@ -245,8 +245,5 @@ class Terrain
     }
 
 
-    public function __toString(): string
-    {
-        return $this->nomterrain;
-    }
+   
 }
