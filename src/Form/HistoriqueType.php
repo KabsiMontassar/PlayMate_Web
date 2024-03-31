@@ -12,10 +12,7 @@ class HistoriqueType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('datereservation')
-            ->add('heurereservation')
-            ->add('idreservation')
-        ;
+            ->add('idreservation');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
