@@ -24,12 +24,12 @@
 
 
 
-        <li class="nav-heading">Pages</li>
+        <li class="nav-heading">Gestion User</li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ path('app_user_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-layout-text-window-reverse"></i>
-                <span>Table</span>
+                <span>Users</span>
             </a>
         </li>
         <li class="nav-item">
@@ -38,8 +38,11 @@
                 <span>Dashboard</span>
             </a>
         </li>
+
+        <!-- End Nav Item -->
+         <li class="nav-heading">GestionTerrain</li>
         <li class="nav-item">
-      <a class="nav-link" href="{{ path('app_terrain_index') }}"> 
+      <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}"> 
         <i class="bi bi-grid"></i>
         <span>Terrain</span>
       </a>
@@ -50,6 +53,9 @@
         <span>Avis</span>
       </a>
     </li>
+
+    <!-- End Nav Item -->
+      <li class="nav-heading">Gestion Reservation</li>
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ path('app_reservation_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
@@ -75,10 +81,25 @@
             </a>
         </li>
 
-
+        <!-- End Nav Item -->
+        <li class="nav-heading">Gestion Evenement</li>
+          <li class="nav-item">
+            <a class="nav-link collapsed " href="{{ path('app_tournoi_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Tournoi</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_participation_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Participation</span>
+            </a>
+        </li>
+<!-- End Nav Item -->
     </ul>
 
 </aside>
+
 
 
 <main id="main" class="main">

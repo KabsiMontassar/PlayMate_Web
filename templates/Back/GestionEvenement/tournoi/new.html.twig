@@ -9,3 +9,59 @@
 
     <a href="{{ path('app_tournoi_index') }}">back to list</a>
 {% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var forms = document.querySelectorAll('form');
+
+    forms.forEach(function(form) {
+        // Add classes to form element
+        form.classList.add('row', 'g-3', 'needs-validation');
+
+        // Add class "col-12" to each div inside the form
+        var formDivs = form.querySelectorAll('div');
+        formDivs.forEach(function(div) {
+            div.classList.add('col-12');
+        });
+
+        // Add class "form-label" to each label inside the form
+        var formLabels = form.querySelectorAll('label');
+        formLabels.forEach(function(label) {
+            label.classList.add('form-label');
+        });
+
+        // Add class "form-control" to each input inside the form
+        var formInputs = form.querySelectorAll('input');
+        formInputs.forEach(function(input) {
+            input.classList.add('form-control');
+        });
+
+        // Add class "btn" to each button inside the form
+        var formButtons = form.querySelectorAll('button');
+        formButtons.forEach(function(button) {
+            button.classList.add('btn');
+        });
+
+        // Add event listener for form submission and validation
+       document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('.needs-validation');
+        form.addEventListener('submit', function(event) {
+            // Remove existing error messages
+            form.querySelectorAll('.invalid-feedback').forEach(function(error) {
+                error.remove();
+            });
+
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            form.classList.add('was-validated');
+
+        
+        });
+    });
+    });
+});
+</script>
+
