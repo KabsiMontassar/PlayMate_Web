@@ -3,35 +3,33 @@
 <title>Historique index</title>
 
 {% block body %}
-    <h1>Historique index</h1>
+<h1>Historique index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Idhistorique</th>
-                <th>Datereservation</th>
-                <th>Heurereservation</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Idhistorique</th>
+
+            <th>actions</th>
+        </tr>
+    </thead>
+    <tbody>
         {% for historique in historiques %}
-            <tr>
-                <td>{{ historique.idhistorique }}</td>
-                <td>{{ historique.datereservation }}</td>
-                <td>{{ historique.heurereservation }}</td>
-                <td>
-                    <a href="{{ path('app_historique_show', {'idhistorique': historique.idhistorique}) }}">show</a>
-                    <a href="{{ path('app_historique_edit', {'idhistorique': historique.idhistorique}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <tr>
+            <td>{{ historique.idhistorique }}</td>
 
-    <a href="{{ path('app_historique_new') }}">Create new</a>
+            <td>
+                <a href="{{ path('app_historique_show', {'idhistorique': historique.idhistorique}) }}">show</a>
+                <a href="{{ path('app_historique_edit', {'idhistorique': historique.idhistorique}) }}">edit</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">no records found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_historique_new') }}">Create new</a>
 {% endblock %}
