@@ -1,29 +1,83 @@
-<!DOCTYPE html>
+{% extends 'BaseBack.html.twig' %}
 
-<title>Avis index</title>
+{% block title %}Avis index{% endblock %}
 
 {% block body %}
-    <h1>Avis index</h1>
+<header id="header" class="header fixed-top d-flex align-items-center">
 
-    <table class="table">
-        <thead>
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="#" class="logo d-flex align-items-center"> <!-- home -->
+      <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
+      <span class="d-none d-lg-block">PlayMate</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn"></i>
+  </div><!-- End Logo -->
+
+</header>
+<aside id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+    <li class="nav-heading">Pages</li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_user_dashboard') }}"> <!-- user pROFILE PAGE -->
+        <i class="bi bi-grid"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}"> <!-- user pROFILE PAGE -->
+        <i class="bi bi-grid"></i>
+        <span>Terrain</span>
+      </a>
+    </li>
+ <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> <!-- user pROFILE PAGE -->
+        <i class="bi bi-grid"></i>
+        <span>Avis</span>
+      </a>
+    </li>
+
+
+  </ul>
+
+</aside>
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Table Page</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
+        <li class="breadcrumb-item active">Table</li>
+
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+
+  <section class="section">
+    <table class="table datatable">
+            <thead>
             <tr>
                 <th>Idavis</th>
+                <th>IdTerrain</th>
                 <th>Commentaire</th>
                 <th>Note</th>
-                <th>actions</th>
+               
             </tr>
         </thead>
         <tbody>
         {% for avi in avis %}
             <tr>
                 <td>{{ avi.idavis }}</td>
+                <td>{{ avi.Terrain }}</td>
                 <td>{{ avi.commentaire }}</td>
                 <td>{{ avi.note }}</td>
-                <td>
-                    <a href="{{ path('app_avis_show', {'idavis': avi.idavis}) }}">show</a>
-                    <a href="{{ path('app_avis_edit', {'idavis': avi.idavis}) }}">edit</a>
-                </td>
+                
             </tr>
         {% else %}
             <tr>
@@ -32,6 +86,9 @@
         {% endfor %}
         </tbody>
     </table>
+  </section>
 
-    <a href="{{ path('app_avis_new') }}">Create new</a>
+</main>
+
+
 {% endblock %}
