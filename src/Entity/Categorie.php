@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="categorie")
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\CategorieRepository")
  */
 class Categorie
 {
@@ -66,5 +65,8 @@ class Categorie
         return $this;
     }
 
-
+    public function __toString()
+    {
+        return $this->description;
+    }
 }

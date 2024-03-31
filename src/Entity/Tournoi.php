@@ -2,16 +2,14 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * Tournoi
  *
  * @ORM\Table(name="tournoi", indexes={@ORM\Index(name="fk_avis_organisateur", columns={"idOrganisateur"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\TournoiRepository")
-
  */
 class Tournoi
 {
@@ -53,18 +51,25 @@ class Tournoi
     private $address;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="datedebut", type="string", length=255, nullable=false)
+     * @ORM\Column(name="datedebut", type="date", nullable=false)
      */
     private $datedebut;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="datefin", type="string", length=255, nullable=false)
+     * @ORM\Column(name="datefin", type="date", nullable=false)
      */
     private $datefin;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="visite", type="integer", nullable=false)
+     */
+    private $visite = '0';
 
     /**
      * @var \User
@@ -129,26 +134,38 @@ class Tournoi
         return $this;
     }
 
-    public function getDatedebut(): ?string
+    public function getDatedebut(): ?\DateTimeInterface
     {
         return $this->datedebut;
     }
 
-    public function setDatedebut(string $datedebut): static
+    public function setDatedebut(\DateTimeInterface $datedebut): static
     {
         $this->datedebut = $datedebut;
 
         return $this;
     }
 
-    public function getDatefin(): ?string
+    public function getDatefin(): ?\DateTimeInterface
     {
         return $this->datefin;
     }
 
-    public function setDatefin(string $datefin): static
+    public function setDatefin(\DateTimeInterface $datefin): static
     {
         $this->datefin = $datefin;
+
+        return $this;
+    }
+
+    public function getVisite(): ?int
+    {
+        return $this->visite;
+    }
+
+    public function setVisite(int $visite): static
+    {
+        $this->visite = $visite;
 
         return $this;
     }
@@ -164,6 +181,12 @@ class Tournoi
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->nom;
+    }
+
 
 
 }

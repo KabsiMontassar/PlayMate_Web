@@ -4,13 +4,11 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Historique
  *
  * @ORM\Table(name="historique", indexes={@ORM\Index(name="idReservation", columns={"idReservation"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\HistoriqueRepository")
  */
 class Historique
 {
@@ -22,10 +20,6 @@ class Historique
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idhistorique;
-
-  
-
-   
 
     /**
      * @var \Reservation
@@ -41,10 +35,6 @@ class Historique
     {
         return $this->idhistorique;
     }
-
-    
-
-   
 
     public function getIdreservation(): ?Reservation
     {

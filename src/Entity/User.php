@@ -3,16 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeImmutable;
-
 
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- *  
  */
 class User
 {
@@ -47,18 +43,18 @@ class User
     private $name;
 
     /**
-     * @var int
+     * @var int|null
      *
-     * @ORM\Column(name="Age", type="integer", nullable=false)
+     * @ORM\Column(name="Age", type="integer", nullable=true, options={"default"="NULL"})
      */
-    private $age;
+    private $age = NULL;
 
     /**
-     * @var int
+     * @var int|null
      *
-     * @ORM\Column(name="Phone", type="integer", nullable=false)
+     * @ORM\Column(name="Phone", type="integer", nullable=true, options={"default"="NULL"})
      */
-    private $phone;
+    private $phone = NULL;
 
     /**
      * @var string|null
@@ -102,29 +98,6 @@ class User
      */
     private $verificationcode;
 
-   
-
-    public function __construct()
-    {
-        $this->datedecreation = (new DateTimeImmutable())->format('Y-m-d');
-        $this->verificationcode = $this->generateVerificationCode();
-        $this->status = true; 
-    }
-
-    private function generateVerificationCode(): string
-    {
-        $length = 6; // Length of the verification code
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $verificationCode = '';
-        for ($i = 0; $i < $length; $i++) {
-            $verificationCode .= $characters[random_int(0, strlen($characters) - 1)];
-        }
-        return $verificationCode;
-    }
-    public function __toString(): string
-    {
-        return $this->name;
-    }
     public function getId(): ?int
     {
         return $this->id;
@@ -171,7 +144,7 @@ class User
         return $this->age;
     }
 
-    public function setAge(int $age): static
+    public function setAge(?int $age): static
     {
         $this->age = $age;
 
@@ -183,7 +156,7 @@ class User
         return $this->phone;
     }
 
-    public function setPhone(int $phone): static
+    public function setPhone(?int $phone): static
     {
         $this->phone = $phone;
 
@@ -262,7 +235,10 @@ class User
         return $this;
     }
 
-    
+    public function __toString()
+    {
+        return $this->name;
+    }
 
 
 }
