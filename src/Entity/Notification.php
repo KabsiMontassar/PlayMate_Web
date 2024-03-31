@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="notification", indexes={@ORM\Index(name="fk_aaa", columns={"iduser"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\NotificationRepository")
  */
 class Notification
 {
@@ -49,5 +48,5 @@ class Notification
         return $this;
     }
 
-
+  
 }

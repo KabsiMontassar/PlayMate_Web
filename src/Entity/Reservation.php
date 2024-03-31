@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="reservation", indexes={@ORM\Index(name="idTerrain", columns={"idTerrain"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\ReservationRepository")
  */
 class Reservation
 {
@@ -49,10 +48,6 @@ class Reservation
      * @ORM\Column(name="type", type="string", length=255, nullable=false)
      */
     private $type;
-
-   
-
-   
 
     /**
      * @var \Terrain
@@ -117,7 +112,6 @@ class Reservation
         return $this;
     }
 
- 
     public function getIdterrain(): ?Terrain
     {
         return $this->idterrain;
@@ -129,6 +123,9 @@ class Reservation
 
         return $this;
     }
-
+    public function __toString()
+    {
+        return $this->datereservation;
+    }
 
 }

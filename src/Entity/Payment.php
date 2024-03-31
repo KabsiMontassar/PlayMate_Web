@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="payment", indexes={@ORM\Index(name="idReservation", columns={"idReservation"}), @ORM\Index(name="fk_payment_membre", columns={"idMembre"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\PaymentRepository")
  */
 class Payment
 {
@@ -44,16 +43,6 @@ class Payment
     private $payed = 'NULL';
 
     /**
-     * @var \Reservation
-     *
-     * @ORM\ManyToOne(targetEntity="Reservation")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idReservation", referencedColumnName="idReservation")
-     * })
-     */
-    private $idreservation;
-
-    /**
      * @var \User
      *
      * @ORM\ManyToOne(targetEntity="User")
@@ -62,6 +51,16 @@ class Payment
      * })
      */
     private $idmembre;
+
+    /**
+     * @var \Reservation
+     *
+     * @ORM\ManyToOne(targetEntity="Reservation")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idReservation", referencedColumnName="idReservation")
+     * })
+     */
+    private $idreservation;
 
     public function getIdpayment(): ?int
     {
@@ -104,6 +103,18 @@ class Payment
         return $this;
     }
 
+    public function getIdmembre(): ?User
+    {
+        return $this->idmembre;
+    }
+
+    public function setIdmembre(?User $idmembre): static
+    {
+        $this->idmembre = $idmembre;
+
+        return $this;
+    }
+
     public function getIdreservation(): ?Reservation
     {
         return $this->idreservation;
@@ -115,17 +126,9 @@ class Payment
 
         return $this;
     }
-
-    public function getIdmembre(): ?User
+    public function __toString()
     {
-        return $this->idmembre;
-    }
-
-    public function setIdmembre(?User $idmembre): static
-    {
-        $this->idmembre = $idmembre;
-
-        return $this;
+        return $this->horairepayment;
     }
 
 

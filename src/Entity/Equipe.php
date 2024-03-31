@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="equipe")
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\EquipeRepository")
  */
 class Equipe
 {
@@ -65,5 +64,9 @@ class Equipe
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->nomequipe;
+    }
 
 }
