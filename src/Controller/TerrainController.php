@@ -17,7 +17,7 @@ class TerrainController extends AbstractController
     #[Route('/', name: 'app_terrain_index', methods: ['GET'])]
     public function index(TerrainRepository $terrainRepository): Response
     {
-        return $this->render('terrain/index.html.twig', [
+        return $this->render('Back/Terrains/terrain/index.html.twig', [
             'terrains' => $terrainRepository->findAll(),
         ]);
     }
@@ -36,7 +36,7 @@ class TerrainController extends AbstractController
             return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('terrain/new.html.twig', [
+        return $this->renderForm('Back/Terrains/terrain/new.html.twig', [
             'terrain' => $terrain,
             'form' => $form,
         ]);
@@ -45,7 +45,7 @@ class TerrainController extends AbstractController
     #[Route('/{id}', name: 'app_terrain_show', methods: ['GET'])]
     public function show(Terrain $terrain): Response
     {
-        return $this->render('terrain/show.html.twig', [
+        return $this->render('Back/Terrains/terrain/show.html.twig', [
             'terrain' => $terrain,
         ]);
     }
@@ -62,7 +62,7 @@ class TerrainController extends AbstractController
             return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('terrain/edit.html.twig', [
+        return $this->renderForm('Back/Terrains/terrain/edit.html.twig', [
             'terrain' => $terrain,
             'form' => $form,
         ]);

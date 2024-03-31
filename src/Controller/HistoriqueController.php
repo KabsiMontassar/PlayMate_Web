@@ -17,7 +17,7 @@ class HistoriqueController extends AbstractController
     #[Route('/', name: 'app_historique_index', methods: ['GET'])]
     public function index(HistoriqueRepository $historiqueRepository): Response
     {
-        return $this->render('historique/index.html.twig', [
+        return $this->render('Back\GestionReservation\historique\historique.html.twig', [
             'historiques' => $historiqueRepository->findAll(),
         ]);
     }
@@ -36,7 +36,7 @@ class HistoriqueController extends AbstractController
             return $this->redirectToRoute('app_historique_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('historique/new.html.twig', [
+        return $this->renderForm('Back/GestionReservation/historique/new.html.twig', [
             'historique' => $historique,
             'form' => $form,
         ]);
@@ -71,7 +71,7 @@ class HistoriqueController extends AbstractController
     #[Route('/{idhistorique}', name: 'app_historique_delete', methods: ['POST'])]
     public function delete(Request $request, Historique $historique, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$historique->getIdhistorique(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $historique->getIdhistorique(), $request->request->get('_token'))) {
             $entityManager->remove($historique);
             $entityManager->flush();
         }
