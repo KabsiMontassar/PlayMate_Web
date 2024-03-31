@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'BaseBack.html.twig' %}
 
 {% block title %}Users{% endblock %}
 {% block body %}
@@ -161,7 +161,7 @@
 
                                   <h5 class="card-title">Update Profile</h5>
 
-                      {{ include('user/FormTemplates/_formedit.html.twig' , {'button_label': 'Update'} )  }}
+                      {{ include('Back/GestionUser/FormTemplates/_formedit.html.twig' , {'button_label': 'Update'} )  }}
 
                 </div>
 
@@ -171,7 +171,7 @@
                                   <h5 class="card-title">Update Password</h5>
 
                   <!-- Change Password Form -->
-                   {{ include('user/FormTemplates/_formpassword.html.twig' , {'button_label': 'Update'} ) }}
+                   {{ include('Back/GestionUser/FormTemplates/_formpassword.html.twig' , {'button_label': 'Update'} ) }}
 
                 </div>
 
