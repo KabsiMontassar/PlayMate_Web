@@ -3,11 +3,11 @@
 <title>Edit Reservation</title>
 
 {% block body %}
-    <h1>Edit Reservation</h1>
+<h1>Edit Reservation</h1>
 
-    {{ include('reservation/_form.html.twig', {'button_label': 'Update'}) }}
+{{ include('Back/GestionReservation/reservation/new.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_reservation_index') }}">back to list</a>
+<a href="{{ path('app_reservation_index') }}">back to list</a>
 
-    {{ include('reservation/_delete_form.html.twig') }}
+{{ include('reservation/_delete_form.html.twig') }}
 {% endblock %}

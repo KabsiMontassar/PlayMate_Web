@@ -1,0 +1,120 @@
+{% extends 'BaseBack.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="#" class="logo d-flex align-items-center"> <!-- home -->
+            <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
+            <span class="d-none d-lg-block">PlayMate</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+
+
+
+
+</header>
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+
+
+        <li class="nav-heading">Pages</li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_user_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_user_dashboard') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_reservation_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Reservation</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_historique_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Historique</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_blacklist_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Blacklist</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_payment_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Paiement</span>
+            </a>
+        </li>
+
+
+    </ul>
+
+</aside>
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Table Page</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
+                <li class="breadcrumb-item active">Table</li>
+
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="section">
+        <table class="table datatable">
+            <thead>
+                <tr>
+                    <th>Idblacklist</th>
+                    <th>Duree</th>
+                    <th>Cause</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for blacklist in blacklists %}
+                <tr>
+                    <td>{{ blacklist.idblacklist }}</td>
+                    <td>{{ blacklist.duree }}</td>
+                    <td>{{ blacklist.cause }}</td>
+                    <td>
+                        <a href="{{ path('app_blacklist_show', {'idblacklist': blacklist.idblacklist}) }}">show</a>
+                        <a href="{{ path('app_blacklist_edit', {'idblacklist': blacklist.idblacklist}) }}">edit</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('app_blacklist_new') }}">Create new</a>
+    </section>
+
+</main>
+
+
+{% endblock %}
