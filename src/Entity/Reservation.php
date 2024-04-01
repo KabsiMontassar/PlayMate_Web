@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Reservation
@@ -29,9 +30,8 @@ class Reservation
     private $isconfirm;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="dateReservation", type="string", length=255, nullable=false)
+     * @ORM\Column(type="date", nullable=false)
+     * @Assert\GreaterThan("today")
      */
     private $datereservation;
 
@@ -39,6 +39,18 @@ class Reservation
      * @var string
      *
      * @ORM\Column(name="heureReservation", type="string", length=255, nullable=false)
+     * @Assert\Regex(
+     *     pattern="/^([01][0-9]|2[0-3]):[0-5][0-9]$/",
+     *     message="L'heure doit être au format HH:MM"
+     * )
+     * @Assert\GreaterThan(
+     *     value="07:59",
+     *     message="L'heure doit être après 07:59"
+     * )
+     * @Assert\LessThanOrEqual(
+     *     value="23:59",
+     *     message="L'heure doit être avant 00:00"
+     * )
      */
     private $heurereservation;
 
@@ -54,7 +66,7 @@ class Reservation
      *
      * @ORM\ManyToOne(targetEntity="Terrain")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idTerrain", referencedColumnName="id")
+     * @ORM\JoinColumn(name="idTerrain", referencedColumnName="id")
      * })
      */
     private $idterrain;
@@ -69,19 +81,19 @@ class Reservation
         return $this->isconfirm;
     }
 
-    public function setIsconfirm(bool $isconfirm): static
+    public function setIsconfirm(bool $isconfirm): self
     {
         $this->isconfirm = $isconfirm;
 
         return $this;
     }
 
-    public function getDatereservation(): ?string
+    public function getDatereservation(): ?\DateTimeInterface
     {
         return $this->datereservation;
     }
 
-    public function setDatereservation(string $datereservation): static
+    public function setDatereservation(\DateTimeInterface $datereservation): self
     {
         $this->datereservation = $datereservation;
 
@@ -93,7 +105,7 @@ class Reservation
         return $this->heurereservation;
     }
 
-    public function setHeurereservation(string $heurereservation): static
+    public function setHeurereservation(string $heurereservation): self
     {
         $this->heurereservation = $heurereservation;
 
@@ -105,7 +117,7 @@ class Reservation
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -117,15 +129,15 @@ class Reservation
         return $this->idterrain;
     }
 
-    public function setIdterrain(?Terrain $idterrain): static
+    public function setIdterrain(?Terrain $idterrain): self
     {
         $this->idterrain = $idterrain;
 
         return $this;
     }
+
     public function __toString()
     {
-        return $this->datereservation;
+        return (string) $this->idreservation;
     }
-
 }
