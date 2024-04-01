@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Payment
@@ -22,9 +23,9 @@ class Payment
     private $idpayment;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="datePayment", type="string", length=255, nullable=false)
+     * @ORM\Column(type="date", nullable=false)
      */
     private $datepayment;
 
@@ -32,6 +33,10 @@ class Payment
      * @var string
      *
      * @ORM\Column(name="horairePayment", type="string", length=255, nullable=false)
+     * @Assert\Regex(
+     *     pattern="/^([01][0-9]|2[0-3]):[0-5][0-9]$/",
+     *     message="L'heure doit être au format HH:MM"
+     * )
      */
     private $horairepayment;
 
@@ -39,6 +44,7 @@ class Payment
      * @var bool|null
      *
      * @ORM\Column(name="Payed", type="boolean", nullable=true, options={"default"="NULL"})
+     * 
      */
     private $payed = 'NULL';
 
@@ -67,12 +73,12 @@ class Payment
         return $this->idpayment;
     }
 
-    public function getDatepayment(): ?string
+    public function getDatepayment(): ?\DateTime
     {
         return $this->datepayment;
     }
 
-    public function setDatepayment(string $datepayment): static
+    public function setDatepayment(\DateTime $datepayment): static
     {
         $this->datepayment = $datepayment;
 
@@ -126,10 +132,9 @@ class Payment
 
         return $this;
     }
+
     public function __toString()
     {
         return $this->horairepayment;
     }
-
-
 }
