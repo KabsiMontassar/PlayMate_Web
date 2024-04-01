@@ -17,7 +17,7 @@
         </tr>
         <tr>
             <th>Datereservation</th>
-            <td>{{ reservation.datereservation }}</td>
+            <td>{{ reservation.datereservation ? reservation.datereservation.format('Y-m-d') : ''}}</td>
         </tr>
         <tr>
             <th>Heurereservation</th>
