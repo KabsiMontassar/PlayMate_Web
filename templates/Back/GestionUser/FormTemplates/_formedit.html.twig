@@ -8,7 +8,7 @@
     {{ form_label(form1.name, 'Name', {'label_attr': {'class': 'form-label'}}) }}
 </div>
 <div class="col-md-8 col-lg-9">
-    {{ form_widget(form1.name, {'attr': {'class': 'form-control', 'pattern': '^([a-zA-Zéàùç]+[ ]{0,1})+$', 'minlength': '3'}}) }}
+    {{ form_widget(form1.name, {'attr': {'class': 'form-control', 'pattern': '^([a-zA-Zéàùç]+[ ]{0,1})+$', 'minlength': '3',  'maxlength':'20'}}) }}
     <div class="invalid-feedback">Please enter a valid name (only letters and spaces, minimum length 3 characters).</div>
   
 </div>
@@ -16,7 +16,7 @@
     {{ form_label(form1.age, 'Age', {'label_attr': {'class': 'form-label'}}) }}
 </div>
 <div class="col-md-8 col-lg-9">
-    {{ form_widget(form1.age, {'attr': {'class': 'form-control', 'pattern': '^\d+$', 'min': '12', 'max': '99'}}) }}
+    {{ form_widget(form1.age, {'attr': {'class': 'form-control', 'pattern': '^\d+$', 'min': '12', 'max': '99'  }}) }}
     <div class="invalid-feedback">Please enter a valid age (only numbers between 12 and 99).</div>
 </div>
 <div class="col-md-4 col-lg-3">
@@ -32,7 +32,7 @@
     {{ form_label(form1.address, 'Address', {'label_attr': {'class': 'form-label'}}) }}
 </div>
 <div class="col-md-8 col-lg-9">
-    {{ form_widget(form1.address, {'attr': {'class': 'form-control', 'minlength': '5'}}) }}
+    {{ form_widget(form1.address, {'attr': {'class': 'form-control', 'minlength': '5',  'maxlength':'35' }}) }}
     <div class="invalid-feedback">Please enter a valid address (minimum length 5 characters).</div>
   
 </div>

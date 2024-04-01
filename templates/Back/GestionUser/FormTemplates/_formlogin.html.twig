@@ -7,17 +7,16 @@
     {{ form_label(formlogin.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
     <div class="input-group has-validation">
         <span class="input-group-text" id="inputGroupPrepend">@</span>
-        {{ form_widget(formlogin.email, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(formlogin.email, {'attr': {'class': 'form-control' , 'maxlength' : '35'}}) }}
                   <div class="invalid-feedback">Please enter a valid email address.</div>
 
     </div>
 </div>
 <div class="col-12">
     {{ form_label(formlogin.password, 'Password', {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(formlogin.password, {'attr': {'class': 'form-control', 'pattern': '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$'}}) }}
+    {{ form_widget(formlogin.password, {'attr': {'class': 'form-control', 'pattern': '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$', 'maxlength' : '25'}}) }}
 </div>
 
-{{ form_widget(formlogin.name, {'attr': {'class': 'form-control', 'style': 'display:none', 'value': 'aaa'}}) }}
 
 <div class="col-12">
     <button type="submit" class="btn btn-primary w-100" id="submit-button">Login</button>
