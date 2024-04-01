@@ -133,7 +133,7 @@
                 <td>{{ participation.datec ? participation.datec|date('Y-m-d') : '' }}</td>
                 <td>{{ participation.nomequipe }}</td>
                 <td>
-                    <a href="{{ path('app_participation_show', {'id': participation.id}) }}">show</a>
+                    {# <a href="{{ path('app_participation_show', {'id': participation.id}) }}">show</a> #}
                 
                 </td>
             </tr>
@@ -145,5 +145,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_participation_new') }}">Create new</a>
+
+    {# <a href="{{ path('app_participation_new', {'iduser': user.id}) }}">Create new</a> #}
 {% endblock %}

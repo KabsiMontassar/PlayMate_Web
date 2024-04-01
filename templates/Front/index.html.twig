@@ -2,7 +2,23 @@
 
 {% block title %}Login{% endblock %}
 {% block body %}
+  <div class="floating-user-icon d-none d-lg-block" >
+        <a href="{{ asset('Front/#') }}" class="dropdown-toggle active" data-toggle="dropdown">
+            <i class="fas fa-user"></i>
+        </a>
+        <div class="dropdown-menu border-0 rounded-0 m-0">
+{% if user.image is defined %}
+    {% set imagepath = 'uploads/images/' ~ user.image %}
+{% else %}
+    {% set imagepath = 'uploads/images/default.jpg' %}
+{% endif %}        
+            <img src="{{ asset(imagepath) }}" class="mx-auto d-block" style="width: 50px; height: auto;">
+            <h6 class="text-center my-2">{{user.name}}</h6>
 
+            <a href="{{ path('app_user_profile' , {'id': user.id}) }}" class="dropdown-item">Voir profile</a>
+            <a href="{{ path('app_user_login' , {'id': user.id}) }}" class="dropdown-item">Se déconnecter</a>
+        </div>
+    </div>
 
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">

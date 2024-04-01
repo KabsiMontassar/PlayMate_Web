@@ -5,7 +5,7 @@
  <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="#" class="logo d-flex align-items-center"> <!-- home -->
+      <a href="{{ path('app_Home', {'id': user.id}) }}" class="logo d-flex align-items-center"> <!-- home -->
         <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
         <span class="d-none d-lg-block">PlayMate</span>
       </a>

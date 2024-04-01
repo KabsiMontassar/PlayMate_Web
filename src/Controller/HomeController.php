@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 
 use App\Form\Login;
+use App\Repository\UserRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,165 +21,83 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_user_index', methods: ['GET', 'POST'])] 
     public function index(): RedirectResponse
     {
-        return $this->redirectToRoute('app_Home');
+        return $this->redirectToRoute('app_user_login');
     }
 
-    #[Route('/Apropos', name: 'app_Apropos', methods: ['GET', 'POST'])]
-    public function Apropos(?int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/Apropos/{id}', name: 'app_Apropos', methods: ['GET', 'POST'])]
+    public function Apropos( int $id , Request $request , EntityManagerInterface $em): Response
     {
-        $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(id);
-        // if ($id !== null) {
-        //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(43);
-        //     if (!$user) {
-        //         // User not found, return an empty user object or any default value
-        //         $user = new User(); // Assuming User is an entity class
-        //         // You can set default values for the user object if needed
-        //     }
-        // } else {
-        //     // If $id is null (no user ID provided), treat as a guest
-        //     $user = null;
-        // }
+        $user = $em->getRepository(User::class)->find($id);
+    
         return $this->render('Front/apropos.html.twig', [
             'user' => $user,
         ]);
     }
-    #[Route('/Boutique', name: 'app_Boutique', methods: ['GET', 'POST'])]
-    public function Boutique(?int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/Boutique/{id}', name: 'app_Boutique', methods: ['GET', 'POST'])]
+    public function Boutique( int $id , Request $request , EntityManagerInterface $em): Response
     {
-        $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(43);
-        // if ($id !== null) {
-        //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(43);
-        //     if (!$user) {
-        //         // User not found, return an empty user object or any default value
-        //         $user = new User(); // Assuming User is an entity class
-        //         // You can set default values for the user object if needed
-        //     }
-        // } else {
-        //     // If $id is null (no user ID provided), treat as a guest
-        //     $user = null;
-        // }
+        $user = $em->getRepository(User::class)->find($id);
+
         return $this->render('Front/boutique.html.twig', [
             'user' => $user,
         ]);
     }
-    #[Route('/Contact', name: 'app_Contact', methods: ['GET', 'POST'])]
-    public function Contact(?int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/Contact/{id}', name: 'app_Contact', methods: ['GET', 'POST'])]
+    public function Contact( int $id , Request $request , EntityManagerInterface $em): Response
     {
-        $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(43);
-        // if ($id !== null) {
-        //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(43);
-        //     if (!$user) {
-        //         // User not found, return an empty user object or any default value
-        //         $user = new User(); // Assuming User is an entity class
-        //         // You can set default values for the user object if needed
-        //     }
-        // } else {
-        //     // If $id is null (no user ID provided), treat as a guest
-        //     $user = null;
-        // }
+        $user = $em->getRepository(User::class)->find($id);
+
         return $this->render('Front/contact.html.twig', [
             'user' => $user,
         ]);
     }
-    #[Route('/Evenement', name: 'app_Evenement', methods: ['GET', 'POST'])]
-    public function Evenement(?int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/Evenement/{id}', name: 'app_Evenement', methods: ['GET', 'POST'])]
+    public function Evenement( int $id , Request $request , EntityManagerInterface $em): Response
     {
-        $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(43);
-        // if ($id !== null) {
-        //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(43);
-        //     if (!$user) {
-        //         // User not found, return an empty user object or any default value
-        //         $user = new User(); // Assuming User is an entity class
-        //         // You can set default values for the user object if needed
-        //     }
-        // } else {
-        //     // If $id is null (no user ID provided), treat as a guest
-        //     $user = null;
-        // }
+        $user = $em->getRepository(User::class)->find($id);
+
         return $this->render('Front/evenements.html.twig', [
             'user' => $user,
         ]);
     }
-    #[Route('/Home', name: 'app_Home', methods: ['GET', 'POST'])]
-    public function Home(?int $id, EntityManagerInterface $entityManager): Response
-    {
-        $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(43);
+    #[Route('/Home/{id}', name: 'app_Home', methods: ['GET', 'POST'])]
+    public function Home(  Request $request , EntityManagerInterface $em ,int $id ): Response
+    { 
+    
+        $user = $em->getRepository(User::class)->find($id);
+
         return $this->render('Front/index.html.twig', [
             'user' => $user,
         ]);
     }
-    #[Route('/Reservation', name: 'app_Reservation', methods: ['GET', 'POST'])]
-    public function Reservation(?int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/Reservation/{id}', name: 'app_Reservation', methods: ['GET', 'POST'])]
+    public function Reservation( int $id , Request $request , EntityManagerInterface $em): Response
     {
-        $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(43);
-        // if ($id !== null) {
-        //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(43);
-        //     if (!$user) {
-        //         // User not found, return an empty user object or any default value
-        //         $user = new User(); // Assuming User is an entity class
-        //         // You can set default values for the user object if needed
-        //     }
-        // } else {
-        //     // If $id is null (no user ID provided), treat as a guest
-        //     $user = null;
-        // }
+        $user = $em->getRepository(User::class)->find($id);
+
         return $this->render('Front/reservation.html.twig', [
             'user' => $user,
         ]);
     }
-    #[Route('/Service', name: 'app_Service', methods: ['GET', 'POST'])]
-    public function Service(?int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/Service/{id}', name: 'app_Service', methods: ['GET', 'POST'])]
+    public function Service( int $id , Request $request , EntityManagerInterface $em): Response
     {
-        $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(43);
-        // if ($id !== null) {
-        //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(43);
-        //     if (!$user) {
-        //         // User not found, return an empty user object or any default value
-        //         $user = new User(); // Assuming User is an entity class
-        //         // You can set default values for the user object if needed
-        //     }
-        // } else {
-        //     // If $id is null (no user ID provided), treat as a guest
-        //     $user = null;
-        // }
+       
+        $user = $em->getRepository(User::class)->find($id);
+
         return $this->render('Front/service.html.twig', [
             'user' => $user,
         ]);
     }
-    #[Route('/Terrains', name: 'app_Terrains', methods: ['GET', 'POST'])]
-    public function Terrains(?int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/Terrains/{id}', name: 'app_Terrains', methods: ['GET', 'POST'])]
+    public function Terrains( int $id , Request $request , EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find(43);
-      //  $terrains = $terrainsRepository->findall();
-        // if ($id !== null) {
-        //     $userRepository = $entityManager->getRepository(User::class);
-        //     $user = $userRepository->find(43);
-        //     if (!$user) {
-        //         // User not found, return an empty user object or any default value
-        //         $user = new User(); // Assuming User is an entity class
-        //         // You can set default values for the user object if needed
-        //     }
-        // } else {
-        //     // If $id is null (no user ID provided), treat as a guest
-        //     $user = null;
-        // }
+        $user = $userRepository->find($id);
+
         return $this->render('Front/terrains.html.twig', [
             'user' => $user,
-         //   'terrains' => $terrains,
+       
         ]);
     }
 
