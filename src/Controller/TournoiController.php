@@ -33,6 +33,21 @@ class TournoiController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $formData = $form->getData();
+            // Process form 1 (update user information)
+           $affiche =  $form->get('affiche')->getData();
+           if ($affiche) {
+            // Generate a unique name for the file
+            $newFilename = uniqid().'.'.$affiche->guessExtension();
+    
+            // Move the file to the desired directory
+            $affiche->move(
+                $this->getParameter('image_directory'), // Path defined in services.yaml or config/packages/framework.yaml
+                $newFilename
+            );
+            $formData->setAffiche($newFilename);
+        }
             $entityManager->persist($tournoi);
             $entityManager->flush();
 

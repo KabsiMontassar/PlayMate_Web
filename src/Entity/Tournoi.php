@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Tournoi
@@ -33,6 +34,10 @@ class Tournoi
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255, nullable=false)
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z0-9 ]+$/",
+     *     message="Le nom ne doit contenir que des lettres, des chiffres et des espaces."
+     * )
      */
     private $nom;
 
@@ -47,6 +52,10 @@ class Tournoi
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=255, nullable=false)
+    * @Assert\Regex(
+     *     pattern="/^[a-zA-Z0-9 ]+$/",
+     *     message="L'adresse ne doit contenir que des lettres, des chiffres et des espaces."
+     * )
      */
     private $address;
 
@@ -54,6 +63,10 @@ class Tournoi
      * @var \DateTime
      *
      * @ORM\Column(name="datedebut", type="date", nullable=false)
+     * @Assert\LessThanOrEqual(
+     *     propertyPath="datefin",
+     *     message="La date de début doit être antérieure ou égale à la date de fin."
+     * )
      */
     private $datedebut;
 
@@ -61,6 +74,14 @@ class Tournoi
      * @var \DateTime
      *
      * @ORM\Column(name="datefin", type="date", nullable=false)
+     * @Assert\Expression(
+     *     "this.getDatedebut() <= this.getDatefin()",
+     *     message="La date de fin doit être postérieure à la date de début."
+     * )
+     * @Assert\Expression(
+     *     "this.getDatefin() <= this.getDatedebut().modify('+30 days')",
+     *     message="La différence entre la date de début et la date de fin ne doit pas dépasser 30 jours."
+     * )
      */
     private $datefin;
 
