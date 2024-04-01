@@ -18,22 +18,25 @@ use App\Repository\UserRepository;
 class ParticipationController extends AbstractController
 {
     #[Route('/', name: 'app_participation_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager,): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
+        
+        $user = $entityManager->getRepository(User::class)->find(43);
+
         $participations = $entityManager
             ->getRepository(Participation::class)
             ->findAll();
 
         return $this->render('Back/GestionEvenement/participation/participation.html.twig', [
             'participations' => $participations,
+            'user' => $user,
         ]);
     }
 
     #[Route('/new/{iduser}', name: 'app_participation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, ?int $iduser): Response
     {
-        $UserRepository= $entityManager-> getRepository(User::class);
-        $user = $UserRepository-> find($iduser);
+        $user = $entityManager->getRepository(User::class)->find($iduser);
         $participation = new Participation();
         $form = $this->createForm(ParticipationType::class, $participation, ['user' => $user]);
         $form->handleRequest($request);
@@ -53,11 +56,14 @@ class ParticipationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_participation_show', methods: ['GET'])]
-    public function show(Participation $participation): Response
+    #[Route('/{id}/{iduser}', name: 'app_participation_show', methods: ['GET'])]
+    public function show(Participation $participation,  int $iduser,EntityManagerInterface $entityManager): Response
     {
+        $user = $entityManager->getRepository(User::class)->find($iduser);
+
         return $this->render('Back/GestionEvenement/participation/show.html.twig', [
             'participation' => $participation,
+            'user' => $user,
         ]);
     }
 
@@ -79,14 +85,16 @@ class ParticipationController extends AbstractController
         ]);
     }*/
 
-    #[Route('/{id}', name: 'app_participation_delete', methods: ['POST'])]
-    public function delete(Request $request, Participation $participation, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/{iduser}', name: 'app_participation_delete', methods: ['POST'])]
+    public function delete(int $iduser,Request $request, Participation $participation, EntityManagerInterface $entityManager): Response
     {
+        $user = $entityManager->getRepository(User::class)->find($iduser);
+
         if ($this->isCsrfTokenValid('delete'.$participation->getId(), $request->request->get('_token'))) {
             $entityManager->remove($participation);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_participation_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_participation_index', [ 'user' => $user], Response::HTTP_SEE_OTHER);
     }
 }
