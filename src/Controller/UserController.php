@@ -40,7 +40,7 @@ class UserController extends AbstractController
         $userRepository = $entityManager->getRepository(User::class);
         
         $user = new User();
-        $formlogin = $this->createForm(Login::class );
+        $formlogin = $this->createForm(Login::class , $user , ['validation_groups' => ['login']]);
         $formlogin->handleRequest($request);
         if ($formlogin->isSubmitted() && $formlogin->isValid()) {
            
@@ -69,7 +69,7 @@ class UserController extends AbstractController
         $userRepository = $entityManager->getRepository(User::class);
 
         $user = new User();
-        $form = $this->createForm(UserType::class , $user);
+        $form = $this->createForm(UserType::class , $user , ['validation_groups' => ['registration']]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -97,7 +97,7 @@ class UserController extends AbstractController
         
         $userRepository = $entityManager->getRepository(User::class);
         $user = $userRepository->find($id);
-        $form1 = $this->createForm(UserUpdateType::class , $user);
+        $form1 = $this->createForm(UserUpdateType::class , $user , ['validation_groups' => ['update_profile']]);
         $form2 = $this->createForm(UserPasswordType::class  	);
     
         // Handle form submissions

@@ -19,7 +19,6 @@ class Login extends AbstractType
         $builder
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
-            ->add('name') 
         ;
     }
 
