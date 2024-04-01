@@ -145,5 +145,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_participation_new') }}">Create new</a>
+    <a href="{{ path('app_participation_new', {'iduser': user.id}) }}">Create new</a>
 {% endblock %}
