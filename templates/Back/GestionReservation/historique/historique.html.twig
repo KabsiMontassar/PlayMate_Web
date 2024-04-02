@@ -119,15 +119,20 @@
         <table class="table datatable">
             <thead>
                 <tr>
-                    <th>Idhistorique</th>
-
-                    <th>actions</th>
+                    <th>Historique ID</th>
+                    <th>Reservation ID</th>
+                    <th>Date Reservation</th>
+                    <th>Heure Reservation</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for historique in historiques %}
                 <tr>
                     <td>{{ historique.idhistorique }}</td>
+                    <td>{{ historique.reservation.idreservation }}</td>
+                    <td>{{ historique.reservation.datereservation|date('Y-m-d') }}</td>
+                    <td>{{ historique.reservation.heurereservation }}</td>
 
                     <td>
                         <a href="{{ path('app_historique_show', {'idhistorique': historique.idhistorique}) }}"> show</a>
