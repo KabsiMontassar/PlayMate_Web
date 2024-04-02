@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="blacklist", indexes={@ORM\Index(name="idReservation", columns={"idReservation"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\BlacklistRepository")
  */
 class Blacklist
 {
@@ -87,5 +86,8 @@ class Blacklist
         return $this;
     }
 
-
+    public function __toString()
+    {
+        return $this->cause;
+    }
 }

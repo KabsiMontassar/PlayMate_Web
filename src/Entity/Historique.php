@@ -4,13 +4,11 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Historique
  *
- * @ORM\Table(name="historique", indexes={@ORM\Index(name="idReservation", columns={"idReservation"})})
+ * @ORM\Table(name="historique")
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\HistoriqueRepository")
  */
 class Historique
 {
@@ -23,40 +21,27 @@ class Historique
      */
     private $idhistorique;
 
-  
-
-   
-
     /**
-     * @var \Reservation
+     * @var Reservation|null
      *
-     * @ORM\ManyToOne(targetEntity="Reservation")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idReservation", referencedColumnName="idReservation")
-     * })
+     * @ORM\ManyToOne(targetEntity=Reservation::class)
+     * @ORM\JoinColumn(name="idReservation", referencedColumnName="idReservation", nullable=false)
      */
-    private $idreservation;
+    private $reservation;
 
     public function getIdhistorique(): ?int
     {
         return $this->idhistorique;
     }
 
-    
-
-   
-
-    public function getIdreservation(): ?Reservation
+    public function getReservation(): ?Reservation
     {
-        return $this->idreservation;
+        return $this->reservation;
     }
 
-    public function setIdreservation(?Reservation $idreservation): static
+    public function setReservation(?Reservation $reservation): self
     {
-        $this->idreservation = $idreservation;
-
+        $this->reservation = $reservation;
         return $this;
     }
-
-
 }

@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Payment
  *
  * @ORM\Table(name="payment", indexes={@ORM\Index(name="idReservation", columns={"idReservation"}), @ORM\Index(name="fk_payment_membre", columns={"idMembre"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\PaymentRepository")
  */
 class Payment
 {
@@ -23,9 +23,9 @@ class Payment
     private $idpayment;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="datePayment", type="string", length=255, nullable=false)
+     * @ORM\Column(type="date", nullable=false)
      */
     private $datepayment;
 
@@ -33,6 +33,10 @@ class Payment
      * @var string
      *
      * @ORM\Column(name="horairePayment", type="string", length=255, nullable=false)
+     * @Assert\Regex(
+     *     pattern="/^([01][0-9]|2[0-3]):[0-5][0-9]$/",
+     *     message="L'heure doit être au format HH:MM"
+     * )
      */
     private $horairepayment;
 
@@ -40,18 +44,9 @@ class Payment
      * @var bool|null
      *
      * @ORM\Column(name="Payed", type="boolean", nullable=true, options={"default"="NULL"})
+     * 
      */
     private $payed = 'NULL';
-
-    /**
-     * @var \Reservation
-     *
-     * @ORM\ManyToOne(targetEntity="Reservation")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idReservation", referencedColumnName="idReservation")
-     * })
-     */
-    private $idreservation;
 
     /**
      * @var \User
@@ -63,17 +58,27 @@ class Payment
      */
     private $idmembre;
 
+    /**
+     * @var \Reservation
+     *
+     * @ORM\ManyToOne(targetEntity="Reservation")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idReservation", referencedColumnName="idReservation")
+     * })
+     */
+    private $idreservation;
+
     public function getIdpayment(): ?int
     {
         return $this->idpayment;
     }
 
-    public function getDatepayment(): ?string
+    public function getDatepayment(): ?\DateTime
     {
         return $this->datepayment;
     }
 
-    public function setDatepayment(string $datepayment): static
+    public function setDatepayment(\DateTime $datepayment): static
     {
         $this->datepayment = $datepayment;
 
@@ -104,18 +109,6 @@ class Payment
         return $this;
     }
 
-    public function getIdreservation(): ?Reservation
-    {
-        return $this->idreservation;
-    }
-
-    public function setIdreservation(?Reservation $idreservation): static
-    {
-        $this->idreservation = $idreservation;
-
-        return $this;
-    }
-
     public function getIdmembre(): ?User
     {
         return $this->idmembre;
@@ -128,5 +121,20 @@ class Payment
         return $this;
     }
 
+    public function getIdreservation(): ?Reservation
+    {
+        return $this->idreservation;
+    }
 
+    public function setIdreservation(?Reservation $idreservation): static
+    {
+        $this->idreservation = $idreservation;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->horairepayment;
+    }
 }

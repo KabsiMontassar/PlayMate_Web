@@ -4,15 +4,13 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
-
-
+use Symfony\Component\Validator\Constraints as Assert;
+//groups = {"registration", "update_profile"  , "login"}
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- *  
  */
 class User
 {
@@ -29,6 +27,15 @@ class User
      * @var string
      *
      * @ORM\Column(name="Email", type="string", length=255, nullable=false)
+     * @Assert\Email(
+     *    message = "The email '{{ value }}' is not a valid email."
+     * )
+     * @Assert\NotBlank(
+     *   message = "The email cannot be blank.",
+     *   groups = {"registration", "login"}
+     * )
+     * 
+     * 
      */
     private $email;
 
@@ -36,6 +43,9 @@ class User
      * @var string
      *
      * @ORM\Column(name="Password", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(
+     *   groups = {"registration"  , "login"}
+     * )
      */
     private $password;
 
@@ -43,34 +53,56 @@ class User
      * @var string
      *
      * @ORM\Column(name="Name", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(
+     *   groups = {"registration", "update_profile"  }
+     * )
+     * 
      */
     private $name;
 
     /**
-     * @var int
+     * @var int|null
      *
-     * @ORM\Column(name="Age", type="integer", nullable=false)
+     * @ORM\Column(name="Age", type="integer", nullable=true, options={"default"="NULL"})
+     * @Assert\NotBlank(
+     * message = "The age cannot be blank.",
+     *   groups = { "update_profile" }
+     * )
+    
      */
-    private $age;
+    private $age = NULL;
 
     /**
-     * @var int
+     * @var int|null
      *
-     * @ORM\Column(name="Phone", type="integer", nullable=false)
+     * @ORM\Column(name="Phone", type="integer", nullable=true, options={"default"="NULL"})
+     * @Assert\NotBlank(
+     * message = "The phone cannot be blank.",
+     *   groups = { "update_profile" }
+     * )
+    
+     * 
+     * 
      */
-    private $phone;
+    private $phone = NULL;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="Address", type="string", length=255, nullable=true, options={"default"="NULL"})
+     * @Assert\NotBlank(
+     *  message = "The address cannot be blank.",
+     *   groups = { "update_profile"}
+     * )
+   
+     * 
      */
-    private $address = 'NULL';
+    private $address = NULL;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Role", type="string", length=255, nullable=false)
+     * @ORM\Column(name="Role", type="string", length=255, nullable=false , options={"default"="NULL"})
      */
     private $role;
 
@@ -79,7 +111,7 @@ class User
      *
      * @ORM\Column(name="Image", type="string", length=255, nullable=true, options={"default"="NULL"})
      */
-    private $image = 'NULL';
+    private $image = NULL;
 
     /**
      * @var bool
@@ -102,8 +134,8 @@ class User
      */
     private $verificationcode;
 
-   
 
+    // construct 
     public function __construct()
     {
         $this->datedecreation = (new DateTimeImmutable())->format('Y-m-d');
@@ -121,10 +153,7 @@ class User
         }
         return $verificationCode;
     }
-    public function __toString(): string
-    {
-        return $this->name;
-    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -171,7 +200,7 @@ class User
         return $this->age;
     }
 
-    public function setAge(int $age): static
+    public function setAge(?int $age): static
     {
         $this->age = $age;
 
@@ -183,7 +212,7 @@ class User
         return $this->phone;
     }
 
-    public function setPhone(int $phone): static
+    public function setPhone(?int $phone): static
     {
         $this->phone = $phone;
 
@@ -262,7 +291,10 @@ class User
         return $this;
     }
 
-    
+    public function __toString()
+    {
+        return $this->name;
+    }
 
 
 }

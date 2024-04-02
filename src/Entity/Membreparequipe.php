@@ -4,13 +4,11 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Membreparequipe
  *
- * @ORM\Table(name="membreparequipe", indexes={@ORM\Index(name="idEquipe", columns={"idEquipe"}), @ORM\Index(name="fk_abaa", columns={"idMembre"})})
+ * @ORM\Table(name="membreparequipe", indexes={@ORM\Index(name="fk_abaa", columns={"idMembre"}), @ORM\Index(name="idEquipe", columns={"idEquipe"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\MembreparequipeRepository")
  */
 class Membreparequipe
 {
@@ -72,5 +70,6 @@ class Membreparequipe
         return $this;
     }
 
+ 
 
 }

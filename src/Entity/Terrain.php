@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="terrain", indexes={@ORM\Index(name="fk_avis_prop", columns={"idprop"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\TerrainRepository")
  */
 class Terrain
 {
@@ -119,11 +118,6 @@ class Terrain
      * })
      */
     private $idprop;
-
-    public function __toString(): string
-    {
-        return $this->id;
-    }
 
     public function getId(): ?int
     {
@@ -262,7 +256,10 @@ class Terrain
 
         return $this;
     }
+    public function __toString()
+    {
+        return $this->nomterrain;
+    }
 
 
-   
 }

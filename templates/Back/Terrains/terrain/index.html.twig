@@ -16,20 +16,28 @@
 </header>
 <aside id="sidebar" class="sidebar">
 
-  <ul class="sidebar-nav" id="sidebar-nav">
+    <ul class="sidebar-nav" id="sidebar-nav">
 
 
 
-    <li class="nav-heading">Pages</li>
+        <li class="nav-heading">Gestion User</li>
 
-  
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_user_dashboard') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Dashboard</span>
-      </a>
-    </li>
-    <li class="nav-item">
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_user_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>Users</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_user_dashboard') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <!-- End Nav Item -->
+         <li class="nav-heading">GestionTerrain</li>
+        <li class="nav-item">
       <a class="nav-link" href="{{ path('app_terrain_index') }}"> 
         <i class="bi bi-grid"></i>
         <span>Terrain</span>
@@ -42,7 +50,49 @@
       </a>
     </li>
 
-  </ul>
+    <!-- End Nav Item -->
+      <li class="nav-heading">Gestion Reservation</li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_reservation_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Reservation</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_historique_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Historique</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_blacklist_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Blacklist</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_payment_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Paiement</span>
+            </a>
+        </li>
+
+        <!-- End Nav Item -->
+        <li class="nav-heading">Gestion Evenement</li>
+          <li class="nav-item">
+            <a class="nav-link collapsed " href="{{ path('app_tournoi_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Tournoi</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_participation_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Participation</span>
+            </a>
+        </li>
+<!-- End Nav Item -->
+    </ul>
 
 </aside>
 

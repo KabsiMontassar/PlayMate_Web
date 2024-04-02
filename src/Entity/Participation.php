@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Participation
  *
- * @ORM\Table(name="participation", indexes={@ORM\Index(name="fk_adsds", columns={"idmembre"}), @ORM\Index(name="idTournoi", columns={"idTournoi"})})
+ * @ORM\Table(name="participation", indexes={@ORM\Index(name="idTournoi", columns={"idTournoi"}), @ORM\Index(name="fk_adsds", columns={"idmembre"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\ParticipationRepository")
  */
 class Participation
 {
@@ -30,9 +30,9 @@ class Participation
     private $status;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="datec", type="string", length=255, nullable=false)
+     * @ORM\Column(name="datec", type="date", nullable=false)
      */
     private $datec;
 
@@ -44,16 +44,6 @@ class Participation
     private $nomequipe;
 
     /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idmembre", referencedColumnName="id")
-     * })
-     */
-    private $idmembre;
-
-    /**
      * @var \Tournoi
      *
      * @ORM\ManyToOne(targetEntity="Tournoi")
@@ -62,6 +52,16 @@ class Participation
      * })
      */
     private $idtournoi;
+
+    /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idmembre", referencedColumnName="id")
+     * })
+     */
+    private $idmembre;
 
     public function getId(): ?int
     {
@@ -80,12 +80,12 @@ class Participation
         return $this;
     }
 
-    public function getDatec(): ?string
+    public function getDatec(): ?\DateTimeInterface
     {
         return $this->datec;
     }
 
-    public function setDatec(string $datec): static
+    public function setDatec(\DateTimeInterface $datec): static
     {
         $this->datec = $datec;
 
@@ -104,18 +104,6 @@ class Participation
         return $this;
     }
 
-    public function getIdmembre(): ?User
-    {
-        return $this->idmembre;
-    }
-
-    public function setIdmembre(?User $idmembre): static
-    {
-        $this->idmembre = $idmembre;
-
-        return $this;
-    }
-
     public function getIdtournoi(): ?Tournoi
     {
         return $this->idtournoi;
@@ -128,5 +116,20 @@ class Participation
         return $this;
     }
 
+    public function getIdmembre(): ?User
+    {
+        return $this->idmembre;
+    }
+
+    public function setIdmembre(?User $idmembre): static
+    {
+        $this->idmembre = $idmembre;
+
+        return $this;
+    }
+    public function __toString()
+    {
+        return $this->nomequipe;
+    }
 
 }

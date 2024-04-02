@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<title>Participation index</title>
+
+{% block body %}
+    <h1>Participation index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Status</th>
+                <th>Datec</th>
+                <th>Nomequipe</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for participation in participations %}
+            <tr>
+                <td>{{ participation.id }}</td>
+                <td>{{ participation.status ? 'Yes' : 'No' }}</td>
+                <td>{{ participation.datec ? participation.datec|date('Y-m-d') : '' }}</td>
+                <td>{{ participation.nomequipe }}</td>
+                <td>
+                    <a href="{{ path('app_participation_show', {'id': participation.id}) }}">show</a>
+                
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_participation_new') }}">Create new</a>
+{% endblock %}

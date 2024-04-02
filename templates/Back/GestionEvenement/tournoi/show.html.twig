@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<title>Tournoi</title>
+
+{% block body %}
+    <h1>Tournoi</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ tournoi.id }}</td>
+            </tr>
+            <tr>
+                <th>Nbmaxequipe</th>
+                <td>{{ tournoi.nbmaxequipe }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ tournoi.nom }}</td>
+            </tr>
+            <tr>
+                <th>Affiche</th>
+                <td>{{ tournoi.affiche }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ tournoi.address }}</td>
+            </tr>
+            <tr>
+                <th>Datedebut</th>
+                <td>{{ tournoi.datedebut ? tournoi.datedebut|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Datefin</th>
+                <td>{{ tournoi.datefin ? tournoi.datefin|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Visite</th>
+                <td>{{ tournoi.visite }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tournoi_index') }}">back to list</a>
+
+    <a href="{{ path('app_tournoi_edit', {'id': tournoi.id}) }}">edit</a>
+
+    {{ include('Back/GestionEvenement/tournoi/_delete_form.html.twig') }}
+{% endblock %}
