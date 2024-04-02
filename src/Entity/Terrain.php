@@ -56,6 +56,7 @@ class Terrain
      * @var string
      *
      * @ORM\Column(name="nomTerrain", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez entrez le nom")
      * @Assert\Regex(
      *     pattern="/^[a-zA-Z]+$/",
      *     message="Le nom doit contenir que des lettres."
@@ -171,12 +172,13 @@ class Terrain
         return $this->nomterrain;
     }
 
-    public function setNomterrain(string $nomterrain): static
-    {
-        $this->nomterrain = $nomterrain;
+    public function setNomterrain(?string $nomterrain): static
+{
+    $this->nomterrain = $nomterrain ?? "";
 
-        return $this;
-    }
+    return $this;
+}
+
 
     public function getPrix(): ?float
     {
