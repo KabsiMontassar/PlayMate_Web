@@ -1,0 +1,13 @@
+/* Cachez le paragraphe par défaut */
+.description {
+    display: none;
+}
+
+/* Affichez le paragraphe au survol */
+.destination-item:hover .description {
+    display: block;
+}
+
+.hidden {
+    display: none;
+}

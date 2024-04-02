@@ -5,20 +5,39 @@ namespace App\Controller;
 use App\Entity\Historique;
 use App\Form\HistoriqueType;
 use App\Repository\HistoriqueRepository;
+use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 #[Route('/historique')]
 class HistoriqueController extends AbstractController
 {
     #[Route('/', name: 'app_historique_index', methods: ['GET'])]
-    public function index(HistoriqueRepository $historiqueRepository): Response
+    public function index(HistoriqueRepository $historiqueRepository, ReservationRepository $reservationRepository, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('Back\GestionReservation\historique\historique.html.twig', [
-            'historiques' => $historiqueRepository->findAll(),
+
+        $currentDate = new \DateTime();
+        $reservations = $reservationRepository->findPreviousReservations($currentDate);
+
+        foreach ($reservations as $reservation) {
+            $existingHistorique = $historiqueRepository->findOneBy(['reservation' => $reservation]);
+            if (!$existingHistorique) {
+                $historique = new Historique();
+
+                $historique->setReservation($reservation);
+
+                $entityManager->persist($historique);
+            }
+        }
+        $entityManager->flush();
+
+        $historiques = $historiqueRepository->findAll();
+        return $this->render('Back/GestionReservation/historique/historique.html.twig', [
+            'historiques' => $historiques,
         ]);
     }
 
@@ -45,7 +64,7 @@ class HistoriqueController extends AbstractController
     #[Route('/{idhistorique}', name: 'app_historique_show', methods: ['GET'])]
     public function show(Historique $historique): Response
     {
-        return $this->render('historique/show.html.twig', [
+        return $this->render('Back/GestionReservation/historique/show.html.twig', [
             'historique' => $historique,
         ]);
     }
@@ -62,7 +81,7 @@ class HistoriqueController extends AbstractController
             return $this->redirectToRoute('app_historique_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('historique/edit.html.twig', [
+        return $this->renderForm('Back/GestionReservation/historique/edit.html.twig', [
             'historique' => $historique,
             'form' => $form,
         ]);
