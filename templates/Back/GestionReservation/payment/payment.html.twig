@@ -119,11 +119,14 @@
         <table class="table datatable">
             <thead>
                 <tr>
-                    <th>Idpayment</th>
-                    <th>Datepayment</th>
-                    <th>Horairepayment</th>
+                    <th>ID Payment</th>
+                    <th>Date Payment</th>
+                    <th>Horaires Payment</th>
                     <th>Payed</th>
-                    <th>actions</th>
+                    <th>Reservation ID</th>
+                    <th>User ID</th>
+                    <th>User Name</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -133,6 +136,9 @@
                     <td>{{ payment.datepayment|date('Y-m-d') }}</td>
                     <td>{{ payment.horairepayment }}</td>
                     <td>{{ payment.payed ? 'Yes' : 'No' }}</td>
+                    <td>{{ payment.idreservation.idreservation }}</td>
+                    <td>{{ payment.idmembre.id }}</td>
+                    <td>{{ payment.idmembre.name }}</td>
                     <td>
                         <a href="{{ path('app_payment_show', {'idpayment': payment.idpayment}) }}">show</a>
                         <a href="{{ path('app_payment_edit', {'idpayment': payment.idpayment}) }}">edit</a>
