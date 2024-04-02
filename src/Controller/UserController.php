@@ -34,61 +34,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/login', name: 'app_user_login', methods: ['GET' , 'POST'])]
-    public function login(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $userRepository = $entityManager->getRepository(User::class);
-        
-        $user = new User();
-        $formlogin = $this->createForm(Login::class , $user , ['validation_groups' => ['login']]);
-        $formlogin->handleRequest($request);
-        if ($formlogin->isSubmitted() && $formlogin->isValid()) {
-           
-            $user = $userRepository->findOneByemail($formlogin->get('email')->getData());
-
-            if($user){
-                if($user->getPassword() == $formlogin->get('password')->getData()){
-                    return $this->redirectToRoute('app_user_profile', ['id' => $user->getId()]);
-                }else{
-                    $this->addFlash('error', 'Password is incorrect');
-                }
-                }
-        
-            }
-        return $this->renderForm('login.html.twig', [
-            
-            'formlogin' => $formlogin,
-          
-        ]);
-    }
-
-
-    #[Route('/register', name: 'app_user_register', methods: ['GET' , 'POST'])]
-    public function register(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $userRepository = $entityManager->getRepository(User::class);
-
-        $user = new User();
-        $form = $this->createForm(UserType::class , $user , ['validation_groups' => ['registration']]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userexist = $userRepository->findOneByemail($form->get('email')->getData());
-            if(!$userexist){
-                $entityManager->persist($user);
-                $entityManager->flush();
-                return $this->redirectToRoute('app_user_login', [], Response::HTTP_SEE_OTHER);
-            }
-            
-
-            return $this->redirectToRoute('app_user_register', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('register.html.twig', [
-            'form' => $form
-            
-        ]);
-    }
+   
 
   
     #[Route('/{id}/profile', name: 'app_user_profile', methods: ['GET', 'POST'])]
@@ -98,7 +44,7 @@ class UserController extends AbstractController
         $userRepository = $entityManager->getRepository(User::class);
         $user = $userRepository->find($id);
         $form1 = $this->createForm(UserUpdateType::class , $user , ['validation_groups' => ['update_profile']]);
-        $form2 = $this->createForm(UserPasswordType::class  	);
+        $form2 = $this->createForm(UserPasswordType::class  );
     
         // Handle form submissions
         $form1->handleRequest($request);
@@ -117,16 +63,16 @@ class UserController extends AbstractController
             $newFilename = uniqid().'.'.$imageFile->guessExtension();
     
             // Move the file to the desired directory
-            $imageFile->move(
-                $this->getParameter('image_directory'), // Path defined in services.yaml or config/packages/framework.yaml
-                $newFilename
-            );
+           
             $formData->setImage($newFilename);
         }
 
             $entityManager->persist($formData);
             $entityManager->flush();
- 
+            $imageFile->move(
+                $this->getParameter('image_directory'), // Path defined in services.yaml or config/packages/framework.yaml
+                $newFilename
+            );
 
         }
       
