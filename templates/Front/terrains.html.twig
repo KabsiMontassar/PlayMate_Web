@@ -1,6 +1,6 @@
 {% extends 'BaseFront.html.twig' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Nos Terrains{% endblock %}
 {% block body %}
 
     <!-- Navbar Start -->
@@ -75,68 +75,36 @@
             <div class="row">
                   
                     <div class="row pb-3">
-                        <div class="col-md-6 mb-4 pb-2">
-                            <div class="blog-item">
-                                <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-1.jpg') }}" alt="">
-                                    <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
-                                    </div>
-                                </div>
+                       {% for terrain in terrains %}
+<div class="col-md-6 mb-4 pb-2">
+    <div class="blog-item">
+        <div class="position-relative">
+           {% if terrain.image %}
+    <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ terrain.image) }}" alt="">
+{% endif %}
+            <div class="blog-date">
+                <h6 class="font-weight-bold mb-n1">{{ terrain.getNomterrain() }}</h6>
+                <small class="text-white text-uppercase">{{ terrain.getGouvernorat}}</small>
+            </div>
+        </div>
                                 <div class="bg-white p-4">
-                                    <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#">Admin</a>
-                                        <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#">Tours & Travel</a>
-                                    </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#">Dolor justo sea kasd lorem clita justo diam amet</a>
+                                   
+                                    <a class="h5 m-0 text-decoration-none" href="#"> <i class="fas fa-map-marker-alt"></i>       
+ {{ terrain.getAddress() }}</a> <br></br>
+                                   <br> <a class="h5 m-0 text-decoration-none" href="#"> <i class="fas fa-coins"></i>                  
+ {{ terrain.getPrix() }} TND</a></br>
+ <a href="#" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
+  
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-4 pb-2">
-                            <div class="blog-item">
-                                <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-2.jpg') }}" alt="">
-                                    <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
-                                    </div>
-                                </div>
-                                <div class="bg-white p-4">
-                                    <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#">Admin</a>
-                                        <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#">Tours & Travel</a>
-                                    </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#">Dolor justo sea kasd lorem clita justo diam amet</a>
-                                </div>
-                            </div>
-                        </div>
+                       
+                            {% endfor %}
                    
                      
                      
                      
-                       
-                        <div class="col-md-6 mb-4 pb-2">
-                            <div class="blog-item">
-                                <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-2.jpg') }}" alt="">
-                                    <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
-                                    </div>
-                                </div>
-                               <div class="bg-white p-4">
-                                    <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#">Admin</a>
-                                        <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#">Tours & Travel</a>
-                                    </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#">Dolor justo sea kasd lorem clita justo diam amet</a>
-                                </div>
-                            </div>
-                        </div>
+                      
                         <div class="col-12">
                             <nav aria-label="Page navigation">
                                 <ul class="pagination pagination-lg justify-content-center bg-white mb-0" style="padding: 30px;">
