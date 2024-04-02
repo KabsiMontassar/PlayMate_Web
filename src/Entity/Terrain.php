@@ -28,6 +28,7 @@ class Terrain
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez entrez l'adresse")
      */
     private $address;
 
@@ -68,6 +69,7 @@ class Terrain
      * @var float
      *
      * @ORM\Column(name="prix", type="float", precision=10, scale=0, nullable=false)
+     * @Assert\NotBlank(message="Veuillez entrez le prix")
      */
     private $prix;
 
@@ -75,6 +77,7 @@ class Terrain
      * @var int
      *
      * @ORM\Column(name="duree", type="integer", nullable=false)
+     * @Assert\NotBlank(message="Veuillez entrez la duree")
      */
     private $duree;
 
@@ -82,6 +85,11 @@ class Terrain
      * @var string
      *
      * @ORM\Column(name="gouvernorat", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez entrez le gouvernorat") 
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z]+$/",
+     *     message="Le gouvernorat doit contenir que des lettres."
+     * )
      */
     private $gouvernorat;
 
@@ -89,6 +97,7 @@ class Terrain
      * @var string
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez charger une image")
      */
     private $image;
 
@@ -96,6 +105,7 @@ class Terrain
      * @var string
      *
      * @ORM\Column(name="video", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez charger une vidéo")
      */
     private $video;
 
@@ -103,6 +113,7 @@ class Terrain
      * @var \User
      *
      * @ORM\ManyToOne(targetEntity="User")
+     * @Assert\NotBlank(message="Veuillez entrez l'id du proprietaire'")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idprop", referencedColumnName="id")
      * })
