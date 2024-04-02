@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -54,6 +56,10 @@ class Terrain
      * @var string
      *
      * @ORM\Column(name="nomTerrain", type="string", length=255, nullable=false)
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z]+$/",
+     *     message="Le nom doit contenir que des lettres."
+     * )
      */
     private $nomterrain;
 
