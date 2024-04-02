@@ -13,7 +13,7 @@
         </tr>
         <tr>
             <th>Datepayment</th>
-            <td>{{ payment.datepayment }}</td>
+            <td>{{ payment.datepayment ? payment.datepayment.format('Y-m-d') : '' }}</td>
         </tr>
         <tr>
             <th>Horairepayment</th>
@@ -30,5 +30,5 @@
 
 <a href="{{ path('app_payment_edit', {'idpayment': payment.idpayment}) }}">edit</a>
 
-{{ include('Back/GestionReservation/payment/_delete_form.html.twig') }}
+<!--{{ include('Back/GestionReservation/payment/_delete_form.html.twig') }} -->
 {% endblock %}
