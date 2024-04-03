@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Reservation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Terrain;
+use App\Repository\TerrainRepository;
 
 /**
  * @extends ServiceEntityRepository<Reservation>
@@ -54,4 +56,12 @@ class ReservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    // generate function to return terrain  that are disponible in a specific date and time and terrains
+    // from table terrain and reservation 
+
+    
+
+
+   
 }

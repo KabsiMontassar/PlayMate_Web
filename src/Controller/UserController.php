@@ -82,10 +82,6 @@ class UserController extends AbstractController
         if ($form2->isSubmitted() && $form2->isValid()) {
 
            
-        
-           
-         
-       
             // Process form 2 (update user password)
            if($form2->get('CurrentPassword')->getData() == $user ->getPassword()){
 
