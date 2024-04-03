@@ -82,9 +82,12 @@ class HomeController extends AbstractController
     #[Route('/Reservation', name: 'app_Reservation', methods: ['GET', 'POST'])]
     public function Reservation( EntityManagerInterface $entityManager): Response
     {
-       
+        $terrainRepository = $entityManager->getRepository(Terrain::class);
+        $terrains = $terrainRepository->findAll();
 
         return $this->render('Front/reservation.html.twig', [
+             
+                'terrains' => $terrains,
           
            
             
