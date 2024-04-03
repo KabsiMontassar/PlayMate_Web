@@ -10,7 +10,8 @@
 
    {% if error %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>{{ error.messageKey|trans(error.messageData, 'security') }}</strong>
+        <strong>Invalid Password or Email ! Please try again. 
+        </strong>
         
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -41,7 +42,7 @@
 
     <h1 class="card-title text-center pb-0 fs-4">Please sign in</h1>
     <label for="inputEmail" class="form-label">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email"  required autofocus>
     <label for="inputPassword" class="form-label">Password</label>
     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
@@ -52,6 +53,14 @@
     <button class="btn btn-lg btn-primary" type="submit">
         Sign in
     </button>
+
+    {# {% if error %}
+   
+    <span> <a href="{{ path('app_forgot_password') }}">Forgot your password ?</a></span>
+{% endif %} #}
+
+
+<span>Don't have an account yet? <a href="{{ path('app_register') }}">Register</a></span>
 </form>
  </div>
               </div>

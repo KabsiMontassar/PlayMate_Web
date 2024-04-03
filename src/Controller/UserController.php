@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
+use App\Form\ForgetPasswordType;
 use App\Form\Login;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,7 +41,7 @@ class UserController extends AbstractController
 
   
     #[Route('/profile', name: 'app_user_profile', methods: ['GET', 'POST'])]
-    public function profile(Security $security,Request $request, EntityManagerInterface $entityManager): Response
+    public function profile(UserPasswordEncoderInterface $encoder,Security $security,Request $request, EntityManagerInterface $entityManager): Response
     {
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
@@ -77,10 +78,29 @@ class UserController extends AbstractController
                 $newFilename
             );
 
+            $this->addFlash('success', 'Profile updated successfully');
+
         }
       
         if ($form2->isSubmitted() && $form2->isValid()) {
 
+
+            if ($form2->get('NewPassword')->getData() == $form2->get('ConfirmPassword')->getData()) {
+
+                if($encoder->isPasswordValid($user, $form2->get('CurrentPassword')->getData())){
+                    $user->setPassword($encoder->encodePassword($user, $form2->get('NewPassword')->getData()));
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+                    $this->addFlash('success', 'Password updated successfully');
+                } else {
+                    $this->addFlash('danger', 'Current password is incorrect');
+                }
+
+            
+            } else {
+                $this->addFlash('danger', 'New password and confirm password do not match');
+
+            }
            
             // Process form 2 (update user password)
            if($form2->get('CurrentPassword')->getData() == $user ->getPassword()){
@@ -98,7 +118,6 @@ class UserController extends AbstractController
               }
         }
         else{
-            $this->addFlash('danger', 'Current password is incorrect');
         }
     }
     
@@ -107,6 +126,47 @@ class UserController extends AbstractController
             'form1' => $form1->createView(),
             'form2' => $form2->createView(),
             'user' => $user,
+        ]);
+    }
+
+    #[Route('/forgetPassword', name: 'app_forgot_password', methods: ['GET' , 'POST'])]
+    public function forgetPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder): Response
+    {
+        $form = $this->createForm(ForgetPasswordType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $email = $form->get('email')->getData();
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+            if (!$user) {
+                $this->addFlash('danger', 'Email not found');
+                return $this->redirectToRoute('app_forgot_password');
+            } 
+        
+            //can i render the form in the same page
+            $form = $this->createForm(UserPasswordType::class);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                if ($form->get('NewPassword')->getData() == $form->get('ConfirmPassword')->getData()) {
+                    $user->setPassword($encoder->encodePassword($user, $form->get('NewPassword')->getData()));
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+                    $this->addFlash('success', 'Password updated successfully');
+                    return $this->redirectToRoute('app_login');
+                } else {
+                    $this->addFlash('danger', 'New password and confirm password do not match');
+                }
+            } else {
+                return $this->render('Back/GestionUser/ForgetPassword.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+
+
+
+
+        }
+        return $this->render('Back/GestionUser/ForgetPassword.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
     
