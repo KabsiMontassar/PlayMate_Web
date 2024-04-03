@@ -4,9 +4,3 @@
 index:
     path: /
     controller: App\Controller\HomeController::index
-    # Assuming your controller is under the Controller namespace
-app_Terrains:
-  path: /Terrains
-  methods: ['GET', 'POST']
-  controller: App\Controller\HomeController::Terrains
-
