@@ -39,9 +39,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
        
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
-        // // if ($user && $user->isIsblocked()) {
-        // //     throw new \Exception('Your account is blocked. Please contact the administrator.');
-        // // }
+    
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($request->request->get('password', '')),
@@ -62,7 +60,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         }
 
        
-      return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
+      return new RedirectResponse($this->urlGenerator->generate('app_Home'));
     }
 
     protected function getLoginUrl(Request $request): string

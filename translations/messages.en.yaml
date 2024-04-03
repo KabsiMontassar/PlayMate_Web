@@ -1,0 +1,11 @@
+# translations/messages.en.yaml
+
+invalid_email: "Invalid email address provided."
+invalid_password: "Invalid password provided."
+invalid_credentials: "Invalid email or password provided."
+
+
+
+
+
+
