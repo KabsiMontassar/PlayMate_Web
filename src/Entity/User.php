@@ -4,7 +4,10 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
 //groups = {"registration", "update_profile"  , "login"}
 /**
  * User
@@ -12,7 +15,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="user")
  * @ORM\Entity
  */
-class User
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface , PasswordAuthenticatedUserInterface
 {
     /**
      * @var int
@@ -296,5 +300,41 @@ class User
         return $this->name;
     }
 
+    private $roles;
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+   
+
+    public function getRoles(): array
+    {
+         return [$this->role];
+        // guarantee every user at least has ROLE_USER
+       
+    }
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getSalt()
+    {
+        // Leave empty unless you are using bcrypt or another hashing method that requires a salt
+    }
+
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+    }
+
+    public function getUsername()
+    {
+        return $this->email;
+    }
 
 }

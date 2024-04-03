@@ -1,0 +1,90 @@
+{% extends 'BaseBack.html.twig' %}
+{% block body %}
+ <main>
+    <div class="container">
+      <!-- ======= 
+      i want to create  div with flash message
+      ======= -->
+
+      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+    
+
+{#         
+     
+
+       <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Oh snap!</strong> Change a few things up and try submitting again.
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+ #}
+
+          
+          <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+              <div class="d-flex justify-content-center py-4">
+                <img alt="">
+                <span  class="card-title text-center pb-0 fs-4">PlayMate</span>
+              </div><!-- End Logo -->
+
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                    <p class="text-center small">Enter your Email &amp; password to login</p>
+                  </div>
+<form method="post" class="row g-3 needs-validation" novalidate>
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %}
+
+    <h1 class="card-title text-center pb-0 fs-4">Please sign in</h1>
+    <label for="inputEmail" class="form-label">Email</label>
+    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+    <label for="inputPassword" class="form-label">Password</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+    <input type="hidden" name="_csrf_token"
+           value="{{ csrf_token('authenticate') }}"
+    >
+
+    <button class="btn btn-lg btn-primary" type="submit">
+        Sign in
+    </button>
+</form>
+ </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main><!-- End #main -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('.needs-validation');
+        form.addEventListener('submit', function(event) {
+            // Remove existing error messages
+            form.querySelectorAll('.invalid-feedback').forEach(function(error) {
+                error.remove();
+            });
+
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            form.classList.add('was-validated');
+
+        
+        });
+    });
+</script>
+{% endblock %}
+

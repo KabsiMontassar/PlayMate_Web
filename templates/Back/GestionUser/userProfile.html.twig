@@ -4,8 +4,14 @@
 {% block body %}
  <header id="header" class="header fixed-top d-flex align-items-center">
 
+   
+                        {% if app.user %} 
+                        {% set user = app.user %}
+                        {% endif %}
+                        
+
     <div class="d-flex align-items-center justify-content-between">
-      <a href="{{ path('app_Home', {'id': user.id}) }}" class="logo d-flex align-items-center"> <!-- home -->
+      <a href="{{ path('app_Home') }}" class="logo d-flex align-items-center"> <!-- home -->
         <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
         <span class="d-none d-lg-block">PlayMate</span>
       </a>
@@ -33,7 +39,7 @@
             </li>
 
             <li>
-          <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_profile', {'id': user.id}) }}">
+          <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_profile') }}">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
@@ -46,7 +52,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_login') }}">
+              <a class="dropdown-item d-flex align-items-center" href="{{ path('app_login') }}">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -68,7 +74,7 @@
       <li class="nav-heading">Pages</li>
   
       <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_user_profile', {'id': user.id}) }}"> <!-- user pROFILE PAGE -->
+        <a class="nav-link" href="{{ path('app_user_profile') }}"> <!-- user pROFILE PAGE -->
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
