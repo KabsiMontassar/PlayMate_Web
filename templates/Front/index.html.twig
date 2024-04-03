@@ -2,29 +2,13 @@
 
 {% block title %}Login{% endblock %}
 {% block body %}
-  <div class="floating-user-icon d-none d-lg-block" >
-        <a href="{{ asset('Front/#') }}" class="dropdown-toggle active" data-toggle="dropdown">
-            <i class="fas fa-user"></i>
-        </a>
-        <div class="dropdown-menu border-0 rounded-0 m-0">
-{% if user.image is defined %}
-    {% set imagepath = 'uploads/images/' ~ user.image %}
-{% else %}
-    {% set imagepath = 'uploads/images/default.jpg' %}
-{% endif %}        
-            <img src="{{ asset(imagepath) }}" class="mx-auto d-block" style="width: 50px; height: auto;">
-            <h6 class="text-center my-2">{{user.name}}</h6>
-
-            <a href="{{ path('app_user_profile' , {'id': user.id}) }}" class="dropdown-item">Voir profile</a>
-            <a href="{{ path('app_user_login' , {'id': user.id}) }}" class="dropdown-item">Se déconnecter</a>
-        </div>
-    </div>
+ 
 
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
             <nav class="navbar navbar-expand-xl bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
-                <a href="{{ path('app_Home' , {'id': user.id}) }}" class="navbar-brand">
+                <a href="{{ path('app_Home' ) }}" class="navbar-brand">
                     <h1 class="m-0 text-primary"><span class="text-dark">Play</span>Mate</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -32,24 +16,28 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
-                        <a href="{{ path('app_Home' , {'id': user.id}) }}" class="nav-item nav-link active">Accueil</a>
-                        <a href="{{ path('app_Apropos' , {'id': user.id}) }}" class="nav-item nav-link">À propos</a>
-                        <a href="{{ path('app_Service' , {'id': user.id}) }}" class="nav-item nav-link">Services</a>
-                        <a href="{{ path('app_Reservation' , {'id': user.id}) }}" class="nav-item nav-link">Réservée</a>
-                        <a href="{{ path('app_Boutique' , {'id': user.id}) }}" class="nav-item nav-link">Boutique</a>
+                        <a href="{{ path('app_Home' ) }}" class="nav-item nav-link active">Accueil</a>
+                        <a href="{{ path('app_Apropos' ) }}" class="nav-item nav-link">À propos</a>
+                        <a href="{{ path('app_Service' ) }}" class="nav-item nav-link">Services</a>
+                        <a href="{{ path('app_Reservation' ) }}" class="nav-item nav-link">Réservée</a>
+                        <a href="{{ path('app_Boutique' ) }}" class="nav-item nav-link">Boutique</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                             <div class="dropdown-menu border-0 rounded-0 m-0">
-                                <a href="{{ path('app_Terrains' , {'id': user.id}) }}" class="dropdown-item">Nos Terrains</a>
-                                <a href="{{ path('app_Evenement' , {'id': user.id}) }}" class="dropdown-item">Nos Événement</a>
+                                <a href="{{ path('app_Terrains' ) }}" class="dropdown-item">Nos Terrains</a>
+                                <a href="{{ path('app_Evenement' ) }}" class="dropdown-item">Nos Événement</a>
                             </div>
                         </div>
-                        <a href="{{ path('app_Contact' , {'id': user.id}) }}" class="nav-item nav-link">Contact</a>
+                        <a href="{{ path('app_Contact' ) }}" class="nav-item nav-link">Contact</a>
                     </div>
-                    <!-- Additional navbar items for small screens -->
-                    <div class="navbar-nav ml-auto d-lg-none">
-                        <a href="{{ path('app_user_profile' , {'id': user.id}) }}" class="nav-item nav-link">Voir profile</a>
-                        <a href="{{ path('app_user_login' , {'id': user.id}) }}" class="nav-item nav-link">Se déconnecter</a>
+                      <div class="navbar-nav ml-auto d-lg-none">
+                        {% if app.user %}
+                        <a href="{{ path('app_user_profile') }}" class="nav-item nav-link">Voir profile</a>
+                        <a href="{{ path('app_logout') }}" class="nav-item nav-link">Se déconnecter</a>
+                        {% else %}
+                        <a href="{{ path('app_login') }}" class="nav-item nav-link">Se connecter</a>
+                        <a href="{{ path('app_register') }}" class="nav-item nav-link">S'inscrire</a>
+                        {% endif %}
                     </div>
                 </div>
             </nav>
@@ -70,7 +58,7 @@
                         <div class="p-3" style="max-width: 900px;">
                             <h4 class="text-white text-uppercase mb-md-3">Réservez & jouer</h4>
                             <h1 class="display-3 text-white mb-md-4">Rejoignez-nous sur le terrain de jeu !</h1>
-                            <a href="{{ path('app_Reservation' , {'id': user.id}) }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Réserver sans tarder</a>
+                            <a href="{{ path('app_Reservation' ) }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Réserver sans tarder</a>
                         </div>
                     </div>
                 </div>
@@ -80,7 +68,7 @@
                         <div class="p-3" style="max-width: 900px;">
                             <h4 class="text-white text-uppercase mb-md-3">Réservez & jouer</h4>
                             <h1 class="display-3 text-white mb-md-4">Jouez avec nous et marquez des buts !</h1>
-                            <a href="{{ path('app_Reservation' , {'id': user.id}) }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Réserver sans tarder</a>
+                            <a href="{{ path('app_Reservation' ) }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Réserver sans tarder</a>
                         </div>
                     </div>
                 </div>
@@ -124,7 +112,7 @@
                             <img class="img-fluid" src="{{ asset('Front/img/about-2.jpg ') }}" alt="">
                         </div>
                     </div>
-                    <a href="{{ path('app_Reservation' , {'id': user.id}) }}" class="btn btn-primary mt-1">Réservée Maintenant</a>
+                    <a href="{{ path('app_Reservation' ) }}" class="btn btn-primary mt-1">Réservée Maintenant</a>
                 </div>
             </div>
         </div>
@@ -231,7 +219,7 @@
                                 <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>3 days</small>
                                 <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2 Person</small>
                             </div>
-                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' , {'id': user.id}) }}">Discover amazing places of the world with us</a>
+                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' ) }}">Discover amazing places of the world with us</a>
                             <div class="border-top mt-4 pt-4">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6>
@@ -250,7 +238,7 @@
                                 <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>3 days</small>
                                 <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2 Person</small>
                             </div>
-                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' , {'id': user.id}) }}">Discover amazing places of the world with us</a>
+                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' ) }}">Discover amazing places of the world with us</a>
                             <div class="border-top mt-4 pt-4">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6>
@@ -269,7 +257,7 @@
                                 <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>3 days</small>
                                 <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2 Person</small>
                             </div>
-                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' , {'id': user.id}) }}">Discover amazing places of the world with us</a>
+                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' ) }}">Discover amazing places of the world with us</a>
                             <div class="border-top mt-4 pt-4">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6>
@@ -288,7 +276,7 @@
                                 <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>3 days</small>
                                 <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2 Person</small>
                             </div>
-                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' , {'id': user.id}) }}">Discover amazing places of the world with us</a>
+                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' ) }}">Discover amazing places of the world with us</a>
                             <div class="border-top mt-4 pt-4">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6>
@@ -307,7 +295,7 @@
                                 <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>3 days</small>
                                 <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2 Person</small>
                             </div>
-                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' , {'id': user.id}) }}">Discover amazing places of the world with us</a>
+                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' ) }}">Discover amazing places of the world with us</a>
                             <div class="border-top mt-4 pt-4">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6>
@@ -326,7 +314,7 @@
                                 <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>3 days</small>
                                 <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2 Person</small>
                             </div>
-                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' , {'id': user.id}) }}">Discover amazing places of the world with us</a>
+                            <a class="h5 text-decoration-none" href="{{ path('app_Boutique' ) }}">Discover amazing places of the world with us</a>
                             <div class="border-top mt-4 pt-4">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6>

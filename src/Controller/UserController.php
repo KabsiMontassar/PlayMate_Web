@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\HomeController;
+use Symfony\Component\Security\Core\Security;
+
 #[Route('/user')]
 class UserController extends AbstractController
 {
@@ -37,12 +39,13 @@ class UserController extends AbstractController
    
 
   
-    #[Route('/{id}/profile', name: 'app_user_profile', methods: ['GET', 'POST'])]
-    public function profile(Request $request,int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/profile', name: 'app_user_profile', methods: ['GET', 'POST'])]
+    public function profile(Security $security,Request $request, EntityManagerInterface $entityManager): Response
     {
-        
-        $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->find($id);
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+  
+       
         $form1 = $this->createForm(UserUpdateType::class , $user , ['validation_groups' => ['update_profile']]);
         $form2 = $this->createForm(UserPasswordType::class  );
     
@@ -79,11 +82,6 @@ class UserController extends AbstractController
         if ($form2->isSubmitted() && $form2->isValid()) {
 
            
-        
-            $userRepository = $entityManager->getRepository(User::class);
-            $user = $userRepository->find($id);
-      
-       
             // Process form 2 (update user password)
            if($form2->get('CurrentPassword')->getData() == $user ->getPassword()){
 
@@ -95,12 +93,12 @@ class UserController extends AbstractController
                 $entityManager->flush();
                           
               }else{
-                   dd('Password does not match');
+                   $this->addFlash('danger', 'New password and confirm password do not match');
                   
               }
         }
         else{
-            dd('Current password is incorrect');
+            $this->addFlash('danger', 'Current password is incorrect');
         }
     }
     
