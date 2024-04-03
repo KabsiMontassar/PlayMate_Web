@@ -83,9 +83,8 @@ class UserController extends AbstractController
 
            
         
-            $userRepository = $entityManager->getRepository(User::class);
-            $user = $userRepository->find($id);
-      
+           
+         
        
             // Process form 2 (update user password)
            if($form2->get('CurrentPassword')->getData() == $user ->getPassword()){
@@ -98,12 +97,12 @@ class UserController extends AbstractController
                 $entityManager->flush();
                           
               }else{
-                   dd('Password does not match');
+                   $this->addFlash('danger', 'New password and confirm password do not match');
                   
               }
         }
         else{
-            dd('Current password is incorrect');
+            $this->addFlash('danger', 'Current password is incorrect');
         }
     }
     

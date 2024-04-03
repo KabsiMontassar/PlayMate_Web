@@ -322,7 +322,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSalt()
+    public function getSalt() 
     {
         // Leave empty unless you are using bcrypt or another hashing method that requires a salt
     }
