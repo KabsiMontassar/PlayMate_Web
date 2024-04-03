@@ -3,7 +3,7 @@
 {% block title %}Login{% endblock %}
 {% block body %}
 
-<link rel="stylesheet" href="Front\css\ReservationCss\choix.css">
+<link rel="stylesheet" href="{{ asset('Front/css/ReservationCss/choix.css') }}">
 
 
 <!-- Navbar Start -->
@@ -73,7 +73,7 @@
 
 <div class="container-fluid ">
     <div class="container">
-        <img class="img-fluid" id="im1" src="Front\css\ReservationCss\m.jpg" alt="">
+        <img class="img-fluid" id="im1" src="{{ asset('Front/css/ReservationCss/m.jpg') }}" alt="">
         <div class="text-overlay">
             <h3 class="display-4 text-uppercase">Reservation</h3>
             <div class="d-inline-flex">
@@ -136,7 +136,7 @@
         <div class="row destination-row" id="CreerPartie">
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="destination-item position-relative overflow-hidden mb-2" onclick="toggleRow()">
-                    <img class="img-fluid" src="Front\css\ReservationCss\lancezvous.avif" alt="">
+                    <img class="img-fluid" src="{{asset('Front/css/ReservationCss/lancezvous.avif')}}" alt="">
                     <a class="destination-overlay text-white text-decoration-none">
                         <h5 class="text-white">Créer votre partie !</h5>
                         <span></span>
@@ -146,7 +146,7 @@
             </div>
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="destination-item position-relative overflow-hidden mb-2" onclick="toggleRow()">
-                    <img class="img-fluid" src="Front\css\ReservationCss\enqueteadv.webp" alt="">
+                    <img class="img-fluid" src="{{asset('Front/css/ReservationCss/enqueteadv.webp')}}" alt="">
                     <a class="destination-overlay text-white text-decoration-none">
                         <h5 class="text-white">En quête d'adversaire</h5>
                         <span></span>
@@ -155,7 +155,7 @@
             </div>
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="destination-item position-relative overflow-hidden mb-2" onclick="toggleRow()">
-                    <img class="img-fluid" src="Front\css\ReservationCss\m.jpg" alt="">
+                    <img class="img-fluid" src="{{asset('Front/css/ReservationCss/m.jpg')}}" alt="">
                     <a class="destination-overlay text-white text-decoration-none">
                         <h5 class="text-white">Lancez-Vous</h5>
                         <span></span>
@@ -169,7 +169,7 @@
 <!-- Destination Start -->
 <script>
     function toggleRow() {
-        var row = document.querySelector(".destination-row");
+        var row = document.getElementById("CreerPartie");
         row.classList.toggle("hidden");
 
         var bookingDiv = document.getElementById("bookingDiv");
@@ -177,13 +177,14 @@
     }
 </script>
 
+
 <style>
     .backg {
-        background-image: url('C:\Users\azizb\Bureau\3eme\SymfonyProject\SpartansPIWeb\public\Front\css\ReservationCss\enqueteadv.webp');
+        background-image: url('Front/css/ReservationCss/enqueteadv.webp');
         background-size: cover;
         background-position: center;
         height: 400px;
-        /* ajustez la hauteur en fonction de vos besoins */
+
     }
 </style>
 
