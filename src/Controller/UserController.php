@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
-use App\Form\ForgetPasswordType;
+use App\Form\forgetpassword;
 use App\Form\Login;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -129,46 +129,48 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/forgetPassword', name: 'app_forgot_password', methods: ['GET' , 'POST'])]
+
+    #[Route('/forgot_password', name: 'app_forgot_password', methods: ['GET', 'POST'])]
+
     public function forgetPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder): Response
     {
-        $form = $this->createForm(ForgetPasswordType::class);
+        $form = $this->createForm(forgetpassword::class);
         $form->handleRequest($request);
+
+
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            $email = $form->get('email')->getData();
-            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+            $user = $entityManager->getRepository(User::class)->findOneByEmail($form->get('email')->getData());
+           
+            
             if (!$user) {
                 $this->addFlash('danger', 'Email not found');
+                dd($user);
                 return $this->redirectToRoute('app_forgot_password');
-            } 
-        
-            //can i render the form in the same page
-            $form = $this->createForm(UserPasswordType::class);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                if ($form->get('NewPassword')->getData() == $form->get('ConfirmPassword')->getData()) {
-                    $user->setPassword($encoder->encodePassword($user, $form->get('NewPassword')->getData()));
-                    $entityManager->persist($user);
-                    $entityManager->flush();
-                    $this->addFlash('success', 'Password updated successfully');
-                    return $this->redirectToRoute('app_login');
-                } else {
-                    $this->addFlash('danger', 'New password and confirm password do not match');
-                }
-            } else {
-                return $this->render('Back/GestionUser/ForgetPassword.html.twig', [
-                    'form' => $form->createView(),
-                ]);
             }
-
-
-
-
+            
+            if ($user->getVerificationCode() != $form->get('verificationCode')->getData()) {
+                $this->addFlash('danger', 'Verification code is incorrect');
+                return $this->redirectToRoute('app_forgot_password');
+            }
+    
+            if ($form->get('Newpassword')->getData() != $form->get('Confirmpassword')->getData()) {
+                $this->addFlash('danger', 'New password and confirm password do not match');
+                return $this->redirectToRoute('app_forgot_password');
+            }
+    
+            $user->setPassword($encoder->encodePassword($user, $form->get('Confirmpassword')->getData()));
+            $entityManager->persist($user);
+            $entityManager->flush();
+            $this->addFlash('success', 'Password updated successfully');
+            return $this->redirectToRoute('app_login');
         }
+    
         return $this->render('Back/GestionUser/ForgetPassword.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+    
     
 
 
