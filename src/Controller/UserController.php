@@ -148,7 +148,7 @@ class UserController extends AbstractController
                 dd($user);
                 return $this->redirectToRoute('app_forgot_password');
             }
-            
+
             if ($user->getVerificationCode() != $form->get('verificationCode')->getData()) {
                 $this->addFlash('danger', 'Verification code is incorrect');
                 return $this->redirectToRoute('app_forgot_password');
@@ -172,6 +172,21 @@ class UserController extends AbstractController
     }
     
     
+
+
+// #[Route('/check-email', name: 'check_email', methods: ['POST'])]
+// public function checkEmailValidity(Request $request): Response
+// {
+//     $email = $request->request->get('email');
+//     // Perform validation logic here (e.g., check if the email exists in the database)
+
+//     // Dummy validation logic (replace with your actual validation logic)
+//     if ($email === 'valid@example.com') {
+//         return new Response('valid', Response::HTTP_OK);
+//     } else {
+//         return new Response('invalid', Response::HTTP_BAD_REQUEST);
+//     }
+// }
 
 
 
