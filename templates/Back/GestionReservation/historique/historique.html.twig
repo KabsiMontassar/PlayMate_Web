@@ -40,22 +40,22 @@
         </li>
 
         <!-- End Nav Item -->
-         <li class="nav-heading">GestionTerrain</li>
+        <li class="nav-heading">GestionTerrain</li>
         <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Terrain</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Avis</span>
-      </a>
-    </li>
+            <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}">
+                <i class="bi bi-grid"></i>
+                <span>Terrain</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_avis_index') }}">
+                <i class="bi bi-grid"></i>
+                <span>Avis</span>
+            </a>
+        </li>
 
-    <!-- End Nav Item -->
-      <li class="nav-heading">Gestion Reservation</li>
+        <!-- End Nav Item -->
+        <li class="nav-heading">Gestion Reservation</li>
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ path('app_reservation_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
@@ -83,7 +83,7 @@
 
         <!-- End Nav Item -->
         <li class="nav-heading">Gestion Evenement</li>
-          <li class="nav-item">
+        <li class="nav-item">
             <a class="nav-link collapsed " href="{{ path('app_tournoi_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
                 <span>Tournoi</span>
@@ -95,7 +95,7 @@
                 <span>Participation</span>
             </a>
         </li>
-<!-- End Nav Item -->
+        <!-- End Nav Item -->
     </ul>
 
 </aside>
@@ -119,19 +119,24 @@
         <table class="table datatable">
             <thead>
                 <tr>
-                    <th>Idhistorique</th>
-
-                    <th>actions</th>
+                    <th>Historique ID</th>
+                    <th>Reservation ID</th>
+                    <th>Date Reservation</th>
+                    <th>Heure Reservation</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for historique in historiques %}
                 <tr>
                     <td>{{ historique.idhistorique }}</td>
+                    <td>{{ historique.reservation.idreservation }}</td>
+                    <td>{{ historique.reservation.datereservation|date('Y-m-d') }}</td>
+                    <td>{{ historique.reservation.heurereservation }}</td>
 
                     <td>
-                        <a href="{{ path('app_historique_show', {'idhistorique': historique.idhistorique}) }}">show</a>
-                        <a href="{{ path('app_historique_edit', {'idhistorique': historique.idhistorique}) }}">edit</a>
+                        <a href="{{ path('app_historique_show', {'idhistorique': historique.idhistorique}) }}"> show</a>
+
                     </td>
                 </tr>
                 {% else %}
@@ -141,7 +146,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path('app_historique_new') }}">Create new</a>
+
     </section>
 
 </main>

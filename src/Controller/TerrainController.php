@@ -24,24 +24,45 @@ class TerrainController extends AbstractController
 
     #[Route('/new', name: 'app_terrain_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $terrain = new Terrain();
-        $form = $this->createForm(TerrainType::class, $terrain);
-        $form->handleRequest($request);
+{
+    $terrain = new Terrain();
+    $form = $this->createForm(TerrainType::class, $terrain);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) { 
-            $entityManager->persist($terrain);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Gérer l'upload de l'image
+        $imageFile = $form['image']->getData();
+        if ($imageFile) {
+            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+            $imageFile->move(
+                $this->getParameter('terrain_images_directory'),
+                $newFilename
+            );
+            $terrain->setImage($newFilename);
         }
 
-        return $this->renderForm('Back/Terrains/terrain/new.html.twig', [
-            'terrain' => $terrain,
-            'form' => $form,
-        ]);
+        // Gérer l'upload de la vidéo
+        $videoFile = $form['video']->getData();
+        if ($videoFile) {
+            $newFilename = uniqid().'.'.$videoFile->guessExtension();
+            $videoFile->move(
+                $this->getParameter('terrain_videos_directory'),
+                $newFilename
+            );
+            $terrain->setVideo($newFilename);
+        }
+
+        $entityManager->persist($terrain);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    return $this->renderForm('Back/Terrains/terrain/new.html.twig', [
+        'terrain' => $terrain,
+        'form' => $form,
+    ]);
+}
     #[Route('/{id}', name: 'app_terrain_show', methods: ['GET'])]
     public function show(Terrain $terrain): Response
     {
@@ -55,18 +76,45 @@ class TerrainController extends AbstractController
     {
         $form = $this->createForm(TerrainType::class, $terrain);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
+            // Gérer l'upload de l'image
+            $imageFile = $form['image']->getData();
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                $imageFile->move(
+                    $this->getParameter('terrain_images_directory'),
+                    $newFilename
+                );
+                $terrain->setImage($newFilename);
+            }
+    
+            // Gérer l'upload de la vidéo
+            $videoFile = $form['video']->getData();
+            if ($videoFile) {
+                $newFilename = uniqid().'.'.$videoFile->guessExtension();
+                $videoFile->move(
+                    $this->getParameter('terrain_videos_directory'),
+                    $newFilename
+                );
+                $terrain->setVideo($newFilename);
+            }
+    
             $entityManager->flush();
-
+    
             return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        return $this->renderForm('Back/Terrains/terrain/edit.html.twig', [
+    
+        // Pré-remplir les champs image et vidéo avec leurs valeurs existantes
+        $terrain->setImage($terrain->getImage());
+        $terrain->setVideo($terrain->getVideo());
+    
+        return $this->render('Back/Terrains/terrain/edit.html.twig', [
             'terrain' => $terrain,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_terrain_delete', methods: ['POST'])]
     public function delete(Request $request, Terrain $terrain, EntityManagerInterface $entityManager): Response
