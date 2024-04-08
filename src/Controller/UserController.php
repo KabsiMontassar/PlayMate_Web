@@ -132,62 +132,86 @@ class UserController extends AbstractController
 
     #[Route('/forgot_password', name: 'app_forgot_password', methods: ['GET', 'POST'])]
 
-    public function forgetPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder): Response
+    public function forgetPassword(): Response
     {
-        $form = $this->createForm(forgetpassword::class);
-        $form->handleRequest($request);
-
-
     
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = $entityManager->getRepository(User::class)->findOneByEmail($form->get('email')->getData());
-           
-            
-            if (!$user) {
-                $this->addFlash('danger', 'Email not found');
-                dd($user);
-                return $this->redirectToRoute('app_forgot_password');
-            }
-
-            if ($user->getVerificationCode() != $form->get('verificationCode')->getData()) {
-                $this->addFlash('danger', 'Verification code is incorrect');
-                return $this->redirectToRoute('app_forgot_password');
-            }
-    
-            if ($form->get('Newpassword')->getData() != $form->get('Confirmpassword')->getData()) {
-                $this->addFlash('danger', 'New password and confirm password do not match');
-                return $this->redirectToRoute('app_forgot_password');
-            }
-    
-            $user->setPassword($encoder->encodePassword($user, $form->get('Confirmpassword')->getData()));
-            $entityManager->persist($user);
-            $entityManager->flush();
-            $this->addFlash('success', 'Password updated successfully');
-            return $this->redirectToRoute('app_login');
-        }
-    
-        return $this->render('Back/GestionUser/ForgetPassword.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->render('Back/GestionUser/ForgetPassword.html.twig');
     }
     
     
 
 
-// #[Route('/check-email', name: 'check_email', methods: ['POST'])]
-// public function checkEmailValidity(Request $request): Response
-// {
-//     $email = $request->request->get('email');
-//     // Perform validation logic here (e.g., check if the email exists in the database)
 
-//     // Dummy validation logic (replace with your actual validation logic)
-//     if ($email === 'valid@example.com') {
-//         return new Response('valid', Response::HTTP_OK);
-//     } else {
-//         return new Response('invalid', Response::HTTP_BAD_REQUEST);
-//     }
-// }
+#[Route('/resetpassword/{email}', name: 'app_reset_password_email', methods: ['POST'])]
+public function resetPasswordEmail(Request $request, EntityManagerInterface $entityManager): Response
+{
 
+    $email = $request->attributes->get('email');
+
+    $user = $entityManager->getRepository(User::class)->findOneByEmail($email);
+    if ($user) {
+        // Generate and save a verification code
+       
+        
+        // Send an email to the user with the verification code 
+        
+      
+      
+
+        return new Response('Verification code sent successfully', Response::HTTP_OK);
+    } else {
+      
+        return new Response('Email not found', Response::HTTP_OK);
+    }
+}
+
+#[Route('/resetpassword/{email}/{code}', name: 'app_reset_password_verification_code', methods: ['POST'])]
+public function resetPasswordVerificationCode(Request $request, EntityManagerInterface $entityManager): Response
+{
+  
+    $email = $request->attributes->get('email');
+    $verificationCode = $request->attributes->get('code');
+
+
+    $user = $entityManager->getRepository(User::class)->findOneByEmail($email);
+    if ($user && $user->getVerificationCode() == $verificationCode) {
+       
+  
+
+        return new Response('Verification successful', Response::HTTP_OK);
+    } else {
+       
+        return new Response('Verification failed', Response::HTTP_OK);
+    }
+}
+
+#[Route('/resetpassword/{email}/{code}/{newpassword}/{confirmpassword}', name: 'app_reset_password_complete', methods: ['POST'])]
+public function resetPasswordComplete(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder): Response
+{
+    $email = $request->attributes->get('email');
+    $verificationCode = $request->attributes->get('code');
+    $newPassword = $request->attributes->get('newpassword');
+    $confirmPassword = $request->attributes->get('confirmpassword');
+
+    // Retrieve the user based on the email
+    $user = $entityManager->getRepository(User::class)->findOneByEmail($email);
+    
+    
+            // Update user's password
+            $user->setPassword($encoder->encodePassword($user, $newPassword));
+            $entityManager->flush();
+            
+            // Clear the verification code
+          //  $user->setVerificationCode(null);
+         //   $entityManager->flush();
+
+          
+            return new Response('Password reset successfully', Response::HTTP_OK);
+            
+
+      
+   
+}
 
 
 }
