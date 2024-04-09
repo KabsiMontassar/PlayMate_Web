@@ -1,6 +1,6 @@
 {% extends 'BaseBack.html.twig' %}
 
-{% block title %}Users{% endblock %}
+{% block title %}Equipes{% endblock %}
 {% block body %}
  <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -81,14 +81,14 @@
       <li class="nav-heading">Pages</li>
   
       <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_user_profile') }}"> <!-- user pROFILE PAGE -->
+        <a class="nav-link collapsed" href="{{ path('app_user_profile') }}"> <!-- user pROFILE PAGE -->
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
       </li>
-        <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ path('app_equipe_profile') }}"> <!-- user pROFILE PAGE -->
-          <i class="ri-football-line"></i>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('app_equipe_profile') }}"> <!-- user pROFILE PAGE -->
+          <i class="bi bi-person"></i>
           <span>Equipe</span>
         </a>
       </li>
@@ -110,11 +110,11 @@
 {% endfor %}
 
     <div class="pagetitle">
-      <h1>Profile Page</h1>
+      <h1>Equipe Page</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
-          <li class="breadcrumb-item active">Profile</li>
+          <li class="breadcrumb-item active">Equipe</li>
           
         </ol>
       </nav>
@@ -122,17 +122,7 @@
 
     <section class="section profile">
       <div class="row">
-        <div class="col-xl-4">
-
-          <div class="card">
-            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-              <img src="{{  asset(imagePath) }}" alt="Profile" class="rounded-circle">
-              <h2>{{ user.Name }}</h2>
-              <h3>{{ user.Role }}</h3>
-            </div>
-          </div>
-
-        </div>
+      
 
         <div class="col-xl-8">
 
@@ -142,66 +132,53 @@
               <ul class="nav nav-tabs nav-tabs-bordered">
 
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#Equipes">Equipes</button>
                 </li>
 
                 <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
-                </li>
-
-                <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#Membres">Membre</button>
                 </li>
 
               </ul>
               <div class="tab-content pt-2">
 
-                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                <div class="tab-pane fade show active Equipes" id="Equipes">
 
-                  <h5 class="card-title">Profile Details</h5>
+                  <h5 class="card-title">Equipes</h5>
 
            
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Name</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Name }}</div>
-                </div>
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Email</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Email }}</div>
-                </div>
-
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Age</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Age }}</div>
-                </div>
-                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Phone</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Phone }}</div>
-                </div>
-                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Address</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Address }}</div>
-                </div>
+               <p>
+               
+ {% for equipe in equipes %}
+            <tr>
+                <td>{{ equipe.idequipe }}</td>
+                <td>{{ equipe.nomequipe }}</td>
+                <td>{{ equipe.nbrejoueur }}</td>
+                <td>
+                    <a href="{{ path('app_equipe_show', {'idequipe': equipe.idequipe}) }}">show</a>
+                  
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}             </p>
                 
                 </div>
 
-                <div class="tab-pane fade profile-edit pt-1" id="profile-edit">
+                <div class="tab-pane fade Membres pt-1" id="Membres">
 
-                                  <h5 class="card-title">Update Profile</h5>
-
-                      {{ include('Back/GestionUser/FormTemplates/_formedit.html.twig' , {'button_label': 'Update'} )  }}
-
-                </div>
-
-
-                <div class="tab-pane fade pt-1" id="profile-change-password">
-
-                                  <h5 class="card-title">Update Password</h5>
-
-                  <!-- Change Password Form -->
-                   {{ include('Back/GestionUser/FormTemplates/_formpassword.html.twig' , {'button_label': 'Update'} ) }}
+                                  <h5 class="card-title">Membres</h5>
+  <p>
+               
+               lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa.
+               </p>
 
                 </div>
+
+
+              
 
               </div>
 

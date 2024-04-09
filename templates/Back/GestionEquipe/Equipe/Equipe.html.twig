@@ -84,7 +84,7 @@
         <!-- End Nav Item -->
         <li class="nav-heading">Gestion Evenement</li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ path('app_tournoi_index') }}"> <!-- user pROFILE PAGE -->
+            <a class="nav-link collapsed" href="{{ path('app_tournoi_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
                 <span>Tournoi</span>
             </a>
@@ -95,10 +95,10 @@
                 <span>Participation</span>
             </a>
         </li>
-            <li class="nav-heading">Gestion Equipe</li>
+           <li class="nav-heading">Gestion Equipe</li>
          
           <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ path('app_equipe_index') }}"> <!-- user pROFILE PAGE -->
+            <a class="nav-link" href="{{ path('app_equipe_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
                 <span>Equipe</span>
             </a>
@@ -129,44 +129,35 @@
     <!-- End Page Title -->
 
     <section class="section">
-        <table class="table datatable">
-            <thead>
+      <table class="table data-table">
+        <thead>
             <tr>
-                <th>Id</th>
-                <th>Nbmaxequipe</th>
-                <th>Nom</th>
-                <th>Affiche</th>
-                <th>Address</th>
-                <th>Datedebut</th>
-                <th>Datefin</th>
-                <th>Visite</th>
+                <th>Idequipe</th>
+                <th>Nomequipe</th>
+                <th>Nbrejoueur</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for tournoi in tournois %}
+        {% for equipe in equipes %}
             <tr>
-                <td>{{ tournoi.id }}</td>
-                <td>{{ tournoi.nbmaxequipe }}</td>
-                <td>{{ tournoi.nom }}</td>
-                <td>{{ tournoi.affiche }}</td>
-                <td>{{ tournoi.address }}</td>
-                <td>{{ tournoi.datedebut ? tournoi.datedebut|date('Y-m-d') : '' }}</td>
-                <td>{{ tournoi.datefin ? tournoi.datefin|date('Y-m-d') : '' }}</td>
-                <td>{{ tournoi.visite }}</td>
+                <td>{{ equipe.idequipe }}</td>
+                <td>{{ equipe.nomequipe }}</td>
+                <td>{{ equipe.nbrejoueur }}</td>
                 <td>
-                    <a href="{{ path('app_tournoi_show', {'id': tournoi.id}) }}">show</a>
-                    <a href="{{ path('app_tournoi_edit', {'id': tournoi.id}) }}">edit</a>
+                    <a href="{{ path('app_equipe_show', {'idequipe': equipe.idequipe}) }}">show</a>
+                    <a href="{{ path('app_equipe_edit', {'idequipe': equipe.idequipe}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="9">no records found</td>
+                <td colspan="4">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
-        </table>
-    <a href="{{ path('app_tournoi_new') }}">Create new</a>
+    </table>
+
+    <a href="{{ path('app_equipe_new') }}">Create new</a>
     </section>
 
 </main>

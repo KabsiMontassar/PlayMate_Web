@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Equipe;
 use App\Form\UserType;
 use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
@@ -18,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\HomeController;
 use Symfony\Component\Security\Core\Security;
+
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -212,7 +214,28 @@ public function resetPasswordComplete(Request $request, EntityManagerInterface $
       
    
 }
+ #[Route('/equipe', name: 'app_equipe_profile', methods: ['GET'])]
+    public function equipe(Security $security, EntityManagerInterface $entityManager): Response
+    {
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
 
+ 
+        $Equipes = $entityManager->getRepository(Equipe::class)->findEquipeByUser($user->getId());
+
+        
+  
+       
+      
+        return $this->render('Back/GestionEquipe/Equipe/EquipeProfile.html.twig', [
+           
+          //  'Equipes' => $Equipes,
+            'user'=> $user,
+            'equipes' => $Equipes,
+            
+
+        ]);
+    }
 
 }
 

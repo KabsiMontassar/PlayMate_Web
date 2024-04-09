@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<title>Equipe</title>
+
+{% block body %}
+    <h1>Equipe</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idequipe</th>
+                <td>{{ equipe.idequipe }}</td>
+            </tr>
+            <tr>
+                <th>Nomequipe</th>
+                <td>{{ equipe.nomequipe }}</td>
+            </tr>
+            <tr>
+                <th>Nbrejoueur</th>
+                <td>{{ equipe.nbrejoueur }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_equipe_index') }}">back to list</a>
+
+    <a href="{{ path('app_equipe_edit', {'idequipe': equipe.idequipe}) }}">edit</a>
+
+    {{ include('Back/Gestionequipe/Equipe/_delete_form.html.twig') }}
+{% endblock %}
