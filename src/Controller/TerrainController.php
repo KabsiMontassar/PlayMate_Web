@@ -28,9 +28,12 @@ class TerrainController extends AbstractController
     $terrain = new Terrain();
     $form = $this->createForm(TerrainType::class, $terrain);
     $form->handleRequest($request);
+    if ($form->isSubmitted()) {
+        $formdata = $form->getdata();
+       
 
-    if ($form->isSubmitted() && $form->isValid()) {
         // Gérer l'upload de l'image
+    
         $imageFile = $form['image']->getData();
         if ($imageFile) {
             $newFilename = uniqid().'.'.$imageFile->guessExtension();
@@ -38,7 +41,7 @@ class TerrainController extends AbstractController
                 $this->getParameter('terrain_images_directory'),
                 $newFilename
             );
-            $terrain->setImage($newFilename);
+            $formdata->setImage($newFilename);
         }
 
         // Gérer l'upload de la vidéo
@@ -49,9 +52,8 @@ class TerrainController extends AbstractController
                 $this->getParameter('terrain_videos_directory'),
                 $newFilename
             );
-            $terrain->setVideo($newFilename);
+            $formdata->setVideo($newFilename);
         }
-
         $entityManager->persist($terrain);
         $entityManager->flush();
 
