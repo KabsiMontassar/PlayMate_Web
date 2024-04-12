@@ -39,7 +39,6 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      *   groups = {"registration", "login"}
      * )
      * 
-     * 
      */
     private $email;
 

@@ -29,6 +29,8 @@ class TerrainController extends AbstractController
     $form = $this->createForm(TerrainType::class, $terrain);
     $form->handleRequest($request);
 
+    
+
     if ($form->isSubmitted() && $form->isValid()) {
         // Gérer l'upload de l'image
         $imageFile = $form['image']->getData();
@@ -57,7 +59,8 @@ class TerrainController extends AbstractController
 
         return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
     }
-
+// get durre terrain from terain by id 
+ 
     return $this->renderForm('Back/Terrains/terrain/new.html.twig', [
         'terrain' => $terrain,
         'form' => $form,
@@ -66,6 +69,9 @@ class TerrainController extends AbstractController
     #[Route('/{id}', name: 'app_terrain_show', methods: ['GET'])]
     public function show(Terrain $terrain): Response
     {
+
+
+        // get durre terrain from terain by id
         return $this->render('Back/Terrains/terrain/show.html.twig', [
             'terrain' => $terrain,
         ]);
@@ -119,6 +125,7 @@ class TerrainController extends AbstractController
     #[Route('/{id}', name: 'app_terrain_delete', methods: ['POST'])]
     public function delete(Request $request, Terrain $terrain, EntityManagerInterface $entityManager): Response
     {
+        
         if ($this->isCsrfTokenValid('delete'.$terrain->getId(), $request->request->get('_token'))) {
             $entityManager->remove($terrain);
             $entityManager->flush();

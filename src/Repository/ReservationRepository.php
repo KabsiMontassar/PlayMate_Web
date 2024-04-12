@@ -57,8 +57,6 @@ class ReservationRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // generate function to return terrain  that are disponible in a specific date and time and terrains
-    // from table terrain and reservation 
 
     
 
