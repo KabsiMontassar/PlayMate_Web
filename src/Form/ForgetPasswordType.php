@@ -17,28 +17,28 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 
-class UserType extends AbstractType
+class ForgetPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
-            ->add('password')
-            ->add('name')
-            ->add('role', ChoiceType::class, [
-                'choices' => [
-                    'Membre' => 'Membre',
-                    'Organisateur' => 'Organisateur',
-                    'Propriétaire de Terrain' => 'Proprietaire de Terrain',
-                    'Fournisseur' => 'Fournisseur',
+            ->add('verificationcode', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter the verification code',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Your verification code should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
                 ],
-                'data' => 'Membre', // Set Option A as the default choice
+                'mapped' => false,
+            ]) 
+             ;
 
-                'expanded' => true,
-                'multiple' => false,
-            ])        ;
-
-            //how to acces this in twig ? :
+        
     }
 
     public function configureOptions(OptionsResolver $resolver): void
