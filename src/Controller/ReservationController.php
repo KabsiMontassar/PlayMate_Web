@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Form\ReservationType;
+use App\Controller\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/reservation')]
@@ -77,5 +79,31 @@ class ReservationController extends AbstractController
         }
 
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/getTerrain/{choix}/{idTerrain}/{date}/{horaire}', name: 'app_reservation_getTerrain', methods: ['POST'])]
+    public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        // Effectuer la logique de vérification de disponibilité du terrain
+        $terrainDisponible = $entityManager->getRepository(Reservation::class)->verifierDisponibleTerrain($idTerrain, $horaire, $date, $entityManager);
+
+        // Retourner une réponse JSON en fonction du résultat de la vérification
+        if ($terrainDisponible) {
+            $reservation = new Reservation();
+            $reservation->setIsconfirm(false);
+            $reservation->setDatereservation($date);
+            $reservation->setHeurereservation($horaire);
+            $reservation->setType($choix);
+            $reservation->setIdterrain($idTerrain);
+
+            $entityManager->persist($reservation);
+            $entityManager->flush();
+
+            return new Response('Terrain disponible', Response::HTTP_OK);
+        } else {
+            return new Response('Terrain non disponible', Response::HTTP_OK);
+        }
     }
 }

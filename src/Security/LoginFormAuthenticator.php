@@ -18,6 +18,7 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use App\Repository\UserRepository;
 
 
+
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
@@ -67,4 +68,9 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
+
+    public function forgotPassword(Request $request, UserRepository $userRepository )
+    {
+    }
+    
 }

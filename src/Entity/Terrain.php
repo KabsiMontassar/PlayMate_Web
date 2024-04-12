@@ -112,7 +112,6 @@ class Terrain
      * @var \User
      *
      * @ORM\ManyToOne(targetEntity="User")
-     * @Assert\NotBlank(message="Veuillez entrez l'id du proprietaire'")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idprop", referencedColumnName="id")
      * })

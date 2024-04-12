@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * User
  *
- * @ORM\Table(name="user")
+ * @ORM\Table(name="User", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
  * @ORM\Entity
  */
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -113,7 +113,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     /**
      * @var string|null
      *
-     * @ORM\Column(name="Image", type="string", length=255, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="Image", type="string", length=255, nullable=true, options={"NULL"})
      */
     private $image = NULL;
 
@@ -297,7 +297,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
 
     public function __toString()
     {
-        return $this->name;
+        return $this->id;
     }
 
     private $roles;
@@ -336,5 +336,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
+
+   
 
 }

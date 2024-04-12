@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Terrain;
 use App\Repository\TerrainRepository;
+use DateTime;
 
 /**
  * @extends ServiceEntityRepository<Reservation>
@@ -60,8 +61,43 @@ class ReservationRepository extends ServiceEntityRepository
     // generate function to return terrain  that are disponible in a specific date and time and terrains
     // from table terrain and reservation 
 
-    
 
+    public function verifierDisponibleTerrain($idTerrain, $heure, $date, $entityManager): bool
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->andWhere('r.idTerrain = :idTerrain')
+            ->setParameter('idTerrain', $idTerrain)
+            ->andWhere('r.dateReservation = :date')
+            ->setParameter('date', $date)
+            ->getQuery();
 
-   
+        $reservations = $qb->getResult();
+
+        if (empty($reservations)) {
+            return true;
+        }
+
+        foreach ($reservations as $reservation) {
+            if ($reservation->getDateReservation() === $date) {
+                $heureMatchReserve = new DateTime($reservation->getHeureReservation());
+                $heureNouveauMatch = new DateTime($heure);
+
+                $duree = $entityManager->getRepository(Terrain::class)->findOneBy($idTerrain)->getDuree();
+                $seCroisent = $this->verifCroisementHoraire($heureMatchReserve, $duree, $heureNouveauMatch);
+                if ($seCroisent) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function verifCroisementHoraire(DateTime $heureMatchReserve, $dureeAnnoce, DateTime $heureNouveauMatch): bool
+    {
+        $finReserve = $heureMatchReserve->modify("+ $dureeAnnoce minutes");
+        $finNouveau = $heureNouveauMatch->modify("+ $dureeAnnoce minutes");
+
+        return !($finReserve < $heureNouveauMatch || $finNouveau < $heureMatchReserve);
+    }
 }
