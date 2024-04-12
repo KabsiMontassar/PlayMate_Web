@@ -32,7 +32,7 @@ class TerrainType extends AbstractType
             'required' => false,
         ])
         ->add('idprop')
-    ;
+     ;
 }
 
     public function configureOptions(OptionsResolver $resolver): void
