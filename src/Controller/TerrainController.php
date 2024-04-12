@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Terrain;
+
+use App\Entity\Avis;
 use App\Form\TerrainType;
+use App\Form\AvisType;
 use App\Repository\TerrainRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,20 +20,47 @@ class TerrainController extends AbstractController
     #[Route('/', name: 'app_terrain_index', methods: ['GET'])]
     public function index(TerrainRepository $terrainRepository): Response
     {
+
+        // Récupérer les terrains avec le statut "disponible"
+        $terrainsDisponibles = $terrainRepository->findBy(['status' => true]);
+
         return $this->render('Back/Terrains/terrain/index.html.twig', [
             'terrains' => $terrainRepository->findAll(),
         ]);
     }
+ /**
+     * @Route("/terrain/{id}", name="app_terrain_detail")
+     */
+    public function detail($id)
+    {
+        // Récupérer les détails du terrain en fonction de $id (par ex. depuis la base de données)
+        $terrain = $this->getDoctrine()->getRepository(Terrain::class)->find($id);
 
+        // Vérifier si le terrain existe
+        if (!$terrain) {
+            throw $this->createNotFoundException('Terrain non trouvé');
+        }
+  // Vérifier si le terrain existe et s'il est disponible
+  if (!$terrain || !$terrain->isStatus()) {
+    throw $this->createNotFoundException('Le terrain n\'existe pas ou n\'est pas disponible.');
+}
+        // Passer les détails du terrain au template
+        return $this->render('Front/detailt.html.twig', [
+            'terrain' => $terrain // Passer le terrain récupéré au template
+        ]);
+    }
     #[Route('/new', name: 'app_terrain_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
 {
     $terrain = new Terrain();
     $form = $this->createForm(TerrainType::class, $terrain);
     $form->handleRequest($request);
+    if ($form->isSubmitted()) {
+        $formdata = $form->getdata();
+       
 
-    if ($form->isSubmitted() && $form->isValid()) {
         // Gérer l'upload de l'image
+    
         $imageFile = $form['image']->getData();
         if ($imageFile) {
             $newFilename = uniqid().'.'.$imageFile->guessExtension();
@@ -38,7 +68,7 @@ class TerrainController extends AbstractController
                 $this->getParameter('terrain_images_directory'),
                 $newFilename
             );
-            $terrain->setImage($newFilename);
+            $formdata->setImage($newFilename);
         }
 
         // Gérer l'upload de la vidéo
@@ -49,9 +79,8 @@ class TerrainController extends AbstractController
                 $this->getParameter('terrain_videos_directory'),
                 $newFilename
             );
-            $terrain->setVideo($newFilename);
+            $formdata->setVideo($newFilename);
         }
-
         $entityManager->persist($terrain);
         $entityManager->flush();
 
@@ -66,11 +95,13 @@ class TerrainController extends AbstractController
     #[Route('/{id}', name: 'app_terrain_show', methods: ['GET'])]
     public function show(Terrain $terrain): Response
     {
+        
         return $this->render('Back/Terrains/terrain/show.html.twig', [
             'terrain' => $terrain,
         ]);
     }
-
+     
+    
     #[Route('/{id}/edit', name: 'app_terrain_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Terrain $terrain, EntityManagerInterface $entityManager): Response
     {
@@ -126,4 +157,40 @@ class TerrainController extends AbstractController
 
         return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+/**
+     * @Route("/terrain/{id}/donner-avis", name="app_donner_avis")
+     */
+    public function donnerAvis($id, Request $request)
+{
+    $entityManager = $this->getDoctrine()->getManager();
+    $terrain = $entityManager->getRepository(Terrain::class)->find($id);
+
+    if (!$terrain) {
+        throw $this->createNotFoundException('Terrain non trouvé');
+    }
+
+    $avis = new Avis();
+    $form = $this->createForm(AvisType::class, $avis);
+
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
+        $avis = $form->getData();
+        $avis->setTerrain($terrain);
+
+        $entityManager->persist($avis);
+        $entityManager->flush();
+
+        // Redirection vers la page de détails du terrain
+        return $this->redirectToRoute('app_terrain_detail', ['id' => $id]);
+    }
+
+    return $this->render('Front/donner_avis.html.twig', [
+        'form' => $form->createView(),
+        'terrain' => $terrain,
+    ]);
+}
+
+
 }
