@@ -81,9 +81,11 @@
                   
                     <div class="row pb-3">
                        {% for terrain in terrains %}
+    {% if terrain.isStatus() %}
 <div class="col-md-6 mb-4 pb-2">
     <div class="blog-item">
         <div class="position-relative">
+        
            {% if terrain.image %}
     <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ terrain.image) }}" alt="">
 {% endif %}
@@ -98,12 +100,15 @@
  {{ terrain.getAddress() }}</a> <br></br>
                                    <br> <a class="h5 m-0 text-decoration-none" href="#"> <i class="fas fa-coins"></i>                  
  {{ terrain.getPrix() }} TND</a></br>
- <a href="#" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
-  
-                                </div>
+ <a class="h5 m-0 text-decoration-none" href="#"> <i class="fas fa-clock"></i>       
+ {{ terrain.getDuree() }}</a> <br></br>
+<a href="{{ path('app_terrain_detail', {'id': terrain.id}) }}" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
+    <a href="{{ path('app_terrain_detail', {'id': terrain.id, 'action': 'donner-avis'}) }}" class="btn btn-primary">Donner un avis</a>
+                     </div>
                             </div>
                         </div>
-                       
+                       {% endif %}
+
                             {% endfor %}
                    
                      
