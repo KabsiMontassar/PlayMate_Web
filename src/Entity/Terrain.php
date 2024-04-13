@@ -52,11 +52,11 @@ class Terrain
      */
     private $status;
 
-    /**
+     /**
      * @var string
      *
      * @ORM\Column(name="nomTerrain", type="string", length=255, nullable=false)
-     * @Assert\NotBlank(message="Veuillez entrez le nom")
+     * @Assert\NotBlank(message="Veuillez entrer le nom")
      * @Assert\Regex(
      *     pattern="/^[a-zA-Z]+$/",
      *     message="Le nom doit contenir que des lettres."
@@ -117,6 +117,11 @@ class Terrain
      * })
      */
     private $idprop;
+    /**
+ * @ORM\OneToMany(targetEntity="Avis", mappedBy="terrain", cascade={"remove"})
+ */
+private $avis;
+
 
     public function getId(): ?int
     {
