@@ -51,7 +51,8 @@
   </div>
   <!-- End Page Title -->
 
-{{ form_start(form, {'attr': {'class': 'row g-3 needs validation', 'novalidate': 'novalidate'}}) }}
+{{ form_start(form, {'attr': {'class': 'row g-3 needs-validation p-4', 'novalidate': 'novalidate'} }) }}
+
  <style>
     /* CSS styles here */
     .form-group {
@@ -87,6 +88,7 @@
       background-color: #45a049;
     }
   </style>
+  
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Ajouter') }}</button>
 {{ form_end(form) }}

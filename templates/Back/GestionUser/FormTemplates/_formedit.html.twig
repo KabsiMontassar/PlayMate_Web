@@ -8,8 +8,8 @@
     {{ form_label(form1.name, 'Name', {'label_attr': {'class': 'form-label'}}) }}
 </div>
 <div class="col-md-8 col-lg-9">
-    {{ form_widget(form1.name, {'attr': {'class': 'form-control', 'pattern': '^([a-zA-Zéàùç]+[ ]{0,1})+$', 'minlength': '3',  'maxlength':'20'}}) }}
-    <div class="invalid-feedback">Please enter a valid name (only letters and spaces, minimum length 3 characters).</div>
+    {{ form_widget(form1.name, {'attr': {'class': 'form-control', 'pattern': '^([a-zA-Zéàùç]+[ ]{0,1})+$', 'minlength': '5',  'maxlength':'20'}}) }}
+    <div class="invalid-feedback">Please enter a valid name (only letters and spaces, minimum length 5 characters).</div>
   
 </div>
 <div class="col-md-4 col-lg-3">
@@ -23,8 +23,8 @@
     {{ form_label(form1.phone, 'Phone', {'label_attr': {'class': 'form-label'}}) }}
 </div>
 <div class="col-md-8 col-lg-9">
-    {{ form_widget(form1.phone, {'attr': {'class': 'form-control', 'pattern': '^[1-9]\d{7}$'}}) }}
-    <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+    {{ form_widget(form1.phone, {'attr': {'class': 'form-control', 'pattern': '^[1-9]\d{7}$' , 'maxlength':'8'}}) }}
+    <div class="invalid-feedback">Please enter a valid phone number (8 digits).</div>
     
 </div>
 
@@ -47,7 +47,7 @@
     </div>
 
 <div class="col-12 text-center">
-    <button id="update-button-edit" type="submit" class="btn btn-primary">Update</button>
+    <button id="update-button-edit" type="submit" class="btn" style="background-color:#033E6A; color:white;">Update</button>
 </div>
 
 {# End the form #}
