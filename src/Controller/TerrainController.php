@@ -31,56 +31,46 @@ class TerrainController extends AbstractController
     #[Route('/new', name: 'app_terrain_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-             $terrain = new Terrain();
-             $form = $this->createForm(TerrainType::class, $terrain);
-             $form->handleRequest($request);
-    if ($form->isSubmitted()) {
-             $formdata = $form->getdata();
-
-       // Vérifier si un fichier image a été fourni
+        $terrain = new Terrain();
+        $form = $this->createForm(TerrainType::class, $terrain);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted()) {
+            // Gérer l'upload de l'image
             $imageFile = $form['image']->getData();
-    if ($imageFile) {
-       // Gérer l'upload de l'image
-            $newFilename = uniqid().'.'.$imageFile->guessExtension();
-            $imageFile->move(
-        $this->getParameter('terrain_images_directory'),
-            $newFilename);
-            $terrain->setImage($newFilename);
-}
-
-        // Vérifier si un fichier vidéo a été fourni
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                $imageFile->move(
+                    $this->getParameter('terrain_images_directory'),
+                    $newFilename
+                );
+                $terrain->setImage($newFilename);
+            }
+    
+            // Gérer l'upload de la vidéo
             $videoFile = $form['video']->getData();
-    if ($videoFile) {
-    // Gérer l'upload de la vidéo
-            $newFilename = uniqid().'.'.$videoFile->guessExtension();
-            $videoFile->move(
-        $this->getParameter('terrain_videos_directory'),
-            $newFilename
-    );
-            $terrain->setVideo($newFilename);
-}
-
+            if ($videoFile) {
+                $newFilename = uniqid().'.'.$videoFile->guessExtension();
+                $videoFile->move(
+                    $this->getParameter('terrain_videos_directory'),
+                    $newFilename
+                );
+                $terrain->setVideo($newFilename);
+            }
+    
             $entityManager->persist($terrain);
             $entityManager->flush();
-        return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
-    }
-        return $this->renderForm('Back/Terrains/terrain/new.html.twig', [
-        'terrain' => $terrain,
-        'form' => $form,
-    ]);
-}
-
-//********************************************************************************************
-
-    #[Route('/{id}', name: 'app_terrain_show', methods: ['GET'])]
-    public function show(Terrain $terrain): Response
-    {
-        return $this->render('Back/Terrains/terrain/show.html.twig', [
+    
+            return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
+        }
+    
+        return $this->render('Back/Terrains/terrain/new.html.twig', [
             'terrain' => $terrain,
+            'form' => $form->createView(),
         ]);
     }
-     
-    //********************************************************************************************
+    
+//********************************************************************************************
 
     #[Route('/{id}/edit', name: 'app_terrain_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, EntityManagerInterface $entityManager, int $id): Response
@@ -192,4 +182,12 @@ if ($form->isSubmitted() && $form->isValid()) {
         'terrain' => $terrain,
     ]);
 } 
-}
+
+//********************************************************************************************
+
+#[Route('/{id}', name: 'app_terrain_show', methods: ['GET'])]
+public function show(Terrain $terrain): Response
+{
+    return $this->render('Back/Terrains/terrain/show.html.twig', [
+        'terrain' => $terrain,
+    ]);}}
