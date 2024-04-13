@@ -1,8 +1,134 @@
-<!DOCTYPE html>
 
-<title>Tournoi</title>
+{% extends 'BaseBack.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+<style>
+    /* Your existing styles ... */
+    
+    /* Styles for the action buttons */
+    .btn {
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        transition: background 0.3s ease;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+    
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+    
+    .btn-outline-primary {
+        background-color: transparent;
+        color: #007bff;
+        border: 1px solid #007bff;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    /* Additional styles to make the details stand out */
+    .table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 2rem;
+    }
+
+    .table th, .table td {
+        border: 1px solid #dee2e6;
+        padding: 0.75rem;
+        vertical-align: middle;
+    }
+
+    .table th {
+        text-align: left;
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+    .table tbody tr:hover {
+        background-color: #e9ecef;
+    }
+
+    /* Style for the back-to-list link */
+    .back-to-list {
+        text-decoration: none;
+        color: #007bff;
+        margin-right: 1rem;
+    }
+
+    .back-to-list:hover {
+        text-decoration: underline;
+    }
+
+    /* Container for the actions to space them out */
+    .action-container {
+        margin-top: 2rem;
+    }
+</style>
+{% endblock %}
 
 {% block body %}
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="#" class="logo d-flex align-items-center"> <!-- home -->
+            <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
+            <span class="d-none d-lg-block">PlayMate</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+
+
+
+
+</header>
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+
+        <!-- End Nav Item -->
+        <li class="nav-heading">Gestion Evenement</li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_tournoi_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Tournoi</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_participation_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Participation</span>
+            </a>
+        </li>
+<!-- End Nav Item -->
+    </ul>
+
+</aside>
+
+<main id="main" class="main">
     <h1>Tournoi</h1>
 
     <table class="table">
@@ -42,9 +168,11 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_tournoi_index') }}">back to list</a>
-
-    <a href="{{ path('app_tournoi_edit', {'id': tournoi.id}) }}">edit</a>
-
+    <div class="action-container">
+    <a href="{{ path('app_tournoi_index') }}" class="btn btn-outline-primary back-to-list">Back to list</a>
+    <a href="{{ path('app_tournoi_edit', {'id': tournoi.id}) }}" class="btn btn-primary">Edit</a>
     {{ include('Back/GestionEvenement/tournoi/_delete_form.html.twig') }}
+</div>
+    </main>
+
 {% endblock %}
