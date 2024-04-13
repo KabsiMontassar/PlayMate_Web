@@ -49,7 +49,7 @@ class TournoiType extends AbstractType
             ->add('datefin', DateType::class, [
                 'widget' => 'single_text',
                 'input' => 'datetime',])
-            ->add('idorganisateur')
+           
         ;
     }
 
