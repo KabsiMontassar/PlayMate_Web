@@ -103,8 +103,13 @@ class TerrainController extends AbstractController
      
     
     #[Route('/{id}/edit', name: 'app_terrain_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Terrain $terrain, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, int $id): Response
     {
+        $terrain = $entityManager->getRepository(Terrain::class)->find($id);
+        if (!$terrain) {
+            throw $this->createNotFoundException('Terrain non trouvé');
+        }
+    
         $form = $this->createForm(TerrainType::class, $terrain);
         $form->handleRequest($request);
     
@@ -136,20 +141,22 @@ class TerrainController extends AbstractController
             return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
         }
     
-        // Pré-remplir les champs image et vidéo avec leurs valeurs existantes
-        $terrain->setImage($terrain->getImage());
-        $terrain->setVideo($terrain->getVideo());
-    
         return $this->render('Back/Terrains/terrain/edit.html.twig', [
             'terrain' => $terrain,
             'form' => $form->createView(),
         ]);
     }
-
+    
 
     #[Route('/{id}', name: 'app_terrain_delete', methods: ['POST'])]
-    public function delete(Request $request, Terrain $terrain, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager, int $id): Response
     {
+        $terrain = $entityManager->getRepository(Terrain::class)->find($id);
+
+        if (!$terrain) {
+            throw $this->createNotFoundException('Terrain non trouvé');
+        }
+
         if ($this->isCsrfTokenValid('delete'.$terrain->getId(), $request->request->get('_token'))) {
             $entityManager->remove($terrain);
             $entityManager->flush();
@@ -157,7 +164,6 @@ class TerrainController extends AbstractController
 
         return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
     }
-
 
 /**
      * @Route("/terrain/{id}/donner-avis", name="app_donner_avis")
