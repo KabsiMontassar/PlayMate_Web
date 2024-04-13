@@ -4,14 +4,19 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+//groups = {"registration", "update_profile"  , "login"}
 /**
  * User
  *
- * @ORM\Table(name="user")
+ * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
  * @ORM\Entity
  */
-class User
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface , PasswordAuthenticatedUserInterface
 {
     /**
      * @var int
@@ -26,6 +31,14 @@ class User
      * @var string
      *
      * @ORM\Column(name="Email", type="string", length=255, nullable=false)
+     * @Assert\Email(
+     *    message = "The email '{{ value }}' is not a valid email."
+     * )
+     * @Assert\NotBlank(
+     *   message = "The email cannot be blank.",
+     *   groups = {"registration", "login"}
+     * )
+     * 
      */
     private $email;
 
@@ -33,6 +46,9 @@ class User
      * @var string
      *
      * @ORM\Column(name="Password", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(
+     *   groups = {"registration"  , "login"}
+     * )
      */
     private $password;
 
@@ -40,6 +56,10 @@ class User
      * @var string
      *
      * @ORM\Column(name="Name", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(
+     *   groups = {"registration", "update_profile"  }
+     * )
+     * 
      */
     private $name;
 
@@ -47,6 +67,11 @@ class User
      * @var int|null
      *
      * @ORM\Column(name="Age", type="integer", nullable=true, options={"default"="NULL"})
+     * @Assert\NotBlank(
+     * message = "The age cannot be blank.",
+     *   groups = { "update_profile" }
+     * )
+    
      */
     private $age = NULL;
 
@@ -54,6 +79,13 @@ class User
      * @var int|null
      *
      * @ORM\Column(name="Phone", type="integer", nullable=true, options={"default"="NULL"})
+     * @Assert\NotBlank(
+     * message = "The phone cannot be blank.",
+     *   groups = { "update_profile" }
+     * )
+    
+     * 
+     * 
      */
     private $phone = NULL;
 
@@ -61,22 +93,28 @@ class User
      * @var string|null
      *
      * @ORM\Column(name="Address", type="string", length=255, nullable=true, options={"default"="NULL"})
+     * @Assert\NotBlank(
+     *  message = "The address cannot be blank.",
+     *   groups = { "update_profile"}
+     * )
+   
+     * 
      */
-    private $address = 'NULL';
+    private $address = NULL;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Role", type="string", length=255, nullable=false)
+     * @ORM\Column(name="Role", type="string", length=255, nullable=false , options={"default"="NULL"})
      */
     private $role;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="Image", type="string", length=255, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="Image", type="string", length=255, nullable=true, options={"NULL"})
      */
-    private $image = 'NULL';
+    private $image = NULL;
 
     /**
      * @var bool
@@ -258,8 +296,46 @@ class User
 
     public function __toString()
     {
-        return $this->name;
+        return $this->id;
     }
 
+    private $roles;
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+   
+
+    public function getRoles(): array
+    {
+         return [$this->role];
+        // guarantee every user at least has ROLE_USER
+       
+    }
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getSalt() 
+    {
+        // Leave empty unless you are using bcrypt or another hashing method that requires a salt
+    }
+
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+    }
+
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+   
 
 }

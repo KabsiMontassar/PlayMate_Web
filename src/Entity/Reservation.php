@@ -71,6 +71,11 @@ class Reservation
      */
     private $idterrain;
 
+    public function __construct()
+    {
+        $this->isconfirm = false;
+    }
+
     public function getIdreservation(): ?int
     {
         return $this->idreservation;

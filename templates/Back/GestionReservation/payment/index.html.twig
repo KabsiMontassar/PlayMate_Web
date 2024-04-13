@@ -3,37 +3,43 @@
 <title>Payment index</title>
 
 {% block body %}
-    <h1>Payment index</h1>
+<h1>Payment index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Idpayment</th>
-                <th>Datepayment</th>
-                <th>Horairepayment</th>
-                <th>Payed</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID Payment</th>
+            <th>Date Payment</th>
+            <th>Horaires Payment</th>
+            <th>Payed</th>
+            <th>Reservation ID</th>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
         {% for payment in payments %}
-            <tr>
-                <td>{{ payment.idpayment }}</td>
-                <td>{{ payment.datepayment }}</td>
-                <td>{{ payment.horairepayment }}</td>
-                <td>{{ payment.payed ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_payment_show', {'idpayment': payment.idpayment}) }}">show</a>
-                    <a href="{{ path('app_payment_edit', {'idpayment': payment.idpayment}) }}">edit</a>
-                </td>
-            </tr>
+        <tr>
+            <td>{{ payment.idpayment }}</td>
+            <td>{{ payment.datepayment|date('Y-m-d') }}</td>
+            <td>{{ payment.horairepayment }}</td>
+            <td>{{ payment.payed ? 'Yes' : 'No' }}</td>
+            <td>{{ payment.idreservation.idreservation }}</td>
+            <td>{{ payment.idmembre.id }}</td>
+            <td>{{ payment.idmembre.name }}</td>
+            <td>
+                <a href="{{ path('app_payment_show', {'idpayment': payment.idpayment}) }}">show</a>
+                <a href="{{ path('app_payment_edit', {'idpayment': payment.idpayment}) }}">edit</a>
+            </td>
+        </tr>
         {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
+        <tr>
+            <td colspan="5">no records found</td>
+        </tr>
         {% endfor %}
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
-    <a href="{{ path('app_payment_new') }}">Create new</a>
+<a href="{{ path('app_payment_new') }}">Create new</a>
 {% endblock %}

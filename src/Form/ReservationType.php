@@ -15,7 +15,7 @@ class ReservationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('isconfirm')
+           ->add('isconfirm')
             ->add('datereservation', DateType::class, [
 
                 'widget' => 'single_text',

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,6 +27,7 @@ class Terrain
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez entrez l'adresse")
      */
     private $address;
 
@@ -49,10 +52,15 @@ class Terrain
      */
     private $status;
 
-    /**
+     /**
      * @var string
      *
      * @ORM\Column(name="nomTerrain", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez entrer le nom")
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z]+$/",
+     *     message="Le nom doit contenir que des lettres."
+     * )
      */
     private $nomterrain;
 
@@ -60,6 +68,7 @@ class Terrain
      * @var float
      *
      * @ORM\Column(name="prix", type="float", precision=10, scale=0, nullable=false)
+     * @Assert\NotBlank(message="Veuillez entrez le prix")
      */
     private $prix;
 
@@ -67,6 +76,7 @@ class Terrain
      * @var int
      *
      * @ORM\Column(name="duree", type="integer", nullable=false)
+     * @Assert\NotBlank(message="Veuillez entrez la duree")
      */
     private $duree;
 
@@ -74,6 +84,11 @@ class Terrain
      * @var string
      *
      * @ORM\Column(name="gouvernorat", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez entrez le gouvernorat") 
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z]+$/",
+     *     message="Le gouvernorat doit contenir que des lettres."
+     * )
      */
     private $gouvernorat;
 
@@ -81,6 +96,7 @@ class Terrain
      * @var string
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez charger une image")
      */
     private $image;
 
@@ -88,6 +104,7 @@ class Terrain
      * @var string
      *
      * @ORM\Column(name="video", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez charger une vidéo")
      */
     private $video;
 
@@ -100,6 +117,11 @@ class Terrain
      * })
      */
     private $idprop;
+    /**
+ * @ORM\OneToMany(targetEntity="Avis", mappedBy="terrain", cascade={"remove"})
+ */
+private $avis;
+
 
     public function getId(): ?int
     {
@@ -159,12 +181,13 @@ class Terrain
         return $this->nomterrain;
     }
 
-    public function setNomterrain(string $nomterrain): static
-    {
-        $this->nomterrain = $nomterrain;
+    public function setNomterrain(?string $nomterrain): static
+{
+    $this->nomterrain = $nomterrain ?? "";
 
-        return $this;
-    }
+    return $this;
+}
+
 
     public function getPrix(): ?float
     {
