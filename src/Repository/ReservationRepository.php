@@ -60,12 +60,12 @@ class ReservationRepository extends ServiceEntityRepository
 
 
 
-    public function verifierDisponibleTerrain($idTerrain, $heure, $date, $entityManager): bool
+    public function findByDisponibility($idTerrain, $heure, $date, $entityManager): bool
     {
         $qb = $this->createQueryBuilder('r')
-            ->andWhere('r.idTerrain = :idTerrain')
-            ->setParameter('idTerrain', $idTerrain)
-            ->andWhere('r.dateReservation = :date')
+            ->andWhere('r.idterrain = :id')
+            ->setParameter('id', $idTerrain)
+            ->andWhere('r.datereservation = :date')
             ->setParameter('date', $date)
             ->getQuery();
 

@@ -10,6 +10,7 @@ use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Terrain;
 
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -82,12 +83,15 @@ class ReservationController extends AbstractController
     }
 
     #[Route('/getTerrain/{choix}/{idTerrain}/{date}/{horaire}', name: 'app_reservation_getTerrain', methods: ['POST'])]
-    public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire): Response
+    public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
+        
+        // convert date to DateTimeInterface 
+        $date = new \DateTime($date);
+        // idterrain must be of type ?App\Entity\Terrain
+        $idTerrain = $entityManager->getRepository(Terrain::class)->find($idTerrain);
         // Effectuer la logique de vérification de disponibilité du terrain
-        $terrainDisponible = $entityManager->getRepository(Reservation::class)->verifierDisponibleTerrain($idTerrain, $horaire, $date, $entityManager);
+        $terrainDisponible = $entityManager->getRepository(Reservation::class)->findByDisponibility($idTerrain, $horaire, $date, $entityManager);
 
         // Retourner une réponse JSON en fonction du résultat de la vérification
         if ($terrainDisponible) {
