@@ -76,7 +76,7 @@
                                      <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ tournoi.affiche) }}" alt="">
                                     {% endif %}
                                     <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">{{ tournoi.getDatedebut() }}</h6>
+                                        <h6 class="font-weight-bold mb-n1">{{ tournoi.getDatedebut()|date('Y-m-d') }}</h6>
                                         <small class="text-white text-uppercase">Date Début</small>
                                     </div>
                                 </div>
@@ -86,7 +86,7 @@
                                         <span class="text-primary px-2">|</span>
                                         <a class="text-primary text-uppercase text-decoration-none" href="#" >{{ tournoi.getNom() }}l</a>
                                     </div>
-                                    <a href="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
+                                    <a href="{{ path('app_tournoi_new', {'id': tournoi.id}) }}" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -142,7 +142,7 @@
     <a class="d-flex align-items-center text-decoration-none bg-white mb-3" href="#" >
         <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ tournoi.affiche) }}" alt="">
         <div class="pl-3">
-            <a href="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
+            <a href="{{ path('app_tournoi_new', {'id': tournoi.id}) }}" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
             <small>{{ tournoi.getNom() }}</small>
         </div>
     </a>
