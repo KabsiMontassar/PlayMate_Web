@@ -4,12 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Form\ReservationType;
+// use App\Controller\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use App\Entity\Terrain;
+
 use Symfony\Component\Routing\Annotation\Route;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/reservation')]
 class ReservationController extends AbstractController
@@ -77,5 +82,59 @@ class ReservationController extends AbstractController
         }
 
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/getTerrain/{choix}/{idTerrain}/{date}/{horaire}', name: 'app_reservation_getTerrain', methods: ['POST'])]
+    public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager): Response
+    {
+
+        // convert date to DateTimeInterface 
+        $date = new \DateTime($date);
+        // idterrain must be of type ?App\Entity\Terrain
+        $idTerrain = $entityManager->getRepository(Terrain::class)->find($idTerrain);
+        // Effectuer la logique de vérification de disponibilité du terrain
+        $terrainDisponible = $entityManager->getRepository(Reservation::class)->findByDisponibility($idTerrain, $horaire, $date, $entityManager);
+
+        // Retourner une réponse JSON en fonction du résultat de la vérification
+        if ($terrainDisponible) {
+            $reservation = new Reservation();
+            $reservation->setIsconfirm(false);
+            $reservation->setDatereservation($date);
+            $reservation->setHeurereservation($horaire);
+            $reservation->setType($choix);
+            $reservation->setIdterrain($idTerrain);
+
+            $entityManager->persist($reservation);
+            $entityManager->flush();
+
+            return new Response('Terrain disponible', Response::HTTP_OK);
+        } else {
+            return new Response('Terrain non disponible', Response::HTTP_OK);
+        }
+    }
+    #[Route('/reservations', name: 'get_reservations', methods: ['GET'])]
+    public function getReservations(ReservationRepository $reservationRepository): JsonResponse
+    {
+        $reservations = $reservationRepository->findFutureAndUniqueReservations();
+
+
+        $formattedReservations = [];
+        foreach ($reservations as $reservation) {
+            $formattedReservations[] = [
+                'id' => $reservation->getIdreservation(),
+                'datereservation' => $reservation->getDatereservation()->format('Y-m-d'),
+                'heurereservation' => $reservation->getHeurereservation(),
+                'idterrain' => [
+                    'id' => $reservation->getIdterrain()->getId(),
+                    'nom' => $reservation->getIdterrain()->getNomterrain(),
+                    'adresse' => $reservation->getIdterrain()->getAddress(),
+                    'prix' => $reservation->getIdterrain()->getPrix(),
+                    'duree' => $reservation->getIdterrain()->getDuree()
+                ],
+            ];
+        }
+
+        // Format JSON
+        return new JsonResponse($formattedReservations);
     }
 }

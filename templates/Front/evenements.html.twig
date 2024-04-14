@@ -1,6 +1,6 @@
 {% extends 'BaseFront.html.twig' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Evenements{% endblock %}
 {% block body %}
 
     <!-- Navbar Start -->
@@ -67,158 +67,31 @@
             <div class="row">
                 <div class="col-lg-8">
                     <div class="row pb-3">
+                   {% for tournoi in tournois %}
+
                         <div class="col-md-6 mb-4 pb-2">
                             <div class="blog-item">
                                 <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-1.jpg') }}"  alt="">
+                                    {% if tournoi.affiche %}
+                                     <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ tournoi.affiche) }}" alt="">
+                                    {% endif %}
                                     <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
+                                        <h6 class="font-weight-bold mb-n1">{{ tournoi.getDatedebut()|date('Y-m-d') }}</h6>
+                                        <small class="text-white text-uppercase">Date Début</small>
                                     </div>
                                 </div>
                                 <div class="bg-white p-4">
                                     <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Admin</a>
+                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >{{ tournoi.getAddress() }}</a>
                                         <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Tours & Travel</a>
+                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >{{ tournoi.getNom() }}l</a>
                                     </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#" >Dolor justo sea kasd lorem clita justo diam amet</a>
+                                    <a href="{{ path('app_tournoi_new', {'id': tournoi.id}) }}" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-4 pb-2">
-                            <div class="blog-item">
-                                <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-2.jpg') }}"  alt="">
-                                    <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
-                                    </div>
-                                </div>
-                                <div class="bg-white p-4">
-                                    <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Admin</a>
-                                        <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Tours & Travel</a>
-                                    </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#" >Dolor justo sea kasd lorem clita justo diam amet</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4 pb-2">
-                            <div class="blog-item">
-                                <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-3.jpg') }}"  alt="">
-                                    <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
-                                    </div>
-                                </div>
-                                <div class="bg-white p-4">
-                                    <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Admin</a>
-                                        <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Tours & Travel</a>
-                                    </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#" >Dolor justo sea kasd lorem clita justo diam amet</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4 pb-2">
-                            <div class="blog-item">
-                                <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-1.jpg') }}"  alt="">
-                                    <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
-                                    </div>
-                                </div>
-                                <div class="bg-white p-4">
-                                    <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Admin</a>
-                                        <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Tours & Travel</a>
-                                    </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#" >Dolor justo sea kasd lorem clita justo diam amet</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4 pb-2">
-                            <div class="blog-item">
-                                <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-2.jpg') }}"  alt="">
-                                    <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
-                                    </div>
-                                </div>
-                                <div class="bg-white p-4">
-                                    <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Admin</a>
-                                        <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Tours & Travel</a>
-                                    </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#" >Dolor justo sea kasd lorem clita justo diam amet</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4 pb-2">
-                            <div class="blog-item">
-                                <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-3.jpg') }}"  alt="">
-                                    <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
-                                    </div>
-                                </div>
-                                <div class="bg-white p-4">
-                                    <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Admin</a>
-                                        <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Tours & Travel</a>
-                                    </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#" >Dolor justo sea kasd lorem clita justo diam amet</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4 pb-2">
-                            <div class="blog-item">
-                                <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-1.jpg') }}"  alt="">
-                                    <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
-                                    </div>
-                                </div>
-                                <div class="bg-white p-4">
-                                    <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Admin</a>
-                                        <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Tours & Travel</a>
-                                    </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#" >Dolor justo sea kasd lorem clita justo diam amet</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4 pb-2">
-                            <div class="blog-item">
-                                <div class="position-relative">
-                                    <img class="img-fluid w-100" src="{{ asset('Front/img/blog-2.jpg') }}"  alt="">
-                                    <div class="blog-date">
-                                        <h6 class="font-weight-bold mb-n1">01</h6>
-                                        <small class="text-white text-uppercase">Jan</small>
-                                    </div>
-                                </div>
-                                <div class="bg-white p-4">
-                                    <div class="d-flex mb-2">
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Admin</a>
-                                        <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >Tours & Travel</a>
-                                    </div>
-                                    <a class="h5 m-0 text-decoration-none" href="#" >Dolor justo sea kasd lorem clita justo diam amet</a>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
+                     
                         <div class="col-12">
                             <nav aria-label="Page navigation">
                                 <ul class="pagination pagination-lg justify-content-center bg-white mb-0" style="padding: 30px;">
@@ -263,34 +136,24 @@
     
                     <!-- Recent Events -->
                     <div class="mb-5">
+                
                         <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Événements récents</h4>
-                        <a class="d-flex align-items-center text-decoration-none bg-white mb-3" href="#" >
-                            <img class="img-fluid" src="{{ asset('Front/img/blog-100x100.jpg') }}"  alt="">
-                            <div class="pl-3">
-                                <h6 class="m-1">Diam lorem dolore justo eirmod lorem dolore</h6>
-                                <small>Jan 01, 2050</small>
-                            </div>
-                        </a>
-                        <a class="d-flex align-items-center text-decoration-none bg-white mb-3" href="#" >
-                            <img class="img-fluid" src="{{ asset('Front/img/blog-100x100.jpg') }}"  alt="">
-                            <div class="pl-3">
-                                <h6 class="m-1">Diam lorem dolore justo eirmod lorem dolore</h6>
-                                <small>Jan 01, 2050</small>
-                            </div>
-                        </a>
-                        <a class="d-flex align-items-center text-decoration-none bg-white mb-3" href="#" >
-                            <img class="img-fluid" src="{{ asset('Front/img/blog-100x100.jpg') }}"  alt="">
-                            <div class="pl-3">
-                                <h6 class="m-1">Diam lorem dolore justo eirmod lorem dolore</h6>
-                                <small>Jan 01, 2050</small>
-                            </div>
-                        </a>
+                        {% for tournoi in tournois %}
+    <a class="d-flex align-items-center text-decoration-none bg-white mb-3" href="#" >
+        <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ tournoi.affiche) }}" alt="">
+        <div class="pl-3">
+            <a href="{{ path('app_tournoi_new', {'id': tournoi.id}) }}" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
+            <small>{{ tournoi.getNom() }}</small>
+        </div>
+    </a>
+{% endfor %}
+                
                     </div>
-    
                  
                 </div>
             </div>
         </div>
+        
     </div>
     <!-- Events End -->
 

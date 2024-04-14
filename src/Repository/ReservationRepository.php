@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Terrain;
 use App\Repository\TerrainRepository;
+use DateTime;
 
 /**
  * @extends ServiceEntityRepository<Reservation>
@@ -57,11 +58,61 @@ class ReservationRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // generate function to return terrain  that are disponible in a specific date and time and terrains
-    // from table terrain and reservation 
-
-    
 
 
-   
+    public function findByDisponibility($idTerrain, $heure, $date, $entityManager): bool
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->andWhere('r.idterrain = :id')
+            ->setParameter('id', $idTerrain)
+            ->andWhere('r.datereservation = :date')
+            ->setParameter('date', $date)
+            ->getQuery();
+
+        $reservations = $qb->getResult();
+
+        if (empty($reservations)) {
+            return true;
+        }
+
+        foreach ($reservations as $reservation) {
+            if ($reservation->getDateReservation() === $date) {
+                $heureMatchReserve = new DateTime($reservation->getHeureReservation());
+                $heureNouveauMatch = new DateTime($heure);
+
+                $duree = $entityManager->getRepository(Terrain::class)->findOneBy($idTerrain)->getDuree();
+                $seCroisent = $this->verifCroisementHoraire($heureMatchReserve, $duree, $heureNouveauMatch);
+                if ($seCroisent) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function verifCroisementHoraire(DateTime $heureMatchReserve, $dureeAnnoce, DateTime $heureNouveauMatch): bool
+    {
+        $finReserve = $heureMatchReserve->modify("+ $dureeAnnoce minutes");
+        $finNouveau = $heureNouveauMatch->modify("+ $dureeAnnoce minutes");
+
+        return !($finReserve < $heureNouveauMatch || $finNouveau < $heureMatchReserve);
+    }
+
+    public function findFutureAndUniqueReservations(): array
+    {
+
+        $currentDate = new \DateTime();
+
+        return $this->createQueryBuilder('r')
+            ->where('r.datereservation > :currentDate')
+            ->andWhere('r.type != :type')
+            ->setParameter('currentDate', $currentDate)
+            ->setParameter('type', 'Lancez_Vous')
+            ->groupBy('r.datereservation, r.heurereservation, r.idterrain')
+            ->having('COUNT(r) = 1')
+            ->orderBy('r.datereservation', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

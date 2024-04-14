@@ -3,12 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Tournoi;
+use App\Entity\User;
 use App\Form\TournoiType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+
 
 #[Route('/tournoi')]
 class TournoiController extends AbstractController
@@ -25,9 +29,26 @@ class TournoiController extends AbstractController
         ]);
     }
 
+
+    #[Route('/profile', name: 'app_user_tournoi')]
+public function userTournoi(Security $security, EntityManagerInterface $entityManager): Response
+{
+    $userIdentifier = $security->getUser()->getUserIdentifier();
+    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+
+    $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
+    
+    // Render the template with the tournaments
+    return $this->render('Back/GestionEvenement/tournoi/profiletournoi.html.twig', [
+        'tournois' => $tournois,
+    ]);
+}
+
     #[Route('/new', name: 'app_tournoi_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Security $security, Request $request, EntityManagerInterface $entityManager): Response
     {
+    $userIdentifier = $security->getUser()->getUserIdentifier();
+    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         $tournoi = new Tournoi();
         $form = $this->createForm(TournoiType::class, $tournoi);
         $form->handleRequest($request);
@@ -47,11 +68,12 @@ class TournoiController extends AbstractController
                 $newFilename
             );
             $formData->setAffiche($newFilename);
+            $tournoi->setIdorganisateur($user);
         }
             $entityManager->persist($tournoi);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_tournoi_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_tournoi', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('Back/GestionEvenement/tournoi/new.html.twig', [
@@ -69,15 +91,17 @@ class TournoiController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_tournoi_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Tournoi $tournoi, EntityManagerInterface $entityManager): Response
+    public function edit( Request $request, Tournoi $tournoi, EntityManagerInterface $entityManager): Response
+    
     {
+    
         $form = $this->createForm(TournoiType::class, $tournoi);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_tournoi_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_tournoi', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('Back/GestionEvenement/tournoi/edit.html.twig', [
@@ -94,6 +118,6 @@ class TournoiController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_tournoi_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_tournoi', [], Response::HTTP_SEE_OTHER);
     }
 }

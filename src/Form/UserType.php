@@ -29,7 +29,7 @@ class UserType extends AbstractType
                 'choices' => [
                     'Membre' => 'Membre',
                     'Organisateur' => 'Organisateur',
-                    'Propriétaire de Terrain' => 'Proprietaire_de_Terrain',
+                    'Propriétaire de Terrain' => 'Proprietaire de Terrain',
                     'Fournisseur' => 'Fournisseur',
                 ],
                 'data' => 'Membre', // Set Option A as the default choice

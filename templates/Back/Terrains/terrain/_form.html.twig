@@ -20,19 +20,30 @@
 
   <ul class="sidebar-nav" id="sidebar-nav">
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_user_dashboard') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Dashboard</span>
-      </a>
-    </li>
-    <li class="nav-item">
+
+  <li class="nav-heading" style="color:#033E6A">Pages</li>
+  
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('app_user_profile') }}"> <!-- user pROFILE PAGE -->
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+         
+ 
+          
+        <li class="nav-item">
       <a class="nav-link" href="{{ path('app_terrain_index') }}"> 
         <i class="bi bi-grid"></i>
         <span>Terrain</span>
       </a>
     </li>
-   
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Avis</span>
+      </a>
+    </li>
+ 
 
   </ul>
 
@@ -51,7 +62,8 @@
   </div>
   <!-- End Page Title -->
 
-{{ form_start(form, {'attr': {'class': 'row g-3 needs validation', 'novalidate': 'novalidate'}}) }}
+{{ form_start(form, {'attr': {'class': 'row g-3 needs-validation p-4', 'novalidate': 'novalidate'} }) }}
+
  <style>
     /* CSS styles here */
     .form-group {
@@ -87,6 +99,7 @@
       background-color: #45a049;
     }
   </style>
+  
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Ajouter') }}</button>
 {{ form_end(form) }}

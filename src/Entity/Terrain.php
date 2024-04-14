@@ -52,25 +52,29 @@ class Terrain
      */
     private $status;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="nomTerrain", type="string", length=255, nullable=false)
-     * @Assert\NotBlank(message="Veuillez entrez le nom")
-     * @Assert\Regex(
-     *     pattern="/^[a-zA-Z]+$/",
-     *     message="Le nom doit contenir que des lettres."
-     * )
-     */
-    private $nomterrain;
+   /**
+ * @var string
+ *
+ * @ORM\Column(name="nomTerrain", type="string", length=255, nullable=false)
+ * @Assert\NotBlank(message="Veuillez entrer le nom")
+ * @Assert\Regex(
+ *     pattern="/^[a-zA-Z]+$/",
+ *     message="Le nom doit contenir que des lettres."
+ * )
+ */
+private $nomterrain;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="prix", type="float", precision=10, scale=0, nullable=false)
-     * @Assert\NotBlank(message="Veuillez entrez le prix")
-     */
-    private $prix;
+  /**
+ * @var float
+ *
+ * @ORM\Column(name="prix", type="float", precision=10, scale=0, nullable=false)
+ * @Assert\NotBlank(message="Veuillez entrez le prix")
+ * @Assert\Regex(
+ *     pattern="/^\d+$/",
+ *     message="Le prix doit être un entier."
+ * )
+ */
+private $prix;
 
     /**
      * @var int
@@ -80,18 +84,17 @@ class Terrain
      */
     private $duree;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="gouvernorat", type="string", length=255, nullable=false)
-     * @Assert\NotBlank(message="Veuillez entrez le gouvernorat") 
-     * @Assert\Regex(
-     *     pattern="/^[a-zA-Z]+$/",
-     *     message="Le gouvernorat doit contenir que des lettres."
-     * )
-     */
-    private $gouvernorat;
-
+   /**
+ * @var string
+ *
+ * @ORM\Column(name="gouvernorat", type="string", length=255, nullable=false)
+ * @Assert\NotBlank(message="Veuillez entrez le gouvernorat") 
+ * @Assert\Regex(
+ *     pattern="/^[a-zA-Z]+$/",
+ *     message="Le gouvernorat doit contenir que des lettres."
+ * )
+ */
+private $gouvernorat;
     /**
      * @var string
      *
@@ -112,12 +115,16 @@ class Terrain
      * @var \User
      *
      * @ORM\ManyToOne(targetEntity="User")
-     * @Assert\NotBlank(message="Veuillez entrez l'id du proprietaire'")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idprop", referencedColumnName="id")
      * })
      */
     private $idprop;
+    /**
+ * @ORM\OneToMany(targetEntity="Avis", mappedBy="terrain", cascade={"remove"})
+ */
+private $avis;
+
 
     public function getId(): ?int
     {
