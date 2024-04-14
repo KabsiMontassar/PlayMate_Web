@@ -4,14 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Form\ReservationType;
-use App\Controller\JsonResponse;
+// use App\Controller\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Terrain;
 
 use Symfony\Component\Routing\Annotation\Route;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/reservation')]
 class ReservationController extends AbstractController
@@ -82,12 +85,15 @@ class ReservationController extends AbstractController
     }
 
     #[Route('/getTerrain/{choix}/{idTerrain}/{date}/{horaire}', name: 'app_reservation_getTerrain', methods: ['POST'])]
-    public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire): Response
+    public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
 
+        // convert date to DateTimeInterface 
+        $date = new \DateTime($date);
+        // idterrain must be of type ?App\Entity\Terrain
+        $idTerrain = $entityManager->getRepository(Terrain::class)->find($idTerrain);
         // Effectuer la logique de vérification de disponibilité du terrain
-        $terrainDisponible = $entityManager->getRepository(Reservation::class)->verifierDisponibleTerrain($idTerrain, $horaire, $date, $entityManager);
+        $terrainDisponible = $entityManager->getRepository(Reservation::class)->findByDisponibility($idTerrain, $horaire, $date, $entityManager);
 
         // Retourner une réponse JSON en fonction du résultat de la vérification
         if ($terrainDisponible) {
@@ -105,5 +111,34 @@ class ReservationController extends AbstractController
         } else {
             return new Response('Terrain non disponible', Response::HTTP_OK);
         }
+    }
+
+    #[Route('/all', name: 'app_reservation_all', methods: ['GET'])]
+    public function all(ReservationRepository $reservationRepository): JsonResponse
+    {
+        // Récupérer toutes les réservations à partir du référentiel
+        $reservations = $reservationRepository->findAll();
+
+        // Tableau pour stocker les réservations formatées
+        $formattedReservations = [];
+
+        // Boucler à travers chaque réservation pour la formater
+        foreach ($reservations as $reservation) {
+            // Construire un tableau associatif pour chaque réservation
+            $formattedReservation = [
+                'id' => $reservation->getIdreservation(),
+                'is_confirm' => $reservation->isIsconfirm(),
+                'date_reservation' => $reservation->getDatereservation()->format('Y-m-d'), // Format de date selon votre besoin
+                'heure_reservation' => $reservation->getHeurereservation(),
+                'type' => $reservation->getType(),
+                // Ajoutez d'autres champs si nécessaire
+            ];
+
+            // Ajouter la réservation formatée au tableau des réservations formatées
+            $formattedReservations[] = $formattedReservation;
+        }
+
+        // Retourner les réservations formatées sous forme de réponse JSON
+        return new JsonResponse($formattedReservations);
     }
 }
