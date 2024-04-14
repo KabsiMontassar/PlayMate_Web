@@ -96,7 +96,7 @@
 
     <div class="text-center mb-3 pb-3">
         <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">N'attendez pas !</h6>
-        <h1 style="padding-bottom: 40px;">Créez votre légende !</h1>
+        <h1 style="padding-bottom: 20px;">Créez votre légende !</h1>
     </div>
 
     <!--div pour afficher reservation-->
@@ -343,17 +343,18 @@
                         <div class="blog-item text-center">
                             <div class="bg-white p-4">
                                 <p class="h5 m-0">
-                                    <span class="blue-text">Date de réservation :</span>  <span class="font-weight-bold">${reservation.datereservation} </span>
-                                    <span class="blue-text">Heure de réservation :</span>  <span class="font-weight-bold">${reservation.heurereservation}</span>
+                                    <span class="blue-text">Date de réservation :</span>  <span class="font-weight-bold" id="dateres">${reservation.datereservation} </span>
+                                    <span class="blue-text">Heure de réservation :</span>  <span class="font-weight-bold" id="heureres">${reservation.heurereservation}</span>
                                 </p>
                                 <p class="h5 m-0"> 
-                                    <span class="green-text">Nom du terrain :</span>  <span class="font-weight-bold"> ${reservation.idterrain.nom} </span>
+                                    <span class="green-text d-none">Nom du terrain :</span>  <span class="font-weight-bold d-none" id="terrainid" > ${reservation.idterrain.id}</span>
+                                    <span class="green-text">Nom du terrain :</span>  <span class="font-weight-bold" id="nomterrain"> ${reservation.idterrain.nom} </span>
                                     <span class="green-text">Adresse :</span>  <span class="font-weight-bold"> ${reservation.idterrain.adresse} </span>
                                     <span class="green-text">Durée :</span>  <span class="font-weight-bold"> ${reservation.idterrain.duree} </span>
                                     <span class="green-text">Prix :</span>  <span class="font-weight-bold">${reservation.idterrain.prix}</span>
                                 </p>
                                 <div class="mt-3">
-                                    <button class="btn btn-primary mr-2" onclick="reserver()">Réserver</button>
+                                    <button class="btn btn-primary mr-2" onclick="reserverCommeAdversaire()">Réserver</button>
                                     <button class="btn btn-success" onclick="voirDetails()">Voir Détails</button>
                                 </div>
                             </div>
@@ -448,6 +449,22 @@
         }
     }
 
+    function reserverCommeAdversaire() {
+        alert('dans postuler')
+        var date = document.getElementById("dateres").innerText;
+        var horaire = document.getElementById("heureres").innerText;
+        var terrain = document.getElementById("terrainid").innerText;
+        typeReservation = 'Postuler_Comme_Adversaire';
+        alert(date + " \n" + horaire + "\n" + terrain + "\n" + typeReservation);
+        $.post("/reservation/getTerrain/" + typeReservation + "/" + terrain + "/" + date + "/" + horaire, function (data) {
+            // Traitez la réponse ici
+            if (data === 'Terrain disponible') {
+                alert('ok')
+            } else {
+                alert(data);
+            }
+        });
+    }
 
     // prendre l argument idTerrain
     function VerfivationDisponibiliteTerrain() {

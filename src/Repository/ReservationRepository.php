@@ -98,4 +98,17 @@ class ReservationRepository extends ServiceEntityRepository
 
         return !($finReserve < $heureNouveauMatch || $finNouveau < $heureMatchReserve);
     }
+
+    public function findFutureReservations(): array
+    {
+        // Récupérer la date actuelle
+        $currentDate = new \DateTime();
+
+        return $this->createQueryBuilder('r')
+            ->where('r.datereservation > :currentDate')
+            ->setParameter('currentDate', $currentDate)
+            ->orderBy('r.datereservation', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
