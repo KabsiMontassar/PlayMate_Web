@@ -23,12 +23,12 @@ class TournoiController extends AbstractController
             ->getRepository(Tournoi::class)
             ->findAll();
 
-        return $this->render('Back/GestionEvenement/tournoi/tournoi.html.twig', [
+        return $this->render('Front/evenements.html.twig', [
             'tournois' => $tournois,
         ]);
     }
 
-    
+
     #[Route('/profile', name: 'app_user_tournoi')]
 public function userTournoi(Security $security, EntityManagerInterface $entityManager): Response
 {
