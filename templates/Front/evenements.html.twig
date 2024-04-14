@@ -3,19 +3,19 @@
 {% block title %}Evenements{% endblock %}
 {% block stylesheets %}
         <style>
-        .blog-date {
+      .blog-date {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 10px; /* Adjust as needed */
+    left: 10px; /* Adjust as needed */
     background-color: #7ab730; /* This is the green color you had originally */
     color: white;
-    padding: 5px 10px;
-    font-size: 0.75rem; /* Adjust if necessary to fit the content */
-    white-space: nowrap;
+    padding: 8px 12px; /* Adjust padding if necessary */
+    font-size: 0.65rem; /* Smaller font size */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: add a shadow for depth */
+    max-width: 200px; /* Adjust as necessary */
     overflow: hidden;
     text-overflow: ellipsis;
-    border-radius: 0 0 10px 0;
-    max-width: calc(100% - 20px); /* You may not need this if your date fits comfortably within the width of the image */
 }
         </style>
     {% endblock %}
@@ -103,7 +103,7 @@
                                     <div class="d-flex mb-2">
                                         <a class="text-primary text-uppercase text-decoration-none" href="#" >{{ tournoi.getAddress() }}</a>
                                         <span class="text-primary px-2">|</span>
-                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >{{ tournoi.getNom() }}l</a>
+                                        <a class="text-primary text-uppercase text-decoration-none" href="#" >{{ tournoi.getNom() }}</a>
                                     </div>
                                     <a href="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
                                 </div>
@@ -157,7 +157,7 @@
                     <div class="mb-5">
                 
                      <div class="mb-5">
-                    <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Événements récents</h4>
+                    <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Évènements récents</h4>
     <div class="list-group">
         {% for tournoi in tournoirecent %}
             <a href="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}" class="list-group-item list-group-item-action flex-column align-items-start mb-3">

@@ -25,6 +25,21 @@
     <link href="{{ asset('Front/css/Profilestyle.css') }}" rel="stylesheet">
 
 </head>
+{% block stylesheets %}
+<style>
+.btn-custom-blue {
+    background-color: #007bff; /* Custom blue color */
+    border-color: #007bff; /* Custom blue color */
+    color: white; /* Text color */
+}
+
+.btn-custom-blue:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3; /* Darker blue on hover */
+}
+</style>
+{% endblock %}
+
     <body>
 
  <header id="header" class="header fixed-top d-flex align-items-center">
@@ -180,9 +195,9 @@
                 <td>{{ tournoi.datefin ? tournoi.datefin|date('Y-m-d') : '' }}</td>
                 <td>{{ tournoi.visite }}</td>
                 <td>
-                    <a href="{{ path('app_tournoi_show', {'id': tournoi.id}) }}">show</a>
-                    <a href="{{ path('app_tournoi_edit', {'id': tournoi.id}) }}">edit</a>
-                </td>
+    <a href="{{ path('app_tournoi_show', {'id': tournoi.id}) }}" class="btn btn-custom-blue btn-sm">Show</a>
+    <a href="{{ path('app_tournoi_edit', {'id': tournoi.id}) }}" class="btn btn-custom-blue btn-sm">Edit</a>
+</td>
             </tr>
         {% else %}
             <tr>
@@ -191,7 +206,7 @@
         {% endfor %}
         </tbody>
         </table>
-    <a href="{{ path('app_tournoi_new') }}">Create new</a>
+   <a href="{{ path('app_tournoi_new') }}" class="btn btn-custom-blue">Create new</a>
     </section>
 
        
