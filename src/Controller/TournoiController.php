@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 
 
 #[Route('/tournoi')]
@@ -23,7 +24,7 @@ class TournoiController extends AbstractController
             ->getRepository(Tournoi::class)
             ->findAll();
 
-        return $this->render('Front/evenements.html.twig', [
+        return $this->render('Back/GestionEvenement/tournoi/tournoi.html.twig', [
             'tournois' => $tournois,
         ]);
     }
@@ -84,19 +85,16 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
     #[Route('/{id}', name: 'app_tournoi_show', methods: ['GET'])]
     public function show(Tournoi $tournoi): Response
     {
-    $userIdentifier = $security->getUser()->getUserIdentifier();
-    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         return $this->render('Back/GestionEvenement/tournoi/show.html.twig', [
             'tournoi' => $tournoi,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_tournoi_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Tournoi $tournoi, EntityManagerInterface $entityManager): Response
+    public function edit( Request $request, Tournoi $tournoi, EntityManagerInterface $entityManager): Response
     
     {
-        $userIdentifier = $security->getUser()->getUserIdentifier();
-    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+    
         $form = $this->createForm(TournoiType::class, $tournoi);
         $form->handleRequest($request);
 
@@ -120,6 +118,6 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_tournoi_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_tournoi', [], Response::HTTP_SEE_OTHER);
     }
 }
