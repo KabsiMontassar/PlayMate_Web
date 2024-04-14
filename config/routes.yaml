@@ -4,3 +4,7 @@
 index:
     path: /
     controller: App\Controller\HomeController::index
+get_reservations:
+    path: '/reservations'
+    controller: 'App\Controller\ReservationController::getReservations'
+    methods: ['GET']
