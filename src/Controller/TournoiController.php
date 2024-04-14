@@ -120,4 +120,24 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
 
         return $this->redirectToRoute('app_user_tournoi', [], Response::HTTP_SEE_OTHER);
     }
+    /**
+     * @Route("/tournoi/{id}", name="app_tournoi_detail")
+     */
+    public function detail($id)
+    {
+        // Récupérer les détails du terrain en fonction de $id (par ex. depuis la base de données)
+        $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
+
+        // Vérifier si le terrain existe
+        if (!$tournoi) {
+            throw $this->createNotFoundException('Terrain non trouvé');}
+
+        // Vérifier si le terrain existe et s'il est disponible
+         
+        // Passer les détails du terrain au template
+        return $this->render('Front/detaildutournoi.html.twig', [
+
+            'tournoi' => $tournoi // Passer le terrain récupéré au template
+        ]);
+    }
 }
