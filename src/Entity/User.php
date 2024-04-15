@@ -13,12 +13,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * User
  *
  * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
-//  * * @ORM\Table(name="utilisateur", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
+
 
  * @ORM\Entity
  */
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface , PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @var int
@@ -145,7 +145,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     {
         $this->datedecreation = (new DateTimeImmutable())->format('Y-m-d');
         $this->verificationcode = $this->generateVerificationCode();
-        $this->status = true; 
+        $this->status = true;
     }
 
     private function generateVerificationCode(): string
@@ -308,13 +308,13 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-   
+
 
     public function getRoles(): array
     {
-         return [$this->role];
+        return [$this->role];
         // guarantee every user at least has ROLE_USER
-       
+
     }
     public function setRoles(array $roles): static
     {
@@ -323,7 +323,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSalt() 
+    public function getSalt()
     {
         // Leave empty unless you are using bcrypt or another hashing method that requires a salt
     }
@@ -337,7 +337,4 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
-
-   
-
 }

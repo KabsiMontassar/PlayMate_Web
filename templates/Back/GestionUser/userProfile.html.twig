@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html>
-   <head>
+
+<head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-        <title>{% block title %}Welcome!{% endblock %}</title>
+  <title>{% block title %}Welcome!{% endblock %}</title>
 
 
   <!-- Favicons -->
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -21,19 +24,21 @@
   <link href="{{ asset('Back/assets/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
   <link href="{{ asset('Back/assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
   <link href="{{ asset('Back/assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
-{# <link href="{{ asset('Back/assets/css/style.css') }}" rel="stylesheet"> #}
-    <link href="{{ asset('Front/css/Profilestyle.css') }}" rel="stylesheet">
+  {#
+  <link href="{{ asset('Back/assets/css/style.css') }}" rel="stylesheet"> #}
+  <link href="{{ asset('Front/css/Profilestyle.css') }}" rel="stylesheet">
 
 </head>
-    <body>
 
- <header id="header" class="header fixed-top d-flex align-items-center">
+<body>
 
-   
-                        {% if app.user %} 
-                        {% set user = app.user %}
-                        {% endif %}
-                        
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+
+    {% if app.user %}
+    {% set user = app.user %}
+    {% endif %}
+
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="{{ path('app_Home') }}" class="logo d-flex align-items-center"> <!-- home -->
@@ -42,12 +47,12 @@
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
-            
-              {% if user.image == null %}
-              {% set imagePath = 'uploads/images/default.jpg' %}
-              {% else %}
-              {% set imagePath = 'uploads/images/' ~ user.image %}
-              {% endif %}
+
+    {% if user.image == null %}
+    {% set imagePath = 'uploads/images/default.jpg' %}
+    {% else %}
+    {% set imagePath = 'uploads/images/' ~ user.image %}
+    {% endif %}
 
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
@@ -55,7 +60,7 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{{ asset(imagePath) }}" alt="Profile" class="rounded-circle" >
+            <img src="{{ asset(imagePath) }}" alt="Profile" class="rounded-circle">
             <span class="d-none d-md-block dropdown-toggle ps-2">{{user.Name}}</span>
           </a>
 
@@ -63,7 +68,7 @@
             <li class="dropdown-header">
               <h6>{{user.name}}</h6>
               <span>
-              {{user.Role}}
+                {{user.Role}}
               </span>
             </li>
             <li>
@@ -71,14 +76,14 @@
             </li>
 
             <li>
-          <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_profile') }}">
+              <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_profile') }}">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
             </li>
-          
 
-          
+
+
             <li>
               <hr class="dropdown-divider">
             </li>
@@ -97,51 +102,51 @@
     </nav>
 
   </header>
- <aside id="sidebar" class="sidebar">
+  <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
 
-  
+
       <li class="nav-heading" style="color:#033E6A">Pages</li>
-  
+
       <li class="nav-item">
         <a class="nav-link" href="{{ path('app_user_profile') }}"> <!-- user pROFILE PAGE -->
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
         {% if user.Role == 'Proprietaire de Terrain' %}
-      
-        <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Terrain</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Avis</span>
-      </a>
-    </li>
-    {% endif %}
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}">
+          <i class="bi bi-grid"></i>
+          <span>Terrain</span>
+        </a>
       </li>
-  
-      
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ path('app_avis_index') }}">
+          <i class="bi bi-grid"></i>
+          <span>Avis</span>
+        </a>
+      </li>
+      {% endif %}
+      </li>
+
+
     </ul>
-  
+
   </aside>
 
   <main id="main" class="main">
 
-       {% for type, messages in app.session.flashbag.all() %}
+    {% for type, messages in app.session.flashbag.all() %}
     {% for message in messages %}
-        <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     {% endfor %}
-{% endfor %}
+    {% endfor %}
 
     <div class="pagetitle">
       <h1 style="color:#033E6A">Profile Page</h1>
@@ -149,7 +154,7 @@
         <ol class="breadcrumb">
           <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
           <li class="breadcrumb-item active">Profile</li>
-          
+
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -176,7 +181,8 @@
               <ul class="nav nav-tabs nav-tabs-bordered">
 
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                  <button class="nav-link active" data-bs-toggle="tab"
+                    data-bs-target="#profile-overview">Overview</button>
                 </li>
 
                 <li class="nav-item">
@@ -184,7 +190,8 @@
                 </li>
 
                 <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change
+                    Password</button>
                 </li>
 
               </ul>
@@ -194,61 +201,62 @@
 
                   <h5 class="card-title">Profile Details</h5>
 
-           
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Name</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Name }}</div>
-                </div>
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Email</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Email }}</div>
-                </div>
 
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Age</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Age }}</div>
-                </div>
-                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Phone</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Phone }}</div>
-                </div>
-                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Address</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Address }}</div>
-                </div>
                   <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Membre since</div>
-                  <div class="col-lg-9 col-md-8">{{ user.datedecreation }}</div>
-                </div>
-                 <div class="row">
-                    <div class="col-lg-9 col-md-8"><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#desactivateAccountModal">Desactivate Account</button> </div> 
-                   </div>
-  
-<!-- Modal -->
-<div class="modal fade" id="desactivateAccountModal" tabindex="-1" aria-labelledby="desactivateAccountModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="desactivateAccountModalLabel">Deactivate Account</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to deactivate your account?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" id="confirmDeactivationBtn" 
-        onclick="ivertStatus('{{ user.Email }}')"
-        >Deactivate</button>
-      </div>
-      {#  <a href="{{ path('app_logout') }}"></a> #}
-    </div>
-  </div>
-</div>
+                    <div class="col-lg-3 col-md-4 label">Name</div>
+                    <div class="col-lg-9 col-md-8">{{ user.Name }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Email</div>
+                    <div class="col-lg-9 col-md-8">{{ user.Email }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Age</div>
+                    <div class="col-lg-9 col-md-8">{{ user.Age }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Phone</div>
+                    <div class="col-lg-9 col-md-8">{{ user.Phone }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Address</div>
+                    <div class="col-lg-9 col-md-8">{{ user.Address }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Membre since</div>
+                    <div class="col-lg-9 col-md-8">{{ user.datedecreation }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-9 col-md-8"><button class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#desactivateAccountModal">Desactivate Account</button> </div>
+                  </div>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="desactivateAccountModal" tabindex="-1"
+                    aria-labelledby="desactivateAccountModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="desactivateAccountModalLabel">Deactivate Account</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          Are you sure you want to deactivate your account?
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-danger" id="confirmDeactivationBtn"
+                            onclick="ivertStatus('{{ user.Email }}')">Deactivate</button>
+                        </div>
+                        {# <a href="{{ path('app_logout') }}"></a> #}
+                      </div>
+                    </div>
+                  </div>
 
 
 
-             
+
 
 
 
@@ -259,19 +267,19 @@
 
                 <div class="tab-pane fade profile-edit pt-1" id="profile-edit">
 
-                                  <h5 class="card-title">Update Profile</h5>
+                  <h5 class="card-title">Update Profile</h5>
 
-                      {{ include('Back/GestionUser/FormTemplates/_formedit.html.twig' , {'button_label': 'Update'} )  }}
+                  {{ include('Back/GestionUser/FormTemplates/_formedit.html.twig' , {'button_label': 'Update'} ) }}
 
                 </div>
 
 
                 <div class="tab-pane fade pt-1" id="profile-change-password">
 
-                                  <h5 class="card-title">Update Password</h5>
+                  <h5 class="card-title">Update Password</h5>
 
                   <!-- Change Password Form -->
-                   {{ include('Back/GestionUser/FormTemplates/_formpassword.html.twig' , {'button_label': 'Update'} ) }}
+                  {{ include('Back/GestionUser/FormTemplates/_formpassword.html.twig' , {'button_label': 'Update'} ) }}
 
                 </div>
 
@@ -285,28 +293,28 @@
     </section>
 
   </main>
-<script>
+  <script>
 
-function ivertStatus(userEmail) {
-  const confirmDeactivationBtn = document.getElementById('confirmDeactivationBtn');
- 
-  $.post("/user/inverStatus/" + userEmail , function(data) {
+    function ivertStatus(userEmail) {
+      const confirmDeactivationBtn = document.getElementById('confirmDeactivationBtn');
+
+      $.post("/user/inverStatus/" + userEmail, function (data) {
         if (data === 'success') {
-        
-            window.location.href = '/logout';
+
+          window.location.href = '/logout';
         } else {
-            console.log('error');
-         }
-        
-       
+          console.log('error');
+        }
 
 
-        
-    });
-}
-         
-    
-</script>
+
+
+
+      });
+    }
+
+
+  </script>
 
 
   <script src="{{ asset('Back/assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
@@ -317,11 +325,10 @@ function ivertStatus(userEmail) {
   <script src="{{ asset('Back/assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
   <script src="{{ asset('Back/assets/vendor/tinymce/tinymce.min.js') }}"></script>
   <script src="{{ asset('Back/assets/vendor/php-email-form/validate.js') }}"></script>
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <!-- Template Main JS File -->
   <script src="{{ asset('Back/assets/js/main.js') }}"></script>
-    </body>
+</body>
+
 </html>
-
-

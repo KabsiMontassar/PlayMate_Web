@@ -30,6 +30,7 @@
                                 Terrains</a>
                             <a href="{{ path('app_Evenement' ) }}" class="dropdown-item">Nos
                                 Événement</a>
+                            <a href="{{ path('app_Historique' ) }}" class="dropdown-item">Votre Historique</a>
                         </div>
                     </div>
                     <a href="{{ path('app_Contact' ) }}" class="nav-item nav-link">Contact</a>
@@ -81,10 +82,12 @@
         <img class="img-fluid" id="im1" src="{{ asset('Front/css/ReservationCss/m.jpg') }}" alt="">
         <div class="text-overlay">
             <h3 class="display-4 text-uppercase">Reservation</h3>
-            <div class="d-inline-flex">
-                <p class="m-0 text-uppercase"><a class="text-white" href="{{ path('app_Home' ) }}">Home</a></p>
+            <div class="d-inline-flex text-primary">
+                <p class="m-0 text-uppercase text-primary"><a class="text-white text-primary"
+                        href="{{ path('app_Home' ) }}">Home</a>
+                </p>
                 <i class="fa fa-angle-double-right pt-1 px-3"></i>
-                <p class="m-0 text-uppercase">Reserver</p>
+                <p class="m-0 text-uppercase text-primary">Reserver</p>
             </div>
         </div>
     </div>

@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Historique;
 use App\Entity\Terrain;
 use App\Entity\User;
 use App\Form\UserType;
-
+use App\Controller\Reservation;
+use App\Controller\Payment;
 use App\Form\Login;
 use App\Repository\UserRepository;
 
@@ -15,11 +17,21 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Security\Core\Security;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'start', methods: ['GET', 'POST'])] 
+
+    private $entityManager;
+    private $security;
+
+    public function __construct(EntityManagerInterface $entityManager, Security $security)
+    {
+        $this->entityManager = $entityManager;
+        $this->security = $security;
+    }
+
+    #[Route('/', name: 'start', methods: ['GET', 'POST'])]
     public function index(): RedirectResponse
     {
         return $this->redirectToRoute('app_Home');
@@ -28,111 +40,112 @@ class HomeController extends AbstractController
     #[Route('/Apropos', name: 'app_Apropos', methods: ['GET', 'POST'])]
     public function Apropos(EntityManagerInterface $em): Response
     {
-    
-        return $this->render('Front/apropos.html.twig', [
-          
-        ]);
+
+        return $this->render('Front/apropos.html.twig', []);
     }
     #[Route('/Boutique', name: 'app_Boutique', methods: ['GET', 'POST'])]
-    public function Boutique( EntityManagerInterface $em): Response
+    public function Boutique(EntityManagerInterface $em): Response
     {
-     
 
-        return $this->render('Front/boutique.html.twig', [
-          
-           
-            
-       
-        ]);
+
+        return $this->render('Front/boutique.html.twig', []);
     }
     #[Route('/Contact', name: 'app_Contact', methods: ['GET', 'POST'])]
     public function Contact(EntityManagerInterface $em): Response
     {
-       
 
-        return $this->render('Front/contact.html.twig', [
-          
-           
-            
-       
-        ]);
+
+        return $this->render('Front/contact.html.twig', []);
     }
     #[Route('/Evenement', name: 'app_Evenement', methods: ['GET', 'POST'])]
-    public function Evenement( EntityManagerInterface $entityManager): Response
+    public function Evenement(EntityManagerInterface $entityManager): Response
     {
-       
 
-        return $this->render('Front/evenements.html.twig', [
-          
-           
-            
-       
-        ]);
+
+        return $this->render('Front/evenements.html.twig', []);
     }
     #[Route('/Home', name: 'app_Home', methods: ['GET', 'POST'])]
-    public function Home(  EntityManagerInterface $entityManager): Response
-    { 
-        return $this->render('Front/index.html.twig', [
-          
-           
-            
-       
-        ]);
+    public function Home(EntityManagerInterface $entityManager): Response
+    {
+        return $this->render('Front/index.html.twig', []);
     }
     #[Route('/Reservation', name: 'app_Reservation', methods: ['GET', 'POST'])]
-    public function Reservation( EntityManagerInterface $entityManager): Response
+    public function Reservation(EntityManagerInterface $entityManager): Response
     {
         $terrainRepository = $entityManager->getRepository(Terrain::class);
         $terrains = $terrainRepository->findAll();
 
         return $this->render('Front/reservation.html.twig', [
-             
-                'terrains' => $terrains,
-          
-           
-            
-       
+
+            'terrains' => $terrains,
+
+
+
+
         ]);
     }
     #[Route('/Service', name: 'app_Service', methods: ['GET', 'POST'])]
-    public function Service( EntityManagerInterface $entityManager): Response
+    public function Service(EntityManagerInterface $entityManager): Response
     {
-       
 
-        return $this->render('Front/service.html.twig', [
-          
-           
-            
-       
-        ]);
+
+        return $this->render('Front/service.html.twig', []);
     }
     #[Route('/Terrains', name: 'app_Terrains', methods: ['GET', 'POST'])]
-    public function Terrains( EntityManagerInterface $entityManager): Response
+    public function Terrains(EntityManagerInterface $entityManager): Response
     {
-       
+
 
         $terrainRepository = $entityManager->getRepository(Terrain::class);
         $terrains = $terrainRepository->findAll();
 
         return $this->render('Front/terrains.html.twig', [
-          
+
             'terrains' => $terrains,
-            
-       
+
+
         ]);
     }
+
+    #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
+    public function Historique(EntityManagerInterface $entityManager, Security $security): Response
+    {
+        $user = $this->getUser();
+
+        // Vérifie si l'utilisateur est connecté
+        if ($user instanceof User) {
+            $userId = $user->getId();
+
+            $historiques = $entityManager->createQueryBuilder()
+                ->select('h')
+                ->from(Historique::class, 'h')
+                ->join('h.reservation', 'r')
+                ->join('r.payment', 'p')
+                ->where('p.idmembre = :userId')
+                ->setParameter('userId', $userId)
+                ->getQuery()
+                ->getResult();
+
+            return $this->render('Front/historique.html.twig', [
+                'historiques' => $historiques,
+            ]);
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
+    }
+
 
 
     // #[Route('/login', name: 'app_user_login', methods: ['GET' , 'POST'])]
     // public function login(Request $request, EntityManagerInterface $entityManager): Response
     // {
     //     $userRepository = $entityManager->getRepository(User::class);
-        
+
     //     $user = new User();
     //     $formlogin = $this->createForm(Login::class , $user , ['validation_groups' => ['login']]);
     //     $formlogin->handleRequest($request);
     //     if ($formlogin->isSubmitted() && $formlogin->isValid()) {
-           
+
     //         $user = $userRepository->findOneByemail($formlogin->get('email')->getData());
 
     //         if($user){
@@ -142,12 +155,12 @@ class HomeController extends AbstractController
     //                 $this->addFlash('error', 'Password is incorrect');
     //             }
     //             }
-        
+
     //         }
     //     return $this->renderForm('login.html.twig', [
-            
+
     //         'formlogin' => $formlogin,
-          
+
     //     ]);
     // }
 
@@ -168,24 +181,16 @@ class HomeController extends AbstractController
     //             $entityManager->flush();
     //             return $this->redirectToRoute('app_user_login', [], Response::HTTP_SEE_OTHER);
     //         }
-            
+
 
     //         return $this->redirectToRoute('app_user_register', [], Response::HTTP_SEE_OTHER);
     //     }
 
     //     return $this->renderForm('register.html.twig', [
     //         'form' => $form
-            
+
     //     ]);
     // }
 
 
 }
-
-
-    
-    
-   
-   
-  
-
