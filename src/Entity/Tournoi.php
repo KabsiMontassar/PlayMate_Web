@@ -78,10 +78,6 @@ class Tournoi
      *     "this.getDatedebut() <= this.getDatefin()",
      *     message="La date de fin doit être postérieure à la date de début."
      * )
-     * @Assert\Expression(
-     *     "this.getDatefin() <= this.getDatedebut().modify('+30 days')",
-     *     message="La différence entre la date de début et la date de fin ne doit pas dépasser 30 jours."
-     * )
      */
     private $datefin;
 
