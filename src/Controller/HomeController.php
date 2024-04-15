@@ -3,6 +3,8 @@
 namespace App\Controller;
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
+use App\Entity\Categorie;
+use App\Entity\Product;
 use App\Entity\User;
 use App\Form\UserType;
 
@@ -38,12 +40,19 @@ class HomeController extends AbstractController
     {
      
 
+        $productRepository = $em->getRepository(Product::class);
+        $categorieRepository = $em->getRepository(Categorie::class);
+        $products = $productRepository->findAll();
+        $categories = $categorieRepository->findAll();
+
         return $this->render('Front/boutique.html.twig', [
           
-           
+            'products' => $products,
+            'categories' => $categories,
             
        
         ]);
+          
     }
     #[Route('/Contact', name: 'app_Contact', methods: ['GET', 'POST'])]
     public function Contact(EntityManagerInterface $em): Response
@@ -77,6 +86,7 @@ class HomeController extends AbstractController
        
         ]);
     }
+    
     #[Route('/Home', name: 'app_Home', methods: ['GET', 'POST'])]
     public function Home(  EntityManagerInterface $entityManager): Response
     { 
