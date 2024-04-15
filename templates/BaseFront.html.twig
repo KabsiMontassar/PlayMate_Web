@@ -24,6 +24,9 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('Front/css/style.css') }}" rel="stylesheet">
+    {% block stylesheets %}
+        <!-- Ici, le contenu du block stylesheets de chaque page enfant sera injecté -->
+    {% endblock %}
 </head>
 
 <body>
