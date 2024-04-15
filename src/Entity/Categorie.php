@@ -27,14 +27,14 @@ class Categorie
      *
      * @ORM\Column(name="nom", type="string", length=255, nullable=true, options={"default"="NULL"})
      */
-    private $nom = 'NULL';
+    private $nom ;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="description", type="text", length=65535, nullable=true, options={"default"="NULL"})
      */
-    private $description = 'NULL';
+    private $description ;
 
     public function getId(): ?int
     {

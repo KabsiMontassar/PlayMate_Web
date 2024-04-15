@@ -27,28 +27,28 @@ class Product
      *
      * @ORM\Column(name="nom", type="string", length=255, nullable=true, options={"default"="NULL"})
      */
-    private $nom = 'NULL';
+    private $nom = NULL;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="description", type="text", length=65535, nullable=true, options={"default"="NULL"})
      */
-    private $description = 'NULL';
+    private $description = NULL;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="prix", type="decimal", precision=10, scale=2, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="prix", type="integer", precision=10, scale=2, nullable=true, options={"default"="NULL"})
      */
-    private $prix = 'NULL';
+    private $prix = NULL;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=true, options={"default"="NULL"})
      */
-    private $image = 'NULL';
+    private $image = NULL;
 
     /**
      * @var \User

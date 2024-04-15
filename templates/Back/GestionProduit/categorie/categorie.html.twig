@@ -1,6 +1,6 @@
-{% extends 'BaseBack.html.twig' %}
+    {% extends 'BaseBack.html.twig' %}
 
-{% block title %}Liste des terrains{% endblock %}
+{% block title %}Liste des categories{% endblock %}
 
 {% block body %}
 <header id="header" class="header fixed-top d-flex align-items-center">
@@ -89,7 +89,7 @@
  
           
         <li class="nav-item">
-      <a class="nav-link" href="{{ path('app_terrain_index') }}"> 
+      <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}"> 
         <i class="bi bi-grid"></i>
         <span>Terrain</span>
       </a>
@@ -98,6 +98,12 @@
       <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
         <i class="bi bi-grid"></i>
         <span>Avis</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{ path('app_product_index') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Produit</span>
       </a>
     </li>
  
@@ -120,57 +126,40 @@
   <!-- End Page Title -->
 
   <section class="section">
-    <table class="table datatable">
- 
+    <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Address</th>
-                <th>Gradin</th>
-                <th>Vestiaire</th>
-                <th>Status</th>
-                <th>Nomterrain</th>
-                <th>Prix</th>
-                <th>Duree</th>
-                <th>Gouvernorat</th>
-                <th>Image</th>
-                <th>Video</th>
+                <th>Nom</th>
+                <th>Description</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for terrain in terrains %}
+        {% for categorie in categories %}
             <tr>
-                <td>{{ terrain.id }}</td>
-                <td>{{ terrain.address }}</td>
-                <td>{{ terrain.gradin ? 'disponible' : 'indisponible' }}</td>
-                <td>{{ terrain.vestiaire ? 'disponible' : 'indisponible' }}</td>
-                <td>{{ terrain.status ? 'disponible' : 'en travaux' }}</td>
-                <td>{{ terrain.nomterrain }}</td>
-                <td>{{ terrain.prix }}</td>
-                <td>{{ terrain.duree }}</td>
-                <td>{{ terrain.gouvernorat }}</td>
-                <td>{{ terrain.image }}</td>
-                <td>{{ terrain.video }}</td>
-                <td>
-                     <form action="{{ path('app_terrain_delete', {'id': terrain.id}) }}"
-                      method="post" onsubmit="return confirm('Voulez-vous supprimer ce terrain?');">
+                <td>{{ categorie.id }}</td>
+                <td>{{ categorie.nom }}</td>
+                <td>{{ categorie.description }}</td>
+             <td>
+               <form action="{{ path('app_categorie_delete', {'id': categorie.id}) }}" method="post" onsubmit="return confirm('Voulez-vous supprimer ce produit?');">
     <input type="hidden" name="_method" value="DELETE">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ terrain.id) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.id) }}">
     <button type="submit" class="btn btn-danger">Supprimer</button>
 </form>
-                    <button onclick="window.location=
-                    '{{ path('app_terrain_edit', {'id': terrain.id}) }}'"
-                     class="btn btn-primary">Modifier</button>
+                    <button onclick="window.location='{{ path('app_categorie_edit', {'id': categorie.id}) }}'" class="btn btn-primary">Modifier</button>
+            
+            
             </tr>
         {% else %}
             <tr>
-                <td colspan="12">no records found</td>
+                <td colspan="4">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <button onclick="window.location='{{ path('app_terrain_new') }}'" class="btn btn-success">Ajouter</button>
-  </section>
+
+    <a href="{{ path('app_categorie_new') }}">Create new</a>
+      </section>
 </main>
 {% endblock %}
