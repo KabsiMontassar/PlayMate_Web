@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
    <head>
@@ -7,6 +5,7 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
         <title>{% block title %}Welcome!{% endblock %}</title>
+
 
   <!-- Favicons -->
 
@@ -27,72 +26,17 @@
 
 </head>
 {% block stylesheets %}
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
 <style>
-    body {
-        background-color: #e9ecef;
-        font-family: 'Nunito', sans-serif;
-    }
-    .card {
-        border-radius: 1rem;
-        border: none;
-        overflow: hidden;
-        box-shadow: 0 0.46875rem 2.1875rem rgb(90 97 105 / 10%), 
-                    0 0.9375rem 1.40625rem rgb(90 97 105 / 10%), 
-                    0 0.25rem 0.53125rem rgb(90 97 105 / 12%), 
-                    0 0.125rem 0.1875rem rgb(90 97 105 / 10%);
-    }
-    .card-header {
-        background-color: #0056b3;
-        color: #fff;
-        font-size: 1.25rem;
-        letter-spacing: 0.1rem;
-    }
-    .form-control, .form-range, .btn-primary {
-        border-radius: 0.75rem;
-    }
-    .form-control:focus, .form-range:focus {
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
-    .btn-primary {
-        background-color: #0056b3;
-        border-color: #0056b3;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 123, 255, 0.75);
-        font-weight: bold;
-    }
-    .btn-primary:hover {
-        background-color: #004085;
-        border-color: #003b75;
-    }
-    .img-thumbnail {
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-        box-shadow: 0 0.46875rem 2.1875rem rgb(90 97 105 / 10%);
-    }
-    .custom-file-input:lang(en)~.custom-file-label::after {
-        content: "Parcourir";
-    }
-    .custom-range::-webkit-slider-thumb {
-        background-color: #0056b3;
-    }
-    .custom-range::-moz-range-thumb {
-        background-color: #0056b3;
-    }
-    .custom-range::-ms-thumb {
-        background-color: #0056b3;
-    }
-    /* Responsive adjustments can be placed here */
-   /* New styles for error messages and input fields */
-    .invalid-feedback {
-        color: #dc3545; /* Red color for the error message */
-        display: block;
-    }
+.btn-custom-blue {
+    background-color: #007bff; /* Custom blue color */
+    border-color: #007bff; /* Custom blue color */
+    color: white; /* Text color */
+}
 
-    /* Apply red border and shadow for invalid inputs */
-    .is-invalid {
-        border-color: #dc3545 !important; /* Override Bootstrap styles */
-        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-    }
+.btn-custom-blue:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3; /* Darker blue on hover */
+}
 </style>
 {% endblock %}
 
@@ -184,13 +128,13 @@
         {% if user.Role == 'Proprietaire de Terrain' %}
       
         <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}"> 
+      <a class="nav-link collapsed" href="{{ path('app_user_terrain') }}"> 
         <i class="bi bi-grid"></i>
         <span>Terrain</span>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
+      <a class="nav-link collapsed" href="{{ path('app_user_avis') }}"> 
         <i class="bi bi-grid"></i>
         <span>Avis</span>
       </a>
@@ -210,62 +154,91 @@
     </ul>
   
   </aside>
-<main id="main" class="main">
 
-  <div class="pagetitle">
-    <h1>Ajouter/Modifier un nouveau terrain</h1>
-    <nav>
-      <ol class="breadcrumb">
+  <main id="main" class="main">
+<div class="pagetitle">
+        <h1>Table Page</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
+                <li class="breadcrumb-item active">Table</li>
+
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="section">
+    <table class="table datatable">
+ 
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Address</th>
+                <th>Gradin</th>
+                <th>Vestiaire</th>
+                <th>Status</th>
+                <th>Nomterrain</th>
+                <th>Prix</th>
+                <th>Duree</th>
+                <th>Gouvernorat</th>
+                <th>Image</th>
+                <th>Video</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for terrain in terrains %}
+            <tr>
+                <td>{{ terrain.id }}</td>
+                <td>{{ terrain.address }}</td>
+                <td>{{ terrain.gradin ? 'disponible' : 'indisponible' }}</td>
+                <td>{{ terrain.vestiaire ? 'disponible' : 'indisponible' }}</td>
+                <td>{{ terrain.status ? 'disponible' : 'en travaux' }}</td>
+                <td>{{ terrain.nomterrain }}</td>
+                <td>{{ terrain.prix }}</td>
+                <td>{{ terrain.duree }}</td>
+                <td>{{ terrain.gouvernorat }}</td>
+                <td>{{ terrain.image }}</td>
+                <td>{{ terrain.video }}</td>
+                <td>
+                     <form action="{{ path('app_terrain_delete', {'id': terrain.id}) }}" method="post" onsubmit="return confirm('Voulez-vous supprimer ce terrain?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ terrain.id) }}">
+    <button type="submit" class="btn btn-danger">Supprimer</button>
+</form>
+                    <button onclick="window.location='{{ path('app_terrain_edit', {'id': terrain.id}) }}'" class="btn btn-primary">Modifier</button>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <button onclick="window.location='{{ path('app_terrain_new') }}'" class="btn btn-success">Ajouter</button>
+  </section>
+
+       
+  </main>
+   
     
 
-      </ol>
-    </nav>
-  </div>
-  <!-- End Page Title -->
 
-{{ form_start(form, {'attr': {'class': 'row g-3 needs-validation p-4', 'novalidate': 'novalidate'} }) }}
 
- <style>
-    /* CSS styles here */
-    .form-group {
-      margin-bottom: 20px;
-    }
+  <script src="{{ asset('Back/assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/chart.js/chart.umd.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/echarts/echarts.min.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/quill/quill.min.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/tinymce/tinymce.min.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/php-email-form/validate.js') }}"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    label {
-      font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="file"],
-    select {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-      margin-top: 4px;
-      margin-bottom: 10px;
-    }
-
-    button.btn {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button.btn:hover {
-      background-color: #45a049;
-    }
-  </style>
-  
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Ajouter') }}</button>
-{{ form_end(form) }}
-</section>
-</main>
-
- </body>
+  <!-- Template Main JS File -->
+  <script src="{{ asset('Back/assets/js/main.js') }}"></script>
+    </body>
 </html>
+
+

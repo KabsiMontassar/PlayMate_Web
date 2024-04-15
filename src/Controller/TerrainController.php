@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Terrain;
 use App\Entity\Avis;
+use App\Entity\User;
 use App\Form\TerrainType;
 use App\Form\AvisType;
 use App\Repository\TerrainRepository;
@@ -12,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 //********************************************************************************************
 
 #[Route('/terrain')]
@@ -28,9 +30,27 @@ class TerrainController extends AbstractController
 
     //********************************************************************************************
 
+    #[Route('/profile', name: 'app_user_terrain')]
+public function userTerrain(Security $security, EntityManagerInterface $entityManager): Response
+{
+    $userIdentifier = $security->getUser()->getUserIdentifier();
+    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+
+    $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+    
+    // Render the template with the tournaments
+    return $this->render('Back/Terrains/terrain/profileterrain.html.twig', [
+        'terrains' => $terrains,
+    ]);
+}
+
+ //********************************************************************************************
+
     #[Route('/new', name: 'app_terrain_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Security $security, Request $request, EntityManagerInterface $entityManager): Response
     {
+    $userIdentifier = $security->getUser()->getUserIdentifier();
+    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         $terrain = new Terrain();
         $form = $this->createForm(TerrainType::class, $terrain);
         $form->handleRequest($request);
@@ -66,6 +86,7 @@ class TerrainController extends AbstractController
             // Continuer le traitement si tout est valide
             $terrain->setNomterrain($nomTerrain);
             $terrain->setGouvernorat($gouvernorat);
+            $terrain->setIdprop($user);
             $terrain->setPrix($prix);
     
             // Gérer l'upload de l'image
@@ -93,7 +114,7 @@ class TerrainController extends AbstractController
             $entityManager->persist($terrain);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_terrain', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->render('Back/Terrains/terrain/new.html.twig', [

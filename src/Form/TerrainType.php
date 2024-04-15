@@ -31,7 +31,6 @@ class TerrainType extends AbstractType
             'mapped' => false,
             'required' => false,
         ])
-        ->add('idprop')
      ;
 }
 
