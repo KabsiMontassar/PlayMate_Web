@@ -166,8 +166,7 @@
  
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Address</th>
+                 <th>Address</th>
                 <th>Gradin</th>
                 <th>Vestiaire</th>
                 <th>Status</th>
@@ -183,8 +182,7 @@
         <tbody>
         {% for terrain in terrains %}
             <tr>
-                <td>{{ terrain.id }}</td>
-                <td>{{ terrain.address }}</td>
+                 <td>{{ terrain.address }}</td>
                 <td>{{ terrain.gradin ? 'disponible' : 'indisponible' }}</td>
                 <td>{{ terrain.vestiaire ? 'disponible' : 'indisponible' }}</td>
                 <td>{{ terrain.status ? 'disponible' : 'en travaux' }}</td>
@@ -195,13 +193,15 @@
                 <td>{{ terrain.image }}</td>
                 <td>{{ terrain.video }}</td>
                 <td>
-                     <form action="{{ path('app_terrain_delete', {'id': terrain.id}) }}" method="post" onsubmit="return confirm('Voulez-vous supprimer ce terrain?');">
+                     <button onclick="window.location='{{ path('app_terrain_edit', {'id': terrain.id}) }}'" class="btn btn-success btn-custom" style="margin-right: 10px;">Modifier</button>
+
+<form action="{{ path('app_terrain_delete', {'id': terrain.id}) }}" method="post" onsubmit="return confirm('Voulez-vous supprimer ce terrain?');">
     <input type="hidden" name="_method" value="DELETE">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ terrain.id) }}">
-    <button type="submit" class="btn btn-danger">Supprimer</button>
+    <button type="submit" class="btn btn-success btn-custom" style="margin-right: 10px;">Supprimer</button>
 </form>
-                    <button onclick="window.location='{{ path('app_terrain_edit', {'id': terrain.id}) }}'" class="btn btn-primary">Modifier</button>
-            </tr>
+
+             </tr>
         {% else %}
             <tr>
                 <td colspan="12">no records found</td>
