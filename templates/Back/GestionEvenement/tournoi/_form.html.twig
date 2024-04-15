@@ -219,12 +219,7 @@
             <div class="card-body">
                 {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
        
-                <div class="mb-3">
-                    {{ form_label(form.nbmaxequipe, null, {'label_attr': {'class': 'form-label'}}) }}
-                    <input type="range" class="form-range" id="teamRange" value="1" min="0" max="4" step="1">
-                    <p>Nombre d'équipes : <span id="nbTeams">8</span></p>
-                    
-                </div>
+                
 
                 <div class="mb-3">
                     {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
@@ -274,6 +269,13 @@
                                 {{ form_errors(form.datefin) }}
                             </div>
                         {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.nbmaxequipe, null, {'label_attr': {'class': 'form-label'}}) }}
+                    <input type="range" class="form-range" id="teamRange" value="1" min="0" max="4" step="1">
+                    <p>Nombre d'équipes : <span id="nbTeams">8</span></p>
+                    
                 </div>
 
                 <div class="text-center">
