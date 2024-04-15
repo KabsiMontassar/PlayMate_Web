@@ -5,25 +5,28 @@
 {% block body %}
 <header id="header" class="header fixed-top d-flex align-items-center">
 
-  <div class="d-flex align-items-center justify-content-between">
-    <a href="#" class="logo d-flex align-items-center"> <!-- home -->
-      <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
-      <span class="d-none d-lg-block">PlayMate</span>
-    </a>
-    <i class="bi bi-list toggle-sidebar-btn"></i>
-  </div><!-- End Logo -->
 
-</header>
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="{{ path('app_Home') }}" class="logo d-flex align-items-center"> <!-- home -->
+        <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
+        <span class="d-none d-lg-block"><span style="color:black">Play</span>Mate</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+            
+            
+  
+
+  </header>
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
 
-
-        <li class="nav-heading">Gestion User</li>
+ <li class="nav-heading">Gestion User</li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ path('app_user_index') }}"> <!-- user pROFILE PAGE -->
+            <a class="nav-link" href="{{ path('app_user_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-layout-text-window-reverse"></i>
                 <span>Users</span>
             </a>
@@ -38,13 +41,14 @@
         <!-- End Nav Item -->
          <li class="nav-heading">GestionTerrain</li>
         <li class="nav-item">
-      <a class="nav-link" href="{{ path('app_terrain_index') }}"> 
+      <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}"> 
         <i class="bi bi-grid"></i>
         <span>Terrain</span>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
+<a class="nav-link collapsed" href="{{ path('app_avis_index2') }}">
+
         <i class="bi bi-grid"></i>
         <span>Avis</span>
       </a>
@@ -91,21 +95,7 @@
                 <span>Participation</span>
             </a>
         </li>
-            <li class="nav-heading">Gestion Equipe</li>
-         
-          <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ path('app_equipe_index') }}"> <!-- user pROFILE PAGE -->
-                <i class="bi bi-grid"></i>
-                <span>Equipe</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ path('app_membreparequipe_index') }}"> <!-- user pROFILE PAGE -->
-                <i class="bi bi-grid"></i>
-                <span>Membre par equipe</span>
-            </a>
-        </li>
-<!-- End Nav Item -->
+ 
     </ul>
 
 </aside>
@@ -140,7 +130,6 @@
                 <th>Gouvernorat</th>
                 <th>Image</th>
                 <th>Video</th>
-                <th>actions</th>
             </tr>
         </thead>
         <tbody>
@@ -158,21 +147,16 @@
                 <td>{{ terrain.image }}</td>
                 <td>{{ terrain.video }}</td>
                 <td>
-                     <form action="{{ path('app_terrain_delete', {'id': terrain.id}) }}" method="post" onsubmit="return confirm('Voulez-vous supprimer ce terrain?');">
-    <input type="hidden" name="_method" value="DELETE">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ terrain.id) }}">
-    <button type="submit" class="btn btn-danger">Supprimer</button>
-</form>
-                    <button onclick="window.location='{{ path('app_terrain_edit', {'id': terrain.id}) }}'" class="btn btn-primary">Modifier</button>
+                
             </tr>
         {% else %}
             <tr>
-                <td colspan="12">no records found</td>
+                <td colspan="12">Aucun Terrain Trouvé </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <button onclick="window.location='{{ path('app_terrain_new') }}'" class="btn btn-success">Ajouter</button>
+   
   </section>
 </main>
 {% endblock %}

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Equipe;
 use App\Form\UserType;
 use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
@@ -19,7 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\HomeController;
 use Symfony\Component\Security\Core\Security;
-
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -67,18 +65,20 @@ class UserController extends AbstractController
            if ($imageFile) {
             // Generate a unique name for the file
             $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
     
             // Move the file to the desired directory
+            $imageFile->move(
+                $this->getParameter('image_directory'), // Path defined in services.yaml or config/packages/framework.yaml
+                $newFilename
+            );
            
             $formData->setImage($newFilename);
         }
 
             $entityManager->persist($formData);
             $entityManager->flush();
-            $imageFile->move(
-                $this->getParameter('image_directory'), // Path defined in services.yaml or config/packages/framework.yaml
-                $newFilename
-            );
+           
 
             $this->addFlash('success', 'Profile updated successfully');
 
@@ -214,28 +214,24 @@ public function resetPasswordComplete(Request $request, EntityManagerInterface $
       
    
 }
- #[Route('/equipe', name: 'app_equipe_profile', methods: ['GET'])]
-    public function equipe(Security $security, EntityManagerInterface $entityManager): Response
-    {
-        $userIdentifier = $security->getUser()->getUserIdentifier();
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+#[Route('/inverStatus/{email}', name: 'app_user_inverStatus', methods: ['POST'])]
+public function invertstatus(Request $request , EntityManagerInterface $entityManager): Response
+  {
 
- 
-        $Equipes = $entityManager->getRepository(Equipe::class)->findEquipeByUser($user->getId());
+      $user = $entityManager->getRepository(User::class)->findOneByEmail($request->attributes->get('email'));
+      if (!$user) {
+          $this->addFlash('danger', 'Email not found');
+          return new Response('error', Response::HTTP_OK);
+       }
 
-        
-  
-       
+       $user->setStatus(!$user->isStatus());
+       $entityManager->persist($user);
+       $entityManager->flush();
+       return new Response('success', Response::HTTP_OK);
       
-        return $this->render('Back/GestionEquipe/Equipe/EquipeProfile.html.twig', [
-           
-          //  'Equipes' => $Equipes,
-            'user'=> $user,
-            'equipes' => $Equipes,
-            
 
-        ]);
-    }
+  }
+
 
 }
 

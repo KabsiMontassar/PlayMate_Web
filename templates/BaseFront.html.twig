@@ -24,6 +24,9 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('Front/css/style.css') }}" rel="stylesheet">
+    {% block stylesheets %}
+        <!-- Ici, le contenu du block stylesheets de chaque page enfant sera injecté -->
+    {% endblock %}
 </head>
 
 <body>
@@ -50,9 +53,9 @@
             <div class="row">
                 <div class="col-lg-6 text-center text-lg-left mb-2 mb-lg-0">
                     <div class="d-inline-flex align-items-center">
-                        <p><i class="fa fa-envelope mr-2"></i>info@example.com</p>
+                        <p><i class="fa fa-envelope mr-2"></i>info@Playmate.tn</p>
                         <p class="text-body px-3">|</p>
-                        <p><i class="fa fa-phone-alt mr-2"></i>+012 345 6789</p>
+                        <p><i class="fa fa-phone-alt mr-2"></i>+21625986532</p>
                     </div>
                 </div>
                 <div class="col-lg-6 text-center text-lg-right">
@@ -94,7 +97,7 @@
                 <a href="{{ asset('Front/') }}" class="navbar-brand">
                     <h1 class="text-primary"><span class="text-white">Play</span>Mate</h1>
                 </a>
-                <p>Sed ipsum clita tempor ipsum ipsum amet sit ipsum lorem amet labore rebum lorem ipsum dolor. No sed vero lorem dolor dolor</p>
+                <p>Trouvez et réservez les meilleurs terrains de football près de chez vous avec notre plateforme</p>
                 <h6 class="text-white text-uppercase mt-4 mb-3" style="letter-spacing: 5px;">Suivez-nous</h6>
                 <div class="d-flex justify-content-start">
                     <a class="btn btn-outline-primary btn-square mr-2" href="{{ asset('Front/#') }}"><i class="fab fa-twitter"></i></a>
@@ -107,9 +110,9 @@
           
             <div class="col-lg-3 col-md-6 mb-5">
                 <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Contactez-nous</h5>
-                <p><i class="fa fa-map-marker-alt mr-2"></i>123 Street, New York, USA</p>
-                <p><i class="fa fa-phone-alt mr-2"></i>+012 345 67890</p>
-                <p><i class="fa fa-envelope mr-2"></i>info@example.com</p>
+                <p><i class="fa fa-map-marker-alt mr-2"></i>Tunis</p>
+                <p><i class="fa fa-phone-alt mr-2"></i>+21625986532</p>
+                <p><i class="fa fa-envelope mr-2"></i>info@Playmate.tn</p>
             </div>
         </div>
     </div>
@@ -128,6 +131,7 @@
     <script src="{{ asset('Front/lib/tempusdominus/js/moment.min.js') }}"></script>
     <script src="{{ asset('Front/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ asset('Front/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 

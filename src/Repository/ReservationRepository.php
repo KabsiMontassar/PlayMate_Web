@@ -58,16 +58,14 @@ class ReservationRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // generate function to return terrain  that are disponible in a specific date and time and terrains
-    // from table terrain and reservation 
 
 
-    public function verifierDisponibleTerrain($idTerrain, $heure, $date, $entityManager): bool
+    public function findByDisponibility($idTerrain, $heure, $date, $entityManager): bool
     {
         $qb = $this->createQueryBuilder('r')
-            ->andWhere('r.idTerrain = :idTerrain')
-            ->setParameter('idTerrain', $idTerrain)
-            ->andWhere('r.dateReservation = :date')
+            ->andWhere('r.idterrain = :id')
+            ->setParameter('id', $idTerrain)
+            ->andWhere('r.datereservation = :date')
             ->setParameter('date', $date)
             ->getQuery();
 
@@ -99,5 +97,22 @@ class ReservationRepository extends ServiceEntityRepository
         $finNouveau = $heureNouveauMatch->modify("+ $dureeAnnoce minutes");
 
         return !($finReserve < $heureNouveauMatch || $finNouveau < $heureMatchReserve);
+    }
+
+    public function findFutureAndUniqueReservations(): array
+    {
+
+        $currentDate = new \DateTime();
+
+        return $this->createQueryBuilder('r')
+            ->where('r.datereservation > :currentDate')
+            ->andWhere('r.type != :type')
+            ->setParameter('currentDate', $currentDate)
+            ->setParameter('type', 'Lancez_Vous')
+            ->groupBy('r.datereservation, r.heurereservation, r.idterrain')
+            ->having('COUNT(r) = 1')
+            ->orderBy('r.datereservation', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

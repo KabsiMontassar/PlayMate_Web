@@ -4,9 +4,11 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
+        
         "php": ">=7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "blackknight467/star-rating-bundle": "*",
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
@@ -49,6 +51,7 @@
         "twig/twig": "^2.12|^3.0",
         "twilio/sdk": "*",
         "vich/uploader-bundle": "^2.3"
+        
     },
     "config": {
         "allow-plugins": {

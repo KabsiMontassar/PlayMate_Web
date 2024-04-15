@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+   <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+        <title>{% block title %}Welcome!{% endblock %}</title>
+
+
+  <!-- Favicons -->
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('Back/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ asset('Back/assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('Back/assets/vendor/quill/quill.snow.css') }}" rel="stylesheet">
+  <link href="{{ asset('Back/assets/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
+  <link href="{{ asset('Back/assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+  <link href="{{ asset('Back/assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
+{# <link href="{{ asset('Back/assets/css/style.css') }}" rel="stylesheet"> #}
+    <link href="{{ asset('Front/css/Profilestyle.css') }}" rel="stylesheet">
+
+</head>
+{% block stylesheets %}
+<style>
+.btn-custom-blue {
+    background-color: #007bff; /* Custom blue color */
+    border-color: #007bff; /* Custom blue color */
+    color: white; /* Text color */
+}
+
+.btn-custom-blue:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3; /* Darker blue on hover */
+}
+</style>
+{% endblock %}
+
+    <body>
+
+ <header id="header" class="header fixed-top d-flex align-items-center">
+
+   
+                        {% if app.user %} 
+                        {% set user = app.user %}
+                        {% endif %}
+                        
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="{{ path('app_Home') }}" class="logo d-flex align-items-center"> <!-- home -->
+        <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
+        <span class="d-none d-lg-block"><span style="color:black">Play</span>Mate</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+            
+              {% if user.image == null %}
+              {% set imagePath = 'uploads/images/default.jpg' %}
+              {% else %}
+              {% set imagePath = 'uploads/images/' ~ user.image %}
+              {% endif %}
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item dropdown pe-3">
+
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="{{ asset(imagePath) }}" alt="Profile" class="rounded-circle" >
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{user.Name}}</span>
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>{{user.name}}</h6>
+              <span>
+              {{user.Role}}
+              </span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+          <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_profile') }}">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+          
+
+          
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{{ path('app_login') }}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+
+          </ul>
+        </li>
+
+      </ul>
+    </nav>
+
+  </header>
+ <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+
+  
+      <li class="nav-heading" style="color:#033E6A">Pages</li>
+  
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('app_user_profile') }}"> <!-- user pROFILE PAGE -->
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+        {% if user.Role == 'Proprietaire de Terrain' %}
+      
+        <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_user_terrain') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Terrain</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Avis</span>
+      </a>
+    </li>
+    {% endif %}
+    
+      </li>
+  
+      
+    </ul>
+  
+  </aside>
+
+  <main id="main" class="main">
+<div class="pagetitle">
+        <h1>Table Page</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
+                <li class="breadcrumb-item active">Table</li>
+
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="section">
+    <table class="table datatable">
+ 
+        <thead>
+            <tr>
+                 <th>Address</th>
+                <th>Gradin</th>
+                <th>Vestiaire</th>
+                <th>Status</th>
+                <th>Nomterrain</th>
+                <th>Prix</th>
+                <th>Duree</th>
+                <th>Gouvernorat</th>
+                <th>Image</th>
+                <th>Video</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for terrain in terrains %}
+            <tr>
+                 <td>{{ terrain.address }}</td>
+                <td>{{ terrain.gradin ? 'disponible' : 'indisponible' }}</td>
+                <td>{{ terrain.vestiaire ? 'disponible' : 'indisponible' }}</td>
+                <td>{{ terrain.status ? 'disponible' : 'en travaux' }}</td>
+                <td>{{ terrain.nomterrain }}</td>
+                <td>{{ terrain.prix }}</td>
+                <td>{{ terrain.duree }}</td>
+                <td>{{ terrain.gouvernorat }}</td>
+                <td>{{ terrain.image }}</td>
+                <td>{{ terrain.video }}</td>
+                <td>
+                     <button onclick="window.location='{{ path('app_terrain_edit', {'id': terrain.id}) }}'" class="btn btn-success btn-custom" style="margin-right: 10px;">Modifier</button>
+
+<form action="{{ path('app_terrain_delete', {'id': terrain.id}) }}" method="post" onsubmit="return confirm('Voulez-vous supprimer ce terrain?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ terrain.id) }}">
+    <button type="submit" class="btn btn-success btn-custom" style="margin-right: 10px;">Supprimer</button>
+</form>
+
+             </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <button onclick="window.location='{{ path('app_terrain_new') }}'" class="btn btn-success">Ajouter</button>
+  </section>
+
+       
+  </main>
+   
+    
+
+
+
+  <script src="{{ asset('Back/assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/chart.js/chart.umd.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/echarts/echarts.min.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/quill/quill.min.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/tinymce/tinymce.min.js') }}"></script>
+  <script src="{{ asset('Back/assets/vendor/php-email-form/validate.js') }}"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{{ asset('Back/assets/js/main.js') }}"></script>
+    </body>
+</html>
+
+
