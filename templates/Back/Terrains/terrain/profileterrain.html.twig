@@ -134,20 +134,13 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_user_avis') }}"> 
+      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
         <i class="bi bi-grid"></i>
         <span>Avis</span>
       </a>
     </li>
     {% endif %}
-    {% if user.Role == 'Organisateur' %}
-        <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_user_tournoi') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Tournoi</span>
-      </a>
-    </li>
-    {% endif %}
+    
       </li>
   
       
