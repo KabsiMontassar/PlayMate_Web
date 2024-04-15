@@ -59,10 +59,14 @@ class Tournoi
      */
     private $address;
 
-    /**
+     /**
      * @var \DateTime
      *
      * @ORM\Column(name="datedebut", type="date", nullable=false)
+     * @Assert\GreaterThanOrEqual(
+     *     "today",
+     *     message="La date de début ne peut pas être inférieure à la date du jour."
+     * )
      * @Assert\LessThanOrEqual(
      *     propertyPath="datefin",
      *     message="La date de début doit être antérieure ou égale à la date de fin."
@@ -74,12 +78,21 @@ class Tournoi
      * @var \DateTime
      *
      * @ORM\Column(name="datefin", type="date", nullable=false)
+     * @Assert\GreaterThanOrEqual(
+     *     "today",
+     *     message="La date de fin ne peut pas être inférieure à la date du jour."
+     * )
      * @Assert\Expression(
      *     "this.getDatedebut() <= this.getDatefin()",
      *     message="La date de fin doit être postérieure à la date de début."
      * )
+     * @Assert\Expression(
+     *     "this.getDatefin().diff(this.getDatedebut()).days <= 30",
+     *     message="La différence entre la date de début et la date de fin ne doit pas dépasser 30 jours."
+     * )
      */
     private $datefin;
+
 
     /**
      * @var int
