@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+ 
 use App\Entity\Avis;
 use App\Form\AvisType;
 use App\Repository\AvisRepository;
@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+ 
 
 #[Route('/avis')]
 class AvisController extends AbstractController
@@ -21,20 +22,7 @@ class AvisController extends AbstractController
             'avis' => $avisRepository->findAll(),
         ]);
     }
-
-    #[Route('/profile', name: 'app_user_avis')]
-    public function userAvis(Security $security, EntityManagerInterface $entityManager): Response
-    {
-        $userIdentifier = $security->getUser()->getUserIdentifier();
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-    
-        $avis = $entityManager->getRepository(Avis::class)->findBy(['idprop' => $user]);
-        
-        // Render the template with the tournaments
-        return $this->render('Back/Terrains/terrain/profileterrain.html.twig', [
-            'terrains' => $terrians,
-        ]);
-    }
+ 
 
     #[Route('/new', name: 'app_avis_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
