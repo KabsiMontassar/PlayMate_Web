@@ -38,6 +38,18 @@ class EquipeController extends AbstractController
         ]);
     }
 
+    #[Route('/profile', name: 'app_equipe_profile', methods: ['GET'])]
+    public function profile(EntityManagerInterface $entityManager): Response
+    {
+        $equipes = $entityManager
+            ->getRepository(Equipe::class)
+            ->findAll();
+
+        return $this->render('Front/Equipe/Profile.html.twig', [
+            'equipes' => $equipes,
+        ]);
+    }
+    
     #[Route('/new', name: 'app_equipe_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
