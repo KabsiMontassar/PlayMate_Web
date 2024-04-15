@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * Equipe
  *
@@ -25,6 +27,19 @@ class Equipe
      * @var string
      *
      * @ORM\Column(name="nomEquipe", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(
+     *  message = "The name cannot be blank.",
+     * )
+     * @Assert\Length(
+     * min = 3,
+     * minMessage = "The name must be at least {{ limit }} characters long",
+     * max = 25,
+     * maxMessage = "The name cannot be longer than {{ limit }} characters"
+     * )
+     * @Assert\Regex(
+     * pattern = "/^[a-zA-Z0-9]+$/",
+     * message = "The name can only contain letters and numbers"
+     * )
      */
     private $nomequipe;
 

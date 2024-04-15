@@ -18,11 +18,12 @@ class EquipeType extends AbstractType
             ->add('nbrejoueur', RangeType::class, [
                 'attr' => [
                     'min' => 1,
-                    'max' => 11,
+                    'max' => 15,
                     'step' => 1
                 ]
                 
-            ])
+                ])
+                
         ;
     }
 
