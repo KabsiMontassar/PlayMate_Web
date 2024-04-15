@@ -113,12 +113,11 @@ class ReservationController extends AbstractController
         }
     }
     #[Route('/reservations', name: 'get_reservations', methods: ['GET'])]
-    public function getReservations(): JsonResponse
+    public function getReservations(ReservationRepository $reservationRepository): JsonResponse
     {
+        $reservations = $reservationRepository->findFutureAndUniqueReservations();
 
-        $reservations = $this->getDoctrine()->getRepository(Reservation::class)->findAll();
 
-        // trj3
         $formattedReservations = [];
         foreach ($reservations as $reservation) {
             $formattedReservations[] = [
@@ -126,6 +125,7 @@ class ReservationController extends AbstractController
                 'datereservation' => $reservation->getDatereservation()->format('Y-m-d'),
                 'heurereservation' => $reservation->getHeurereservation(),
                 'idterrain' => [
+                    'id' => $reservation->getIdterrain()->getId(),
                     'nom' => $reservation->getIdterrain()->getNomterrain(),
                     'adresse' => $reservation->getIdterrain()->getAddress(),
                     'prix' => $reservation->getIdterrain()->getPrix(),
@@ -134,7 +134,7 @@ class ReservationController extends AbstractController
             ];
         }
 
-        //  format JSON
+        // Format JSON
         return new JsonResponse($formattedReservations);
     }
 }

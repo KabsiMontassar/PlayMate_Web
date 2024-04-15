@@ -26,11 +26,13 @@ class TournoiType extends AbstractType
                 '8' => '8',
                 '16 ' => '16',
                 '24' => '24',
+                '32' => '32',
             ],
             'data' => '8', // Set Option A as the default choice
-
-            'expanded' => true,
+            'label' => false,
+            'expanded' => false,
             'multiple' => false,
+            'attr' => ['style' => 'display:none;'],
         ])
             ->add('nom', TextType::class)
             ->add('affiche', FileType::class, [
@@ -47,7 +49,7 @@ class TournoiType extends AbstractType
             ->add('datefin', DateType::class, [
                 'widget' => 'single_text',
                 'input' => 'datetime',])
-            ->add('idorganisateur')
+           
         ;
     }
 

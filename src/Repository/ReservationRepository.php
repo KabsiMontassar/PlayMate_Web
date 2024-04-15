@@ -98,4 +98,21 @@ class ReservationRepository extends ServiceEntityRepository
 
         return !($finReserve < $heureNouveauMatch || $finNouveau < $heureMatchReserve);
     }
+
+    public function findFutureAndUniqueReservations(): array
+    {
+
+        $currentDate = new \DateTime();
+
+        return $this->createQueryBuilder('r')
+            ->where('r.datereservation > :currentDate')
+            ->andWhere('r.type != :type')
+            ->setParameter('currentDate', $currentDate)
+            ->setParameter('type', 'Lancez_Vous')
+            ->groupBy('r.datereservation, r.heurereservation, r.idterrain')
+            ->having('COUNT(r) = 1')
+            ->orderBy('r.datereservation', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
