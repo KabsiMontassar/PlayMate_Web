@@ -83,12 +83,56 @@
                     </div>
                 </div>
                  <div class="text-center">
-                <a href="#" class="btn btn-success btn-lg mt-3">Participer</a>
+                <div class="col-lg-9 col-md-8"><button class="btn" data-bs-toggle="modal" data-bs-target="#desactivateAccountModal">Participer</button> </div> 
             </div>
  </div>
+ <!-- Modal -->
+<div class="modal fade" id="desactivateAccountModal" tabindex="-1" aria-labelledby="desactivateAccountModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="desactivateAccountModalLabel">Deactivate Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Tu veux Participer?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="confirmDeactivationBtn" 
+        onclick="ivertStatus('{{ user.Email }}')"
+        >Participer</button>
+      </div>
+      {#  <a href="{{ path('app_logout') }}"></a> #}
+    </div>
+  </div>
+</div>
+
+
         </div>
     </div>
 
+    <script>
+    function participer(id) {
+  const confirmDeactivationBtn = document.getElementById('confirmDeactivationBtn');
+ 
+  $.post("/participation/new" + id , function(data) {
+        if (data === 'success') {
+        
+            window.location.href = '/Home';
+        } else {
+            console.log('error');
+         }
+        
+       
+
+
+        
+    });
+}
+</script>
+
 {% endblock %}
+
 
 

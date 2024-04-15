@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\UserController;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\Security;
 
 
 #[Route('/participation')]
@@ -30,8 +31,8 @@ class ParticipationController extends AbstractController
         ]);
     }
 
-    #[Route('/new/{iduser}/{id}', name: 'app_participation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, $id): Response
+    #[Route('/new/{id}', name: 'app_participation_new', methods: ['GET', 'POST'])]
+    public function new(Security $security, Request $request, EntityManagerInterface $entityManager, $id): Response
     {
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
@@ -44,15 +45,12 @@ class ParticipationController extends AbstractController
             $formdata->setIdmembre($user);
             $entityManager->persist($formdata);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_participation_index', [], Response::HTTP_SEE_OTHER,);
+            return new Response('Success', Response::HTTP_OK);
         }
 
-        return $this->renderForm('Back/GestionEvenement/participation/new.html.twig', [
-            'participation' => $participation,
-            'form' => $form,
-            
-        ]);
+       
+        return new Response('Error', Response::HTTP_OK); 
+
     }
 
     #[Route('/{id}/{iduser}', name: 'app_participation_show', methods: ['GET'])]
