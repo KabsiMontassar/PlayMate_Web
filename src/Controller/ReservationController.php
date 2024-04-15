@@ -115,9 +115,9 @@ class ReservationController extends AbstractController
     #[Route('/reservations', name: 'get_reservations', methods: ['GET'])]
     public function getReservations(ReservationRepository $reservationRepository): JsonResponse
     {
-        $reservations = $reservationRepository->findFutureReservations();
+        $reservations = $reservationRepository->findFutureAndUniqueReservations();
 
-        // Formatter les réservations
+
         $formattedReservations = [];
         foreach ($reservations as $reservation) {
             $formattedReservations[] = [
