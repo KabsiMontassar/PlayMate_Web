@@ -112,33 +112,29 @@ class ReservationController extends AbstractController
             return new Response('Terrain non disponible', Response::HTTP_OK);
         }
     }
-
-    #[Route('/all', name: 'app_reservation_all', methods: ['GET'])]
-    public function all(ReservationRepository $reservationRepository): JsonResponse
+    #[Route('/reservations', name: 'get_reservations', methods: ['GET'])]
+    public function getReservations(ReservationRepository $reservationRepository): JsonResponse
     {
-        // Récupérer toutes les réservations à partir du référentiel
-        $reservations = $reservationRepository->findAll();
+        $reservations = $reservationRepository->findFutureAndUniqueReservations();
 
-        // Tableau pour stocker les réservations formatées
+
         $formattedReservations = [];
-
-        // Boucler à travers chaque réservation pour la formater
         foreach ($reservations as $reservation) {
-            // Construire un tableau associatif pour chaque réservation
-            $formattedReservation = [
+            $formattedReservations[] = [
                 'id' => $reservation->getIdreservation(),
-                'is_confirm' => $reservation->isIsconfirm(),
-                'date_reservation' => $reservation->getDatereservation()->format('Y-m-d'), // Format de date selon votre besoin
-                'heure_reservation' => $reservation->getHeurereservation(),
-                'type' => $reservation->getType(),
-                // Ajoutez d'autres champs si nécessaire
+                'datereservation' => $reservation->getDatereservation()->format('Y-m-d'),
+                'heurereservation' => $reservation->getHeurereservation(),
+                'idterrain' => [
+                    'id' => $reservation->getIdterrain()->getId(),
+                    'nom' => $reservation->getIdterrain()->getNomterrain(),
+                    'adresse' => $reservation->getIdterrain()->getAddress(),
+                    'prix' => $reservation->getIdterrain()->getPrix(),
+                    'duree' => $reservation->getIdterrain()->getDuree()
+                ],
             ];
-
-            // Ajouter la réservation formatée au tableau des réservations formatées
-            $formattedReservations[] = $formattedReservation;
         }
 
-        // Retourner les réservations formatées sous forme de réponse JSON
+        // Format JSON
         return new JsonResponse($formattedReservations);
     }
 }

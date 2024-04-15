@@ -91,10 +91,16 @@
 </div>
 <!-- Header End -->
 <div class="container pt-5 pb-3">
+
+
+
     <div class="text-center mb-3 pb-3">
         <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">N'attendez pas !</h6>
-        <h1 style="padding-bottom: 40px;">Créez votre légende !</h1>
+        <h1 style="padding-bottom: 20px;">Créez votre légende !</h1>
     </div>
+
+    <!--div pour afficher reservation-->
+    <div class="container-lg position-relative p-0 px-lg-3" id="reservation-container" class="row"></div>
 
     <!-- choix du une des trois types-->
     <div class="container-fluid py-5">
@@ -181,7 +187,7 @@
                     <div class="col-12" id="pagginationLancezVous">
                         <nav aria-label="Page navigation">
                             <ul class="pagination pagination-lg justify-content-center bg-white mb-0"
-                                style="padding: 30px;">
+                                style="padding: 10px;">
                                 <li class="page-item disabled">
                                     <a class="page-link" href="#" aria-label="Previous">
                                         <span aria-hidden="true">&laquo;</span>
@@ -212,9 +218,9 @@
 
     <!-- affichage du parametre de creer partie-->
     <div class="container-fluid booking mt-5 pb-5 d-flex justify-content-center align-items-center invisible"
-        id="bookingDiv">
+        id="bookingDiv" style="padding: 5px;">
         <div class="container pb-5">
-            <div class="bg-light shadow" style="padding: 30px;">
+            <div class="bg-light shadow" style="padding: 10px;">
                 <div class="row align-items-center text-center" style="min-height: 60px;">
                     <div class="col-md-3">
                         <div class="mb-3 mb-md-0">
@@ -325,8 +331,42 @@
             var afficherTerrain = document.getElementById("afficherTerrain");
             afficherTerrain.classList.toggle("invisible");
         } else if (typeReservation == 'Postuler_Comme_Adversaire') {
+            fetch('/reservations')
+                .then(response => response.json())
+                .then(reservations => {
+                    var reservationContainer = document.getElementById('reservation-container');
+                    reservationContainer.innerHTML = ''; // Clear existing content
+                    reservations.forEach(reservation => {
+                        var reservationDiv = document.createElement('div');
+                        reservationDiv.classList.add('col-md-12', 'mb-4', 'pb-2');
+                        reservationDiv.innerHTML = `
+                        <div class="blog-item text-center">
+                            <div class="bg-white p-4">
+                                <p class="h5 m-0">
+                                    <span class="blue-text">Date de réservation :</span>  <span class="font-weight-bold" id="dateres">${reservation.datereservation} </span>
+                                    <span class="blue-text">Heure de réservation :</span>  <span class="font-weight-bold" id="heureres">${reservation.heurereservation}</span>
+                                </p>
+                                <p class="h5 m-0"> 
+                                    <span class="green-text d-none">Nom du terrain :</span>  <span class="font-weight-bold d-none" id="terrainid" > ${reservation.idterrain.id}</span>
+                                    <span class="green-text">Nom du terrain :</span>  <span class="font-weight-bold" id="nomterrain"> ${reservation.idterrain.nom} </span>
+                                    <span class="green-text">Adresse :</span>  <span class="font-weight-bold"> ${reservation.idterrain.adresse} </span>
+                                    <span class="green-text">Durée :</span>  <span class="font-weight-bold"> ${reservation.idterrain.duree} </span>
+                                    <span class="green-text">Prix :</span>  <span class="font-weight-bold">${reservation.idterrain.prix}</span>
+                                </p>
+                                <div class="mt-3">
+                                    <button class="btn btn-primary mr-2" onclick="reserverCommeAdversaire()">Réserver</button>
+                                    <button class="btn btn-success" onclick="voirDetails()">Voir Détails</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                        reservationContainer.appendChild(reservationDiv);
+                    });
+                })
+                .catch(error => console.error('Erreur lors de la récupération des réservations:', error));
 
         }
+
         else {
 
             var afficherTerrain = document.getElementById("afficherTerrain");
@@ -409,6 +449,22 @@
         }
     }
 
+    function reserverCommeAdversaire() {
+        alert('dans postuler')
+        var date = document.getElementById("dateres").innerText;
+        var horaire = document.getElementById("heureres").innerText;
+        var terrain = document.getElementById("terrainid").innerText;
+        typeReservation = 'Postuler_Comme_Adversaire';
+        alert(date + " \n" + horaire + "\n" + terrain + "\n" + typeReservation);
+        $.post("/reservation/getTerrain/" + typeReservation + "/" + terrain + "/" + date + "/" + horaire, function (data) {
+            // Traitez la réponse ici
+            if (data === 'Terrain disponible') {
+                alert('ok')
+            } else {
+                alert(data);
+            }
+        });
+    }
 
     // prendre l argument idTerrain
     function VerfivationDisponibiliteTerrain() {
@@ -465,6 +521,18 @@
         background-position: center;
         height: 400px;
 
+    }
+
+    .blue-text {
+        color: #033E6A;
+    }
+
+    .green-text {
+        color: #4CAF50;
+    }
+
+    .text-center {
+        text-align: center;
     }
 </style>
 
