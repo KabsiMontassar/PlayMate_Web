@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Equipe;
+use App\Entity\User;
+use App\Entity\Membreparequipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -45,4 +47,36 @@ class EquipeRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findEquipeByUser($idmembre): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT e
+            FROM App\Entity\Equipe e
+            JOIN App\Entity\Membreparequipe m
+            WHERE m.idmembre = :idmembre'
+        )->setParameter('idmembre', $idmembre);
+
+        return $query->getResult();
+    }
+
+// give me a function that takes a equipe and returns all the users associated by the table membreparequipe 
+
+ public function findUsersbyEquipe($idequipe): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT u
+            FROM App\Entity\User u
+            JOIN App\Entity\Membreparequipe m
+            WHERE m.idequipe = :idequipe'
+        )->setParameter('idequipe', $idequipe);
+
+        return $query->getResult();
+    }
+
+
 }
