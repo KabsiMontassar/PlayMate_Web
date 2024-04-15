@@ -63,11 +63,16 @@ class HomeController extends AbstractController
         $tournois = $entityManager
             ->getRepository(Tournoi::class)
             ->findAll();
+            
+            $recentTournois =  $entityManager
+            ->getRepository(Tournoi::class)
+            ->findBy([], ['id' => 'DESC'], 2);
 
 
         return $this->render('Front/evenements.html.twig', [
           
             'tournois' => $tournois,
+            'tournoirecent'  => $recentTournois,
             
        
         ]);
