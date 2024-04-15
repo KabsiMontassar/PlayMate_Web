@@ -65,12 +65,10 @@ class Terrain
 private $nomterrain;
 
 /**
- * @var float
- *
  * @ORM\Column(name="prix", type="float", precision=10, scale=2, nullable=false)
  * @Assert\NotBlank(message="Veuillez saisir le prix")
- * @Assert\Regex(
- *     pattern="/^\d+(\.\d+)?$/",
+ * @Assert\Type(
+ *     type="numeric",
  *     message="Le prix ne doit contenir que des chiffres."
  * )
  */
