@@ -7,13 +7,13 @@ use DateTimeImmutable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 //groups = {"registration", "update_profile"  , "login"}
 /**
  * User
  *
-//  * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
- * * @ORM\Table(name="utilisateur", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
+ * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
 
  * @ORM\Entity
  */
@@ -51,11 +51,6 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      * @Assert\NotBlank(
      *   groups = {"registration"  , "login"}
      * )
-     * @Assert\Regex(
-     *   pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/",
-     *  message = "The password must be at least 8 characters long and contain at least one digit, one upper case letter and one lower case letter."
-     * )
-     * 
      */
     private $password;
 
@@ -64,14 +59,10 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      *
      * @ORM\Column(name="Name", type="string", length=255, nullable=false)
      * @Assert\NotBlank(
+     *  message = "The name cannot be blank.",
      *   groups = {"registration", "update_profile"  }
-     * )
-     * @Assert\Regex(
-     *  pattern = "/^[a-zA-Z]+$/",
-     * message = "The name must contain only letters."
-     * )
      * 
-     * 
+     * )
      * 
      */
     private $name;
@@ -85,12 +76,11 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      *   groups = { "update_profile" }
      * )
      * @Assert\Range(
-     *  min = 12,
-     * max = 60,   
-     * notInRangeMessage = "You must be between {{ min }} and {{ max }} years old to register.",
-     *  groups = { "update_profile" }
+     *    min = 12,
+     *   max = 100,
+     * notInRangeMessage = "The age must be between {{ min }} and {{ max }}",
+     * groups = { "update_profile" }
      * )
-     * 
     
      */
     private $age = NULL;
@@ -104,12 +94,11 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      *   groups = { "update_profile" }
      * )
      * @Assert\Range(
-     * min = 10000000,
-     * max = 99999999,
-     * notInRangeMessage = "The phone number must be between {{ min }} and {{ max }}.",
-     * groups = { "update_profile" }
+     *     min = 10000000,
+     *    max = 99999999,
+     *   notInRangeMessage = "The phone number must be between {{ min }} and {{ max }}",
+     *  groups = { "update_profile" }
      * )
-     * 
     
      * 
      * 
