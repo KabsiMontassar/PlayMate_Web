@@ -158,7 +158,7 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
                 $terrain->setVideo($newFilename);
             }
                 $entityManager->flush();
-        return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_terrain', [], Response::HTTP_SEE_OTHER);
         }
         return $this->render('Back/Terrains/terrain/edit.html.twig', [
             'terrain' => $terrain,
@@ -179,7 +179,7 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
             $entityManager->remove($terrain);
             $entityManager->flush();
         } 
-        return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_terrain', [], Response::HTTP_SEE_OTHER);
     }
 
     //********************************************************************************************

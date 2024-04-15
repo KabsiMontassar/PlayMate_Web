@@ -28,7 +28,7 @@ class AvisController extends AbstractController
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
     
-        $terrains = $entityManager->getRepository(Terrain::class)->findBy(['id' => $user]);
+        $avis = $entityManager->getRepository(Avis::class)->findBy(['idprop' => $user]);
         
         // Render the template with the tournaments
         return $this->render('Back/Terrains/terrain/profileterrain.html.twig', [

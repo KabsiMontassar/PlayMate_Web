@@ -130,7 +130,7 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
 
         // Vérifier si le terrain existe
         if (!$tournoi) {
-            throw $this->createNotFoundException('Terrain non trouvé');}
+            throw $this->createNotFoundException('Tournoi non trouvé');}
 
         // Vérifier si le terrain existe et s'il est disponible
          

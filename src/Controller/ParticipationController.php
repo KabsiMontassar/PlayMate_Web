@@ -30,10 +30,12 @@ class ParticipationController extends AbstractController
         ]);
     }
 
-    #[Route('/new/{iduser}', name: 'app_participation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{iduser}/{id}', name: 'app_participation_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, $id): Response
     {
-        
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+        $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
         $participation = new Participation();
         $form = $this->createForm(ParticipationType::class, $participation);
         $form->handleRequest($request);
@@ -85,7 +87,8 @@ class ParticipationController extends AbstractController
     #[Route('/{id}/{iduser}', name: 'app_participation_delete', methods: ['POST'])]
     public function delete(Request $request, Participation $participation, EntityManagerInterface $entityManager): Response
     {
-       
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         if ($this->isCsrfTokenValid('delete'.$participation->getId(), $request->request->get('_token'))) {
             $entityManager->remove($participation);
             $entityManager->flush();
