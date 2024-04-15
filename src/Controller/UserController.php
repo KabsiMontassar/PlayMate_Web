@@ -65,18 +65,20 @@ class UserController extends AbstractController
            if ($imageFile) {
             // Generate a unique name for the file
             $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
     
             // Move the file to the desired directory
+            $imageFile->move(
+                $this->getParameter('image_directory'), // Path defined in services.yaml or config/packages/framework.yaml
+                $newFilename
+            );
            
             $formData->setImage($newFilename);
         }
 
             $entityManager->persist($formData);
             $entityManager->flush();
-            $imageFile->move(
-                $this->getParameter('image_directory'), // Path defined in services.yaml or config/packages/framework.yaml
-                $newFilename
-            );
+           
 
             $this->addFlash('success', 'Profile updated successfully');
 
@@ -212,6 +214,23 @@ public function resetPasswordComplete(Request $request, EntityManagerInterface $
       
    
 }
+#[Route('/inverStatus/{email}', name: 'app_user_inverStatus', methods: ['POST'])]
+public function invertstatus(Request $request , EntityManagerInterface $entityManager): Response
+  {
+
+      $user = $entityManager->getRepository(User::class)->findOneByEmail($request->attributes->get('email'));
+      if (!$user) {
+          $this->addFlash('danger', 'Email not found');
+          return new Response('error', Response::HTTP_OK);
+       }
+
+       $user->setStatus(!$user->isStatus());
+       $entityManager->persist($user);
+       $entityManager->flush();
+       return new Response('success', Response::HTTP_OK);
+      
+
+  }
 
 
 }

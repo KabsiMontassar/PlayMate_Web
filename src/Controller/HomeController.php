@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\Tournoi;
 use App\Entity\Terrain;
 use App\Entity\User;
 use App\Form\UserType;
@@ -60,11 +60,19 @@ class HomeController extends AbstractController
     #[Route('/Evenement', name: 'app_Evenement', methods: ['GET', 'POST'])]
     public function Evenement( EntityManagerInterface $entityManager): Response
     {
-       
+        $tournois = $entityManager
+            ->getRepository(Tournoi::class)
+            ->findAll();
+            
+            $recentTournois =  $entityManager
+            ->getRepository(Tournoi::class)
+            ->findBy([], ['id' => 'DESC'], 2);
+
 
         return $this->render('Front/evenements.html.twig', [
           
-           
+            'tournois' => $tournois,
+            'tournoirecent'  => $recentTournois,
             
        
         ]);

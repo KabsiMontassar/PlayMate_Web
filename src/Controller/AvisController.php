@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+ 
 use App\Entity\Avis;
 use App\Form\AvisType;
 use App\Repository\AvisRepository;
@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+ 
 
 #[Route('/avis')]
 class AvisController extends AbstractController
@@ -21,7 +22,14 @@ class AvisController extends AbstractController
             'avis' => $avisRepository->findAll(),
         ]);
     }
-
+    #[Route('/avis/index2', name: 'app_avis_index2', methods: ['GET'])]
+    public function index2(AvisRepository $avisRepository): Response
+    {
+        return $this->render('Back/Terrains/avis/index2.html.twig', [
+            'avis' => $avisRepository->findAll(),]);
+    }
+    
+    
     #[Route('/new', name: 'app_avis_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

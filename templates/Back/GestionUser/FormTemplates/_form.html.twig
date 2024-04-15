@@ -1,9 +1,9 @@
 {# templates/Back/GestionUser/_form.html.twig #}
 
 {# Start the form with custom attributes, if needed #}
-{{ form_start(form, {'attr': {'class': 'row g-3 needs-validation', 'novalidate': 'novalidate'} }) }}
+{{ form_start(form, {'attr': {'class': 'row g-3 needs-validation p-4', 'novalidate': 'novalidate'} }) }}
    <div class="col-12">
-        {{ form_label(form.name, 'Name', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_label(form.name, 'Name', {'label_attr': {'class': 'form-label', 'style':'font-weight:500'}}) }}
     
         {{ form_widget(form.name, {'attr': {'class': 'form-control', 'pattern': '^([a-zA-Zéàùç]+[ ]{0,1})+$', 'minlength':'5',  'maxlength':'20' }}) }}
 
@@ -12,7 +12,7 @@
     </div>
    
      <div class="col-12">
-        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label', 'style':'font-weight:500'}}) }}
            <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
          {{ form_widget(form.email, {'attr': {'class': 'form-control' ,  'maxlength':'50' }}) }}
@@ -22,7 +22,7 @@
     </div>
 
     <div class="col-12">
-        {{ form_label(form.password, 'Password', {'label_attr': {'class': 'form-label '}}) }}
+        {{ form_label(form.password, 'Password', {'label_attr': {'class': 'form-label ', 'style':'font-weight:500'}}) }}
   
     {{ form_widget(form.password, {'attr': {'class': 'form-control', 'pattern': '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$',  'maxlength':'25'}}) }}
 
@@ -32,10 +32,10 @@
 
  
     <div class="col-12">
-        {{ form_label(form.role, 'Role', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_label(form.role, 'Role', {'label_attr': {'class': 'form-label', 'style':'font-weight:500'}}) }}
         {% for choice in form.role %}
             <div class="form-check">
-                {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_widget(choice, {'attr': {'class': 'form-check-input','style':'Background-color:#4CAF30'}}) }}
                 {{ form_label(choice, null, {'label_attr': {'class': 'form-check-label'}}) }}
             </div>
         {% endfor %}
