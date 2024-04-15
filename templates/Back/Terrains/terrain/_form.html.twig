@@ -20,19 +20,30 @@
 
   <ul class="sidebar-nav" id="sidebar-nav">
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_user_dashboard') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Dashboard</span>
-      </a>
-    </li>
-    <li class="nav-item">
+
+  <li class="nav-heading" style="color:#033E6A">Pages</li>
+  
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('app_user_profile') }}"> <!-- user pROFILE PAGE -->
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+         
+ 
+          
+        <li class="nav-item">
       <a class="nav-link" href="{{ path('app_terrain_index') }}"> 
         <i class="bi bi-grid"></i>
         <span>Terrain</span>
       </a>
     </li>
-   
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Avis</span>
+      </a>
+    </li>
+ 
 
   </ul>
 
