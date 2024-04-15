@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Tournoi;
 use App\Entity\User;
+use App\Entity\Participation;
 use App\Form\TournoiType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
