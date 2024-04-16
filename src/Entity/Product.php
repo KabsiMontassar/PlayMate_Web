@@ -43,8 +43,11 @@ class Product
      * @var string|null
      *
      * @ORM\Column(name="prix", type="integer", precision=10, scale=2, nullable=true, options={"default"="NULL"})
-     *   @Assert\NotBlank(message="Le prix est obligatoire.")
      *  @Assert\GreaterThan(value=0, message="Le prix doit être supérieur à zéro.")
+      * @Assert\Type(
+ *     type="numeric",
+ *     message="Le prix ne doit contenir que des chiffres."
+ * )
      */
     private $prix = NULL;
 
