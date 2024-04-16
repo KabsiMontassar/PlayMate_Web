@@ -1,9 +1,8 @@
 {% extends 'BaseFront.html.twig' %}
 
 {% block title %}Détails du Terrain{% endblock %}
-{% block body %}
- 
 
+{% block body %}
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
@@ -24,7 +23,7 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Pages</a>
                             <div class="dropdown-menu border-0 rounded-0 m-0">
-                                <a href="{{ path('app_Terrains' ,) }}" class="dropdown-item active">Nos Terrains</a>
+                                <a href="{{ path('app_Terrains') }}" class="dropdown-item active">Nos Terrains</a>
                                 <a href="{{ path('app_Evenement') }}" class="dropdown-item">Nos Événement</a>
                             </div>
                         </div>
@@ -33,11 +32,11 @@
                     <!-- Additional navbar items for small screens -->
                     <div class="navbar-nav ml-auto d-lg-none">
                         {% if app.user %}
-                        <a href="{{ path('app_user_profile') }}" class="nav-item nav-link">Voir profile</a>
-                        <a href="{{ path('app_logout') }}" class="nav-item nav-link">Se déconnecter</a>
+                            <a href="{{ path('app_user_profile') }}" class="nav-item nav-link">Voir profile</a>
+                            <a href="{{ path('app_logout') }}" class="nav-item nav-link">Se déconnecter</a>
                         {% else %}
-                        <a href="{{ path('app_login') }}" class="nav-item nav-link">Se connecter</a>
-                        <a href="{{ path('app_register') }}" class="nav-item nav-link">S'inscrire</a>
+                            <a href="{{ path('app_login') }}" class="nav-item nav-link">Se connecter</a>
+                            <a href="{{ path('app_register') }}" class="nav-item nav-link">S'inscrire</a>
                         {% endif %}
                     </div>
                 </div>
@@ -45,26 +44,26 @@
         </div>
     </div>
     <!-- Navbar End -->
-      <!-- Header Start -->
-       <div class="container">
+
+    <!-- Header Start -->
+    <div class="container">
         <div class="row">
             <div class="col-md-12 text-center">
                 <img class="img-fluid" src="{{ asset('uploads/images/' ~ tournoi.affiche) }}" alt="" style="max-width: 70%; height: auto;">
             </div>
         </div>
-        
-        
+
         <div class="row mt-4">
             <div class="col-md-6 offset-md-3">
                 <!-- Afficher les autres détails du terrain -->
                 <h1 class="text-center">{{ tournoi.getNom() }}</h1>
-                 <div class="card mb-3">
+                <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Nombre Equipes </h5>
                         <p class="card-text">{{ tournoi.getNbmaxequipe() }}</p>
                     </div>
                 </div>
-                 <div class="card mb-3">
+                <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Adresse</h5>
                         <p class="card-text">{{ tournoi.getAddress() }}</p>
@@ -76,63 +75,53 @@
                         <p class="card-text">{{ tournoi.getDatedebut()|date('Y-m-d') }}</p>
                     </div>
                 </div>
-                 <div class="card mb-3">
+                <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Date Fin</h5>
                         <p class="card-text">{{ tournoi.getDatefin()|date('Y-m-d') }}</p>
                     </div>
                 </div>
-                 <div class="text-center">
-                <div class="col-lg-9 col-md-8"><button class="btn" data-bs-toggle="modal" data-bs-target="#desactivateAccountModal">Participer</button> </div> 
+                <div class="text-center">
+                    <div class="col-lg-9 col-md-8">
+                        <button class="btn" data-toggle="modal" data-target="#participateModal">Participer</button>
+                    </div>
+                </div>
             </div>
- </div>
- <!-- Modal -->
-<div class="modal fade" id="desactivateAccountModal" tabindex="-1" aria-labelledby="desactivateAccountModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="desactivateAccountModalLabel">Deactivate Account</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Tu veux Participer?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" id="confirmDeactivationBtn" 
-        onclick="ivertStatus('{{ user.Email }}')"
-        >Participer</button>
-      </div>
-      {#  <a href="{{ path('app_logout') }}"></a> #}
-    </div>
-  </div>
-</div>
+        </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="participateModal" tabindex="-1" aria-labelledby="participateModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="participateModalLabel">Participer</h5>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+    {{ include('Back/GestionEvenement/participation/_form.html.twig') }}
 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="participer('{{ tournoi.id }}')">Participer</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
     <script>
-    function participer(id) {
-  const confirmDeactivationBtn = document.getElementById('confirmDeactivationBtn');
- 
-  $.post("/participation/new" + id , function(data) {
-        if (data === 'success') {
-        
-            window.location.href = '/Home';
-        } else {
-            console.log('error');
-         }
-        
-       
-
-
-        
-    });
-}
-</script>
-
+        function participer(id) {
+            $.post("/participation/new" + id , function(data) {
+                if (data === 'success') {
+                    window.location.href = '/Home';
+                } else {
+                    console.log('error');
+                }
+            });
+        }
+    </script>
 {% endblock %}
-
-
-
