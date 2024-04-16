@@ -134,6 +134,15 @@
     </li>
     {% endif %}
       </li>
+        {% if user.Role == 'Fournisseur' %}
+        <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_user_product') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Products</span>
+      </a>
+    </li>
+    {% endif %}
+      </li>
   
       
     </ul>

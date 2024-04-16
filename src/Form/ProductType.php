@@ -21,7 +21,6 @@ class ProductType extends AbstractType
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('idfournisseur')
             ->add('categorie')
         ;
     }

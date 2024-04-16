@@ -156,6 +156,4 @@ class Product
     {
         return $this->nom;
     }
-
-
 }

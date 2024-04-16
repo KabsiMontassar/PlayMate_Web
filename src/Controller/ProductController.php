@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 #[Route('/product')]
 class ProductController extends AbstractController
@@ -24,10 +25,24 @@ class ProductController extends AbstractController
             'products' => $products,
         ]);
     }
-
-    #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/profile', name: 'app_user_product')]
+    public function userProduct(Security $security, EntityManagerInterface $entityManager): Response
     {
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+    
+        $products = $entityManager->getRepository(Product::class)->findBy(['idfournisseur' => $user]);
+        
+        // Render the template with the tournaments
+        return $this->render('Back/GestionProduit/Produit/profileproduct.html.twig', [
+            'products' => $products,
+        ]);
+    }
+    #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
+    public function new(Security $security, Request $request, EntityManagerInterface $entityManager): Response
+    {   
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
@@ -67,10 +82,11 @@ class ProductController extends AbstractController
                 );
                 $product->setImage($newFilename);
             }   
+            $product->setIdfournisseur($user);
             $entityManager->persist($product);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_product', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('Back/GestionProduit/Produit/new.html.twig', [
@@ -110,7 +126,7 @@ class ProductController extends AbstractController
                     }
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_product', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('Back/GestionProduit/Produit/edit.html.twig', [
@@ -131,6 +147,6 @@ class ProductController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_product', [], Response::HTTP_SEE_OTHER);
     }
 }
