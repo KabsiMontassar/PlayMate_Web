@@ -7,13 +7,13 @@ use DateTimeImmutable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 //groups = {"registration", "update_profile"  , "login"}
 /**
  * User
  *
-//  * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
- * * @ORM\Table(name="utilisateur", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
+ * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
 
  * @ORM\Entity
  */
@@ -59,7 +59,9 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      *
      * @ORM\Column(name="Name", type="string", length=255, nullable=false)
      * @Assert\NotBlank(
+     *  message = "The name cannot be blank.",
      *   groups = {"registration", "update_profile"  }
+     * 
      * )
      * 
      */
@@ -73,6 +75,12 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      * message = "The age cannot be blank.",
      *   groups = { "update_profile" }
      * )
+     * @Assert\Range(
+     *    min = 12,
+     *   max = 100,
+     * notInRangeMessage = "The age must be between {{ min }} and {{ max }}",
+     * groups = { "update_profile" }
+     * )
     
      */
     private $age = NULL;
@@ -84,6 +92,12 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      * @Assert\NotBlank(
      * message = "The phone cannot be blank.",
      *   groups = { "update_profile" }
+     * )
+     * @Assert\Range(
+     *     min = 10000000,
+     *    max = 99999999,
+     *   notInRangeMessage = "The phone number must be between {{ min }} and {{ max }}",
+     *  groups = { "update_profile" }
      * )
     
      * 

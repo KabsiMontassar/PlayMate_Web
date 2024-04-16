@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Terrain;
 use App\Entity\Avis;
+use App\Entity\User;
 use App\Form\TerrainType;
 use App\Form\AvisType;
 use App\Repository\TerrainRepository;
@@ -12,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 //********************************************************************************************
 
 #[Route('/terrain')]
@@ -28,14 +30,65 @@ class TerrainController extends AbstractController
 
     //********************************************************************************************
 
+    #[Route('/profile', name: 'app_user_terrain')]
+public function userTerrain(Security $security, EntityManagerInterface $entityManager): Response
+{
+    $userIdentifier = $security->getUser()->getUserIdentifier();
+    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+
+    $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+    
+    // Render the template with the tournaments
+    return $this->render('Back/Terrains/terrain/profileterrain.html.twig', [
+        'terrains' => $terrains,
+    ]);
+}
+
+ //********************************************************************************************
+
     #[Route('/new', name: 'app_terrain_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Security $security, Request $request, EntityManagerInterface $entityManager): Response
     {
+    $userIdentifier = $security->getUser()->getUserIdentifier();
+    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         $terrain = new Terrain();
         $form = $this->createForm(TerrainType::class, $terrain);
         $form->handleRequest($request);
     
         if ($form->isSubmitted()) {
+            // Récupérer le nom, le gouvernorat et le prix du formulaire
+            $nomTerrain = $form->get('nomterrain')->getData();
+            $gouvernorat = $form->get('gouvernorat')->getData();
+            $prix = $form->get('prix')->getData();
+    
+            // Vérifier si le nom et le gouvernorat sont des lettres majuscules et minuscules
+            if (!preg_match('/^[a-zA-Z]+$/', $nomTerrain) || !preg_match('/^[a-zA-Z]+$/', $gouvernorat)) {
+                // Gérer l'erreur, par exemple afficher un message à l'utilisateur
+                // Rediriger vers le formulaire avec un message d'erreur
+                return $this->render('Back/Terrains/terrain/new.html.twig', [
+                    'terrain' => $terrain,
+                    'form' => $form->createView(),
+                    'error_message' => 'Le nom et le gouvernorat doivent contenir uniquement des lettres.'
+                ]);
+            }
+    
+            // Vérifier si le prix est un entier
+            if (!is_numeric($prix)) {
+                // Gérer l'erreur, par exemple afficher un message à l'utilisateur
+                // Rediriger vers le formulaire avec un message d'erreur
+                return $this->render('Back/Terrains/terrain/new.html.twig', [
+                    'terrain' => $terrain,
+                    'form' => $form->createView(),
+                    'error_message' => 'Le prix doit être un entier.'
+                ]);
+            }
+    
+            // Continuer le traitement si tout est valide
+            $terrain->setNomterrain($nomTerrain);
+            $terrain->setGouvernorat($gouvernorat);
+            $terrain->setIdprop($user);
+            $terrain->setPrix($prix);
+    
             // Gérer l'upload de l'image
             $imageFile = $form['image']->getData();
             if ($imageFile) {
@@ -61,7 +114,7 @@ class TerrainController extends AbstractController
             $entityManager->persist($terrain);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_terrain', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->render('Back/Terrains/terrain/new.html.twig', [
@@ -69,6 +122,7 @@ class TerrainController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    
     
 //********************************************************************************************
 
@@ -104,7 +158,7 @@ class TerrainController extends AbstractController
                 $terrain->setVideo($newFilename);
             }
                 $entityManager->flush();
-        return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_terrain', [], Response::HTTP_SEE_OTHER);
         }
         return $this->render('Back/Terrains/terrain/edit.html.twig', [
             'terrain' => $terrain,
@@ -125,7 +179,7 @@ class TerrainController extends AbstractController
             $entityManager->remove($terrain);
             $entityManager->flush();
         } 
-        return $this->redirectToRoute('app_terrain_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_terrain', [], Response::HTTP_SEE_OTHER);
     }
 
     //********************************************************************************************

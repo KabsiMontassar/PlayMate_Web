@@ -24,6 +24,9 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('Front/css/style.css') }}" rel="stylesheet">
+    {% block stylesheets %}
+        <!-- Ici, le contenu du block stylesheets de chaque page enfant sera injecté -->
+    {% endblock %}
 </head>
 
 <body>
@@ -128,6 +131,7 @@
     <script src="{{ asset('Front/lib/tempusdominus/js/moment.min.js') }}"></script>
     <script src="{{ asset('Front/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ asset('Front/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 

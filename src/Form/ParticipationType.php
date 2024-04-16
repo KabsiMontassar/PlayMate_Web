@@ -40,7 +40,6 @@ class ParticipationType extends AbstractType
         }
 
         $builder
-        ->add('idtournoi')
         ->add('nomequipe', ChoiceType::class, [
                 'choices' => $equipeChoices,
             ])
