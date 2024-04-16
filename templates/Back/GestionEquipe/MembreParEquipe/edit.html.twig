@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+
+<title>Edit Membreparequipe</title>
+
+{% block body %}
+    <h1>Edit Membreparequipe</h1>
+
+    {{ include('Back/Gestionequipe/MembreParEquipe/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_membreparequipe_index') }}">back to list</a>
+
+    {{ include('membreparequipe/_delete_form.html.twig') }}
+{% endblock %}
