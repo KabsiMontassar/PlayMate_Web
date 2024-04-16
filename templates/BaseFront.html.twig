@@ -95,34 +95,42 @@
                 </button>
             </div>
             <div class="modal-body">
+            {% if app.user %}
+               <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Name</div>
+                  <div class="col-lg-9 col-md-8">{{ app.user.Name }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Email</div>
+                  <div class="col-lg-9 col-md-8">{{  app.user.Email }}</div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Age</div>
+                  <div class="col-lg-9 col-md-8">{{  app.user.Age }}</div>
+                </div>
+                 <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Phone</div>
+                  <div class="col-lg-9 col-md-8">{{  app.user.Phone }}</div>
+                </div>
+                 <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Address</div>
+                  <div class="col-lg-9 col-md-8">{{  app.user.Address }}</div>
+                </div>
+                  <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Membre since</div>
+                  <div class="col-lg-9 col-md-8">{{  app.user.datedecreation }}</div>
+                </div>
+               
+                {% endif %}
                 
-  
-<!-- Modal -->
-<div class="modal fade" id="desactivateAccountModal" tabindex="-1" aria-labelledby="desactivateAccountModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="desactivateAccountModalLabel">Deactivate Account</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to deactivate your account?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" id="confirmDeactivationBtn" 
-        onclick="ivertStatus('{{ user.Email }}')"
-        >Deactivate</button>
-      </div>
-      {#  <a href="{{ path('app_logout') }}"></a> #}
-    </div>
-  </div>
+
 </div>
-            {% endif %}
+           
             </div>
         </div>
     </div>
-</div>
+
 
 
     <!-- Topbar End -->
