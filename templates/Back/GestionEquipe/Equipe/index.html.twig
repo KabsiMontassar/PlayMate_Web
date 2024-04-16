@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<title>Equipe index</title>
+
+{% block body %}
+    <h1>Equipe index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Idequipe</th>
+                <th>Nomequipe</th>
+                <th>Nbrejoueur</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for equipe in equipes %}
+            <tr>
+                <td>{{ equipe.idequipe }}</td>
+                <td>{{ equipe.nomequipe }}</td>
+                <td>{{ equipe.nbrejoueur }}</td>
+                <td>
+                    <a href="{{ path('app_equipe_show', {'idequipe': equipe.idequipe}) }}">show</a>
+                    <a href="{{ path('app_equipe_edit', {'idequipe': equipe.idequipe}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_equipe_new') }}">Create new</a>
+{% endblock %}

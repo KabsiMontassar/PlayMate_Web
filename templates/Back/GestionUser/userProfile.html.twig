@@ -134,11 +134,11 @@
     </li>
     {% endif %}
       </li>
-        {% if user.Role == 'Fournisseur' %}
+        {% if user.Role == 'Membre' %}
         <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_user_product') }}"> 
+      <a class="nav-link collapsed" href="{{ path('app_equipe_profile') }}"> 
         <i class="bi bi-grid"></i>
-        <span>Products</span>
+        <span>Equipes</span>
       </a>
     </li>
     {% endif %}

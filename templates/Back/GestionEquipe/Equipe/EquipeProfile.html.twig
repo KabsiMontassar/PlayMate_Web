@@ -1,0 +1,198 @@
+{% extends 'BaseBack.html.twig' %}
+
+{% block title %}Equipes{% endblock %}
+{% block body %}
+ <header id="header" class="header fixed-top d-flex align-items-center">
+
+   
+                        {% if app.user %} 
+                        {% set user = app.user %}
+                        {% endif %}
+                        
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="{{ path('app_Home') }}" class="logo d-flex align-items-center"> <!-- home -->
+        <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
+        <span class="d-none d-lg-block">PlayMate</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+            
+              {% if user.image == null %}
+              {% set imagePath = 'uploads/images/default.jpg' %}
+              {% else %}
+              {% set imagePath = 'uploads/images/' ~ user.image %}
+              {% endif %}
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item dropdown pe-3">
+
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="{{ asset(imagePath) }}" alt="Profile" class="rounded-circle" >
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{user.Name}}</span>
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>{{user.name}}</h6>
+              <span>
+              {{user.Role}}
+              </span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+          <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_profile') }}">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+          
+
+          
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{{ path('app_login') }}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+
+          </ul>
+        </li>
+
+      </ul>
+    </nav>
+
+  </header>
+ <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+
+  
+      <li class="nav-heading">Pages</li>
+  
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ path('app_user_profile') }}"> <!-- user pROFILE PAGE -->
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('app_equipe_profile') }}"> <!-- user pROFILE PAGE -->
+          <i class="bi bi-person"></i>
+          <span>Equipe</span>
+        </a>
+      </li>
+  
+      
+    </ul>
+  
+  </aside>
+
+  <main id="main" class="main">
+
+       {% for type, messages in app.session.flashbag.all() %}
+    {% for message in messages %}
+        <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endfor %}
+
+    <div class="pagetitle">
+      <h1>Equipe Page</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
+          <li class="breadcrumb-item active">Equipe</li>
+          
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile">
+      <div class="row">
+      
+
+        <div class="col-xl-8">
+
+          <div class="card">
+            <div class="card-body pt-3">
+              <!-- Bordered Tabs -->
+              <ul class="nav nav-tabs nav-tabs-bordered">
+
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#Equipes">Equipes</button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#Membres">Membre</button>
+                </li>
+
+              </ul>
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade show active Equipes" id="Equipes">
+
+                  <h5 class="card-title">Equipes</h5>
+
+           
+               <p>
+               
+ {% for equipe in equipes %}
+            <tr>
+                <td>{{ equipe.idequipe }}</td>
+                <td>{{ equipe.nomequipe }}</td>
+                <td>{{ equipe.nbrejoueur }}</td>
+                <td>
+                    <a href="{{ path('app_equipe_show', {'idequipe': equipe.idequipe}) }}">show</a>
+                  
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}             </p>
+                
+                </div>
+
+                <div class="tab-pane fade Membres pt-1" id="Membres">
+
+                                  <h5 class="card-title">Membres</h5>
+  <p>
+               
+               lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa.
+               </p>
+
+                </div>
+
+
+              
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+{% endblock body %}
+
+
+
+
