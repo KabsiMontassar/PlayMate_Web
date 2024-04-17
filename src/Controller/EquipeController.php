@@ -41,11 +41,12 @@ class EquipeController extends AbstractController
     #[Route('/profile', name: 'app_equipe_profile', methods: ['GET'])]
     public function profile(EntityManagerInterface $entityManager): Response
     {
+        
         $equipes = $entityManager
             ->getRepository(Equipe::class)
             ->findAll();
 
-        return $this->render('Front/Equipe/Profile.html.twig', [
+        return $this->render('Back/Gestionequipe/Equipe/EquipeProfile.html.twig', [
             'equipes' => $equipes,
         ]);
     }
