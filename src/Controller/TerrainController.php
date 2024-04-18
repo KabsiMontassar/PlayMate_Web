@@ -213,24 +213,25 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
      */
     public function donnerAvis($id, Request $request)
 {
-        $entityManager = $this->getDoctrine()->getManager();
-        $terrain = $entityManager->getRepository(Terrain::class)->find($id);
-
-if (!$terrain) {
-        throw $this->createNotFoundException('Terrain non trouvé');
+    $entityManager = $this->getDoctrine()->getManager();
+    $terrain = $entityManager->getRepository(Terrain::class)->find($id);
+    
+    if (!$terrain) {
+      throw $this->createNotFoundException('Terrain non trouvé');
     }
-        $avis = new Avis();
-        $form = $this->createForm(AvisType::class, $avis);
-        $form->handleRequest($request);
-
-if ($form->isSubmitted() && $form->isValid()) {
-        $avis = $form->getData();
-        $avis->setTerrain($terrain); 
-        $entityManager->persist($avis);
-        $entityManager->flush(); 
-        // Redirection vers la page de détails du terrain
-        return $this->redirectToRoute('app_terrain_detail', ['id' => $id]);
-    } 
+    $avis = new Avis();
+    $form = $this->createForm(AvisType::class, $avis);
+    $form->handleRequest($request);
+    
+    if ($form->isSubmitted() && $form->isValid()) {
+      $avis = $form->getData();
+      $avis->setTerrain($terrain);
+      $entityManager->persist($avis);
+      $entityManager->flush();
+    
+      // Redirection after successful submission
+      return $this->redirectToRoute('app_terrain_detail', ['id' => $id]);
+    }
     return $this->render('Front/donner_avis.html.twig', [
         'form' => $form->createView(),
         'terrain' => $terrain,
