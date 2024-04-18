@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<title>Membreparequipe index</title>
+
+{% block body %}
+    <h1>Membreparequipe index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for membreparequipe in membreparequipes %}
+            <tr>
+                <td>{{ membreparequipe.id }}</td>
+                <td>
+                    <a href="{{ path('app_membreparequipe_show', {'id': membreparequipe.id}) }}">show</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

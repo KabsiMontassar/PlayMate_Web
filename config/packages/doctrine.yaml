@@ -1,24 +1,24 @@
 doctrine:
-    # dbal:
-    #     url: '%env(resolve:DATABASE_URL)%'
-    #     use_savepoints: true
-    #     mapping_types:
-    #         enum: string
     dbal:
-        default_connection: default
-        connections:
-            default:
-                driver: 'pdo_sqlsrv'
-                server_version: '>=2005'
-                charset: utf8
-                host: 'spartanspi.database.windows.net'
-                port: 1433
-                dbname: 'spartans'
-                user: 'login@spartanspi'
-                password: 'spartans/PiWeb'
-                options:
-                    Encrypt: true
-                    TrustServerCertificate: false
+        url: '%env(resolve:DATABASE_URL)%'
+        use_savepoints: true
+        mapping_types:
+            enum: string
+    # dbal:
+    #     default_connection: default
+    #     connections:
+    #         default:
+    #             driver: 'pdo_sqlsrv'
+    #             server_version: '>=2005'
+    #             charset: utf8
+    #             host: 'spartanspi.database.windows.net'
+    #             port: 1433
+    #             dbname: 'spartans'
+    #             user: 'login@spartanspi'
+    #             password: 'spartans/PiWeb'
+    #             options:
+    #                 Encrypt: true
+    #                 TrustServerCertificate: false
   
 
         # IMPORTANT: You MUST configure your server version,

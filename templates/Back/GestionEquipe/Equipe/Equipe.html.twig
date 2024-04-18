@@ -40,22 +40,22 @@
         </li>
 
         <!-- End Nav Item -->
-        <li class="nav-heading">GestionTerrain</li>
+         <li class="nav-heading">GestionTerrain</li>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}">
-                <i class="bi bi-grid"></i>
-                <span>Terrain</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ path('app_avis_index') }}">
-                <i class="bi bi-grid"></i>
-                <span>Avis</span>
-            </a>
-        </li>
+      <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Terrain</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Avis</span>
+      </a>
+    </li>
 
-        <!-- End Nav Item -->
-        <li class="nav-heading">Gestion Reservation</li>
+    <!-- End Nav Item -->
+      <li class="nav-heading">Gestion Reservation</li>
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ path('app_reservation_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
@@ -63,7 +63,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ path('app_historique_index') }}"> <!-- user pROFILE PAGE -->
+            <a class="nav-link collapsed" href="{{ path('app_historique_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
                 <span>Historique</span>
             </a>
@@ -83,8 +83,8 @@
 
         <!-- End Nav Item -->
         <li class="nav-heading">Gestion Evenement</li>
-        <li class="nav-item">
-            <a class="nav-link collapsed " href="{{ path('app_tournoi_index') }}"> <!-- user pROFILE PAGE -->
+          <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_tournoi_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
                 <span>Tournoi</span>
             </a>
@@ -95,10 +95,10 @@
                 <span>Participation</span>
             </a>
         </li>
-            <li class="nav-heading">Gestion Equipe</li>
+           <li class="nav-heading">Gestion Equipe</li>
          
           <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ path('app_equipe_index') }}"> <!-- user pROFILE PAGE -->
+            <a class="nav-link" href="{{ path('app_equipe_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
                 <span>Equipe</span>
             </a>
@@ -109,11 +109,10 @@
                 <span>Membre par equipe</span>
             </a>
         </li>
-        <!-- End Nav Item -->
+<!-- End Nav Item -->
     </ul>
 
 </aside>
-
 
 <main id="main" class="main">
 
@@ -130,36 +129,32 @@
     <!-- End Page Title -->
 
     <section class="section">
-        <table class="table datatable">
-            <thead>
-                <tr>
-                    <th>Historique ID</th>
-                    <th>Reservation ID</th>
-                    <th>Date Reservation</th>
-                    <th>Heure Reservation</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for historique in historiques %}
-                <tr>
-                    <td>{{ historique.idhistorique }}</td>
-                    <td>{{ historique.reservation.idreservation }}</td>
-                    <td>{{ historique.reservation.datereservation|date('Y-m-d') }}</td>
-                    <td>{{ historique.reservation.heurereservation }}</td>
-
-                    <td>
-                        <a href="{{ path('app_historique_show', {'idhistorique': historique.idhistorique}) }}"> show</a>
-
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="4">no records found</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <table class="table data-table">
+        <thead>
+            <tr>
+                <th>Idequipe</th>
+                <th>Nomequipe</th>
+                <th>Nbrejoueur</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for equipe in equipes %}
+            <tr>
+                <td>{{ equipe.idequipe }}</td>
+                <td>{{ equipe.nomequipe }}</td>
+                <td>{{ equipe.nbrejoueur }}</td>
+                <td>
+                    <a href="{{ path('app_equipe_show', {'idequipe': equipe.idequipe}) }}">show</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
     </section>
 
