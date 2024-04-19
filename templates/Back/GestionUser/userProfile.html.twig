@@ -4,99 +4,55 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-        <title>{% block title %}Welcome!{% endblock %}</title>
 
 
-  <!-- Favicons -->
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
   <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('Back/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-  <link href="{{ asset('Back/assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('Back/assets/vendor/quill/quill.snow.css') }}" rel="stylesheet">
-  <link href="{{ asset('Back/assets/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
-  <link href="{{ asset('Back/assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
-  <link href="{{ asset('Back/assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
-{# <link href="{{ asset('Back/assets/css/style.css') }}" rel="stylesheet"> #}
     <link href="{{ asset('Front/css/Profilestyle.css') }}" rel="stylesheet">
+      <link href="{{ asset('Front/css/style.css') }}" rel="stylesheet">
+      
 
+    
+    <style>
+      .sidebar {
+    position: fixed;
+    top: 60px;
+    left: 60px;
+    bottom: 0;
+    width: 200px;
+    height: calc(80vh - 60px);
+    z-index: 996;
+    transition: all 0.3s;
+    padding: 20px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #aab7cf transparent;
+    box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+    background-color: #fff;
+  }
+    </style>
 </head>
     <body>
 
- <header id="header" class="header fixed-top d-flex align-items-center">
-
-   
-                        {% if app.user %} 
-                        {% set user = app.user %}
-                        {% endif %}
-                        
-
-    <div class="d-flex align-items-center justify-content-between">
-      <a href="{{ path('app_Home') }}" class="logo d-flex align-items-center"> <!-- home -->
-        <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
-        <span class="d-none d-lg-block"><span style="color:black">Play</span>Mate</span>
-      </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
-            
-              {% if user.image == null %}
+ 
+ {% if user.image == null %}
               {% set imagePath = 'uploads/images/default.jpg' %}
               {% else %}
               {% set imagePath = 'uploads/images/' ~ user.image %}
-              {% endif %}
+  {% endif %}
+   <div class="floating-user-icon d-none d-lg-block" >
+        <a  class="dropdown-toggle active" data-toggle="dropdown">
+            <i class="fas fa-user"></i>
+        </a>
+        <div class="dropdown-menu border-0 rounded-0 m-0">
+  
+       
+            <a href="{{ path('app_Home') }}" class="dropdown-item">Home</a>
 
-    <nav class="header-nav ms-auto">
-      <ul class="d-flex align-items-center">
-
-        <li class="nav-item dropdown pe-3">
-
-          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{{ asset(imagePath) }}" alt="Profile" class="rounded-circle" >
-            <span class="d-none d-md-block dropdown-toggle ps-2">{{user.Name}}</span>
-          </a>
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-            <li class="dropdown-header">
-              <h6>{{user.name}}</h6>
-              <span>
-              {{user.Role}}
-              </span>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-          <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_profile') }}">
-                <i class="bi bi-person"></i>
-                <span>My Profile</span>
-              </a>
-            </li>
-          
-
-          
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="{{ path('app_login') }}">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
-              </a>
-            </li>
-
-          </ul>
-        </li>
-
-      </ul>
-    </nav>
-
-  </header>
+            <a href="{{ path('app_logout') }}" class="dropdown-item">Se déconnecter</a>
+           
+        
+        </div>
+    </div>
  <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
@@ -240,6 +196,7 @@
                  <div class="row">
                     <div class="col-lg-9 col-md-8"><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#desactivateAccountModal">Desactivate Account</button> </div> 
                    </div>
+                  
   
 <!-- Modal -->
 <div class="modal fade" id="desactivateAccountModal" tabindex="-1" aria-labelledby="desactivateAccountModalLabel" aria-hidden="true">
@@ -302,6 +259,9 @@
     </section>
 
   </main>
+
+
+<!-- Signature -->
 <script>
 
 function ivertStatus(userEmail) {
@@ -321,11 +281,27 @@ function ivertStatus(userEmail) {
         
     });
 }
-         
-    
+ 
+
+    function invertclass() {
+        var element = document.querySelector(".toggleMenu");
+        var elementmenu = document.querySelector("#mainMenu");
+        element.classList.toggle("open");
+    }
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
+    <!-- JavaScript Libraries -->
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('Front/lib/easing/easing.min.js') }}"></script>
+    <script src="{{ asset('Front/lib/tempusdominus/js/moment.min.js') }}"></script>
+    <script src="{{ asset('Front/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+    <script src="{{ asset('Front/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      
   <script src="{{ asset('Back/assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
   <script src="{{ asset('Back/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('Back/assets/vendor/chart.js/chart.umd.js') }}"></script>
@@ -336,8 +312,11 @@ function ivertStatus(userEmail) {
   <script src="{{ asset('Back/assets/vendor/php-email-form/validate.js') }}"></script>
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <!-- Template Main JS File -->
-  <script src="{{ asset('Back/assets/js/main.js') }}"></script>
+
+
+    <!-- Template Javascript -->
+    <script src="{{ asset('Front/js/main.js') }}"></script>
+
     </body>
 </html>
 
