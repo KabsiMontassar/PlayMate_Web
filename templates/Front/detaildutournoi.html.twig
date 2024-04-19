@@ -83,43 +83,12 @@
                 </div>
                 <div class="text-center">
                     <div class="col-lg-9 col-md-8">
-                        <button class="btn" data-toggle="modal" data-target="#participateModal">Participer</button>
+                       <a href="{{ path('app_participation_new', {'id': tournoi.id , 'iduser': app.user.id}) }}" class="btn btn-custom-blue">Participer</a>
+                       
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="participateModal" tabindex="-1" aria-labelledby="participateModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="participateModalLabel">Participer</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" onclick="participer('{{ tournoi.id }}')">Participer</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        function participer(id) {
-            $.post("/participation/new" + id , function(data) {
-                if (data === 'success') {
-                    window.location.href = '/Home';
-                } else {
-                    console.log('error');
-                }
-            });
-        }
-    </script>
 {% endblock %}
