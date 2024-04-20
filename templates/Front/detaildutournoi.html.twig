@@ -96,7 +96,8 @@
         </button>
       </div>
       <div class="modal-body"> 
-    {{ render(controller('App\\Controller\\ParticipationController::formAction', {'id': tournoi.id, 'iduser': app.user.id})) }}
+       {{ include('Back/GestionEvenement/participation/_form.html.twig', {'id': tournoi.id, 'iduser': app.user.id}  )  }}
+    {# {{ render(controller('App\\Controller\\ParticipationController::new', {'id': tournoi.id, 'iduser': app.user.id})) }} #}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
@@ -112,23 +113,6 @@
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>$(document).on('submit', '#participationForm', function(e) {
-    e.preventDefault();
-    var form = $(this);
-    $.ajax({
-        type: form.attr('method'),
-        url: form.attr('action'),
-        data: form.serialize(),
-        success: function (response) {
-            alert('Participation enregistrée');
-            $('#participationModal').modal('hide');
-            location.reload(); // ou rediriger vers une autre page selon le besoin
-        },
-        error: function (xhr, status, error) {
-            alert('Erreur lors de la soumission: ' + error);
-        }
-    });
-});
-</script>
+
 
 {% endblock %}

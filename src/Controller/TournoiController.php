@@ -6,6 +6,7 @@ use App\Entity\Tournoi;
 use App\Entity\User;
 use App\Entity\Participation;
 use App\Form\TournoiType;
+use App\Form\ParticipationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -124,21 +125,37 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
     /**
      * @Route("/tournoi/{id}", name="app_tournoi_detail")
      */
-    public function detail($id)
+    public function detail(Security $security, Request $request, $id, EntityManagerInterface $entityManager)
     {
-        // Récupérer les détails du terrain en fonction de $id (par ex. depuis la base de données)
-        $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
 
-        // Vérifier si le terrain existe
+       
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+        $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
+        
+        $participation = new Participation();
+        $form = $this->createForm(ParticipationType::class, $participation);
+        $form->handleRequest($request);
+        $existingParticipation = $entityManager->getRepository(Participation::class)
+        ->findOneBy(['idmembre' => $user, 'idtournoi' => $tournoi]);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $participation->setIdmembre($user);
+            $participation->setIdtournoi($tournoi);
+            $entityManager->persist($participation);
+            $entityManager->flush();
+           
+            return $this->redirectToRoute('app_Evenement', [], Response::HTTP_SEE_OTHER);
+        }
         if (!$tournoi) {
             throw $this->createNotFoundException('Tournoi non trouvé');}
 
-        // Vérifier si le terrain existe et s'il est disponible
-         
-        // Passer les détails du terrain au template
+            
         return $this->render('Front/detaildutournoi.html.twig', [
 
-            'tournoi' => $tournoi // Passer le terrain récupéré au template
+            'tournoi' => $tournoi,
+            'form' => $form->CreateView()
+           
         ]);
     }
 }

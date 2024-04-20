@@ -32,8 +32,8 @@ class ParticipationController extends AbstractController
         ]);
     }
 
-    #[Route('/new/{id}/{iduser}', name: 'app_participation_new', methods: ['GET', 'POST'])]
-    public function new(Security $security, Request $request, EntityManagerInterface $entityManager, $id, $iduser): Response
+    #[Route('/new/{id}', name: 'app_participation_new', methods: ['GET', 'POST'])]
+    public function new(Security $security, Request $request, EntityManagerInterface $entityManager, $id): Response
     {
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
