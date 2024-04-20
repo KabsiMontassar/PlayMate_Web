@@ -48,10 +48,11 @@ class ParticipationController extends AbstractController
             $participation->setIdtournoi($tournoi);
             $entityManager->persist($participation);
             $entityManager->flush();
-            return new Response('Success', Response::HTTP_OK);
+           
+            return $this->redirectToRoute('app_Evenement', [], Response::HTTP_SEE_OTHER);
         }
         
-        return $this->render('Back/GestionEvenement/participation/_form.html.twig', [
+        return $this->render('Back/GestionEvenement/participation/new.html.twig', [
             'form' => $form->createView(),
             'tournoi' => $tournoi,
             'user' => $user,
@@ -62,8 +63,6 @@ class ParticipationController extends AbstractController
     #[Route('/{id}/{iduser}', name: 'app_participation_show', methods: ['GET'])]
     public function show(Participation $participation,  int $iduser,EntityManagerInterface $entityManager): Response
     {
-
-
         return $this->render('Back/GestionEvenement/participation/show.html.twig', [
             'participation' => $participation,
             
