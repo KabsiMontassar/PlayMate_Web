@@ -24,7 +24,7 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('Front/css/style.css') }}" rel="stylesheet">
-      <link href="{{ asset('Front/css/Profilestyle.css') }}" rel="stylesheet">
+      {# <link href="{{ asset('Front/css/Profilestyle.css') }}" rel="stylesheet"> #}
     {% block stylesheets %}
         <!-- Ici, le contenu du block stylesheets de chaque page enfant sera injecté -->
     {% endblock %}
@@ -41,7 +41,7 @@
            {% set imagepath = app.user.image ? 'uploads/images/' ~ app.user.image : 'uploads/images/default.jpg' %}
     
              <img src="{{ asset(imagepath) }}" class="mx-auto d-block" style="width: 50px; height: auto;">
-            <a href="{{ path('app_user_profile') }}" class="dropdown-item">Voir profile</a>
+            <a href="{{ path('app_OverView') }}" class="dropdown-item">Voir profile</a>
             {# <a href="#" class="dropdown-item" data-toggle="modal" data-target="#profileModal">View Profile</a> #}
 
             <a href="{{ path('app_logout') }}" class="dropdown-item">Se déconnecter</a>
@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    {# <!-- Modal -->
 <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -130,7 +130,7 @@
            
             </div>
         </div>
-    </div>
+    </div> #}
 
 
 

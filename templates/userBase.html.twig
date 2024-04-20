@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ asset('Front/css/userprofile.css') }}">
+
+</head>
+<body>
+
+  <div class="quarter-circle">    <a href="{{ path('app_Home' ) }}" ><img class="logo" style="height:90px" src="{{ asset('Back/assets/img/PlayMate.png') }}"></a>
+</div>
+
+   
+
+    <input class="menu-icon" type="checkbox" id="menu-icon" name="menu-icon"/>
+    <label for="menu-icon"></label>
+    <nav class="navbox"> 		
+        <ul class="pt-5">
+            <li><a href="{{ path('app_OverView') }}" onclick="out()" class="active">Profile</a></li>
+            <li><a href="{{ path('app_Commande_Profile') }}" onclick="out()">Commande</a></li>
+            <li><a href="{{ path('app_Produit_Profile') }}" onclick="out()">Produit</a></li>
+            <li><a href="{{ path('app_Reservation_Profile') }}" onclick="out()">Reservation</a></li>
+            <li><a href="{{ path('app_Participation_Profile') }}" onclick="out()">Participation</a></li>
+            <li><a href="{{ path('app_Tournoi_Profile') }}" onclick="out()">Tournoi</a></li>
+            <li><a href="{{ path('app_Terrains_Profile') }}" onclick="out()">Terrain</a></li>
+          
+        </ul>
+    </nav>
+
+
+<div class="container">
+    {% block body %}
+       {% endblock %}
+</div>
+
+
+
+
+
+
+<script>
+  function out() {
+    document.getElementById('menu-icon').checked = false;
+}
+
+</script>
+
+</body>
+</html>

@@ -1,323 +1,106 @@
 <!DOCTYPE html>
-<html>
-   <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ asset('Front/css/Profilestyle.css') }}">
 
-
-
-  <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('Front/css/Profilestyle.css') }}" rel="stylesheet">
-      <link href="{{ asset('Front/css/style.css') }}" rel="stylesheet">
-      
-
-    
-    <style>
-      .sidebar {
-    position: fixed;
-    top: 60px;
-    left: 60px;
-    bottom: 0;
-    width: 200px;
-    height: calc(80vh - 60px);
-    z-index: 996;
-    transition: all 0.3s;
-    padding: 20px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #aab7cf transparent;
-    box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
-    background-color: #fff;
-  }
-    </style>
 </head>
-    <body>
+<body>
 
- 
- {% if user.image == null %}
-              {% set imagePath = 'uploads/images/default.jpg' %}
-              {% else %}
-              {% set imagePath = 'uploads/images/' ~ user.image %}
-  {% endif %}
-   <div class="floating-user-icon d-none d-lg-block" >
-        <a  class="dropdown-toggle active" data-toggle="dropdown">
-            <i class="fas fa-user"></i>
-        </a>
-        <div class="dropdown-menu border-0 rounded-0 m-0">
-  
-       
-            <a href="{{ path('app_Home') }}" class="dropdown-item">Home</a>
+  <div class="quarter-circle">    <a href="{{}}" class="logo"><img src="path_to_your_logo_image" alt="Logo"></a>
+</div>
 
-            <a href="{{ path('app_logout') }}" class="dropdown-item">Se déconnecter</a>
-           
-        
-        </div>
-    </div>
- <aside id="sidebar" class="sidebar">
-
-    <ul class="sidebar-nav" id="sidebar-nav">
+    <!-- Logo linking to home -->
 
 
-  
-      <li class="nav-heading" style="color:#033E6A">Pages</li>
-  
-      <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_user_profile') }}"> <!-- user pROFILE PAGE -->
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-        {% if user.Role == 'Proprietaire de Terrain' %}
-      
-        <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_user_terrain') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Terrain</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Avis</span>
-      </a>
-    </li>
-    {% endif %}
-    {% if user.Role == 'Organisateur' %}
-        <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_user_tournoi') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Tournoi</span>
-      </a>
-    </li>
-    {% endif %}
-      </li>
-        {% if user.Role == 'Membre' %}
-        <li class="nav-item">
-      <a class="nav-link collapsed" href="{{ path('app_equipe_profile') }}"> 
-        <i class="bi bi-grid"></i>
-        <span>Equipes</span>
-      </a>
-    </li>
-    {% endif %}
-      </li>
-  
-      
-    </ul>
-  
-  </aside>
 
-  <main id="main" class="main">
 
-       {% for type, messages in app.session.flashbag.all() %}
-    {% for message in messages %}
-        <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-{% endfor %}
-
-    <div class="pagetitle">
-      <h1 style="color:#033E6A">Profile Page</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
-          <li class="breadcrumb-item active">Profile</li>
+    <input class="menu-icon" type="checkbox" id="menu-icon" name="menu-icon"/>
+    <label for="menu-icon"></label>
+    <nav class="navbox"> 		
+        <ul class="pt-5">
+            <li><a href="#Profile" onclick="showContent('Profile')" class="active">Profile</a></li>
+            <li><a href="#Commande" onclick="showContent('Commande')">Commande</a></li>
+            <li><a href="#Produit" onclick="showContent('Produit')">Produit</a></li>
+            <li><a href="#Reservation" onclick="showContent('Reservation')">Reservation</a></li>
+            <li><a href="#Participation" onclick="showContent('Participation')">Participation</a></li>
+            <li><a href="#Tournoi" onclick="showContent('Tournoi')">Tournoi</a></li>
+            <li><a href="#Terrain" onclick="showContent('Terrain')">Terrain</a></li>
           
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
+        </ul>
+    </nav>
 
-    <section class="section profile">
-      <div class="row">
-        <div class="col-xl-4">
 
-          <div class="card">
-            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-              <img src="{{  asset(imagePath) }}" alt="Profile" class="rounded-circle">
-              <h2>{{ user.Name }}</h2>
-              <h3>{{ user.Role }}</h3>
-            </div>
-          </div>
+<div class="container" id="Profile">
+    <h1>Profile</h1>
+    <p>Profile content</p>
+</div>
 
-        </div>
+<div class="container" id="Commande" style="display:none;">
+    <h1>Commande</h1>
+    <p>Commande content</p>
+</div>
 
-        <div class="col-xl-8">
+<div class="container" id="Produit" style="display:none;">
+    <h1>Produit</h1>
+    <p>Produit content</p>
+</div>
 
-          <div class="card">
-            <div class="card-body pt-3">
-              <!-- Bordered Tabs -->
-              <ul class="nav nav-tabs nav-tabs-bordered">
+<div class="container" id="Reservation" style="display:none;">
+    <h1>Reservation</h1>
+    <p>Reservation content</p>
+</div>
 
-                <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
-                </li>
+<div class="container" id="Participation" style="display:none;">
+    <h1>Participation</h1>
+    <p>Participation content</p>
 
-                <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
-                </li>
+</div>
 
-                <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
-                </li>
+<div class="container" id="Tournoi" style="display:none;">
+    <h1>Tournoi</h1>
+    <p>Tournoi content</p>
+</div>
 
-              </ul>
-              <div class="tab-content pt-2">
-
-                <div class="tab-pane fade show active profile-overview" id="profile-overview">
-
-                  <h5 class="card-title">Profile Details</h5>
-
-           
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Name</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Name }}</div>
-                </div>
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Email</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Email }}</div>
-                </div>
-
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Age</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Age }}</div>
-                </div>
-                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Phone</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Phone }}</div>
-                </div>
-                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Address</div>
-                  <div class="col-lg-9 col-md-8">{{ user.Address }}</div>
-                </div>
-                  <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Membre since</div>
-                  <div class="col-lg-9 col-md-8">{{ user.datedecreation }}</div>
-                </div>
-                 <div class="row">
-                    <div class="col-lg-9 col-md-8"><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#desactivateAccountModal">Desactivate Account</button> </div> 
-                   </div>
-                  
-  
-<!-- Modal -->
-<div class="modal fade" id="desactivateAccountModal" tabindex="-1" aria-labelledby="desactivateAccountModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="desactivateAccountModalLabel">Deactivate Account</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to deactivate your account?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" id="confirmDeactivationBtn" 
-        onclick="ivertStatus('{{ user.Email }}')"
-        >Deactivate</button>
-      </div>
-      {#  <a href="{{ path('app_logout') }}"></a> #}
-    </div>
-  </div>
+<div class="container" id="Terrain" style="display:none;">
+    <h1>Terrain</h1>
+    <p>Terrain content</p>
 </div>
 
 
 
-             
 
 
 
-
-
-
-                </div>
-
-                <div class="tab-pane fade profile-edit pt-1" id="profile-edit">
-
-                                  <h5 class="card-title">Update Profile</h5>
-
-                      {{ include('Back/GestionUser/FormTemplates/_formedit.html.twig' , {'button_label': 'Update'} )  }}
-
-                </div>
-
-
-                <div class="tab-pane fade pt-1" id="profile-change-password">
-
-                                  <h5 class="card-title">Update Password</h5>
-
-                  <!-- Change Password Form -->
-                   {{ include('Back/GestionUser/FormTemplates/_formpassword.html.twig' , {'button_label': 'Update'} ) }}
-
-                </div>
-
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-
-<!-- Signature -->
 <script>
-
-function ivertStatus(userEmail) {
-  const confirmDeactivationBtn = document.getElementById('confirmDeactivationBtn');
- 
-  $.post("/user/inverStatus/" + userEmail , function(data) {
-        if (data === 'success') {
-        
-            window.location.href = '/logout';
-        } else {
-            console.log('error');
-         }
-        
-       
-
-
-        
+  function showContent(contentId) {
+    // Hide all containers
+    var containers = document.querySelectorAll('.container');
+    containers.forEach(function(container) {
+        container.style.display = 'none';
     });
-}
- 
 
-    function invertclass() {
-        var element = document.querySelector(".toggleMenu");
-        var elementmenu = document.querySelector("#mainMenu");
-        element.classList.toggle("open");
+    // Show the selected container
+    var selectedContainer = document.getElementById(contentId);
+    if (selectedContainer) {
+        selectedContainer.style.display = 'block';
     }
+
+    // Update active class in the navbar
+    var navLinks = document.querySelectorAll('.navbox ul li a');
+    navLinks.forEach(function(link) {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + contentId) {
+            link.classList.add('active');
+        }
+    });
+
+    // Close the menu
+    document.getElementById('menu-icon').checked = false;
+}
+
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
-    <!-- JavaScript Libraries -->
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('Front/lib/easing/easing.min.js') }}"></script>
-    <script src="{{ asset('Front/lib/tempusdominus/js/moment.min.js') }}"></script>
-    <script src="{{ asset('Front/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
-    <script src="{{ asset('Front/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      
-  <script src="{{ asset('Back/assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
-  <script src="{{ asset('Back/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('Back/assets/vendor/chart.js/chart.umd.js') }}"></script>
-  <script src="{{ asset('Back/assets/vendor/echarts/echarts.min.js') }}"></script>
-  <script src="{{ asset('Back/assets/vendor/quill/quill.min.js') }}"></script>
-  <script src="{{ asset('Back/assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
-  <script src="{{ asset('Back/assets/vendor/tinymce/tinymce.min.js') }}"></script>
-  <script src="{{ asset('Back/assets/vendor/php-email-form/validate.js') }}"></script>
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-
-    <!-- Template Javascript -->
-    <script src="{{ asset('Front/js/main.js') }}"></script>
-
-    </body>
+</body>
 </html>
-
-
