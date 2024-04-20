@@ -26,7 +26,7 @@ class ProfileController extends AbstractController
     #[Route('/', name: 'First', methods: ['GET', 'POST'])] 
     public function index(): Response
     {
-     return $this->redirectToRoute('app_OverView');
+        return $this->render('userBase.html.twig');
     }
 
     
