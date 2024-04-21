@@ -41,7 +41,7 @@
            {% set imagepath = app.user.image ? 'uploads/images/' ~ app.user.image : 'uploads/images/default.jpg' %}
     
              <img src="{{ asset(imagepath) }}" class="mx-auto d-block" style="width: 50px; height: auto;">
-            <a href="{{ path('app_OverView') }}" class="dropdown-item">Voir profile</a>
+            <a href="{{ path('First') }}" class="dropdown-item">Voir profile</a>
             {# <a href="#" class="dropdown-item" data-toggle="modal" data-target="#profileModal">View Profile</a> #}
 
             <a href="{{ path('app_logout') }}" class="dropdown-item">Se déconnecter</a>

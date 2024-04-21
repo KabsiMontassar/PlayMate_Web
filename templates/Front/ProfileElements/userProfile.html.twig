@@ -1,4 +1,138 @@
 
+    {% set user = app.user %}
+	
+    <div  id="ProfileElement">
+    
+      {% if user.image == null %}
+        {% set imagePath = 'uploads/images/default.jpg' %}
+      {% else %}
+        {% set imagePath = 'uploads/images/' ~ user.image %}
+      {% endif %}
 
-   <h1 class="text-center">Profile</h1>
+      <section class=" profile">
+        <div class="row">
+          <div class="col-12"> <!-- Full width column -->
+            <div class="card">
+              <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                <img  src="{{  asset(imagePath) }}" alt="Profile" style="width:150px;">
+                <h2>{{ user.Name }}</h2>
+                <h3>{{ user.Role }}</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12"> <!-- Full width column -->
+            <div class="card">
+              <div class="card-body">
+                <!-- Bordered Tabs -->
+                <ul class="nav nav-tabs nav-tabs-bordered">
+
+                  <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                  </li>
+
+                  <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
+                  </li>
+
+                  <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                  </li>
+
+                </ul>
+
+                
+                <div class="tab-content">
+
+                  <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                    <h5 class="card-title">Profile Details</h5>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Name</div>
+                  <div class="col-lg-9 col-md-8">{{ user.Name }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Email</div>
+                  <div class="col-lg-9 col-md-8">{{ user.Email }}</div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Age</div>
+                  <div class="col-lg-9 col-md-8">{{ user.Age }}</div>
+                </div>
+                 <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Phone</div>
+                  <div class="col-lg-9 col-md-8">{{ user.Phone }}</div>
+                </div>
+                 <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Address</div>
+                  <div class="col-lg-9 col-md-8">{{ user.Address }}</div>
+                </div>
+                  <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Membre since</div>
+                  <div class="col-lg-9 col-md-8">{{ user.datedecreation }}</div>
+                </div>
+                 <div class="row">
+                    <div class="col-lg-9 col-md-8"><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#desactivateAccountModal">Desactivate Account</button> </div> 
+                   </div>                 
+                   </div>
+
+                  <div class="tab-pane fade profile-edit pt-1" id="profile-edit">
+                    <h5 class="card-title">Update Profile</h5>
+                  </div>
+                       {{ form(form) }}            
+                      
+                  <div class="tab-pane fade pt-1" id="profile-change-password">
+                    <h5 class="card-title">Update Password</h5>
+                       {# {{ form(form2) }}             #}
+             </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    
+  
+<!-- Modal -->
+<div class="modal fade" id="desactivateAccountModal" tabindex="-1" aria-labelledby="desactivateAccountModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="desactivateAccountModalLabel">Deactivate Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to deactivate your account?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="confirmDeactivationBtn" 
+        onclick="ivertStatus('{{ user.Email }}')">Deactivate</button>
+      </div>
+     
+    </div>
+  </div>
+</div>
+{# 
+<script>
+
+function ivertStatus(userEmail) {
+  const confirmDeactivationBtn = document.getElementById('confirmDeactivationBtn');
  
+  $.post("/user/inverStatus/" + userEmail , function(data) {
+        if (data === 'success') {
+            window.location.href = '/logout';
+        } else {
+            console.log('error');
+         } 
+    });
+}
+  
+ 
+
+</script>
+
+ #}

@@ -1,4 +1,4 @@
-{# templates/_form.html.twig #}
+{# templates/_formedit.html.twig #}
 
 {# Start the form with custom attributes, if needed #}
 {{ form_start(form1, {'attr': {'class': 'g-3 row mb-3 needs-validation', 'novalidate': 'novalidate', 'id': 'formedit'}}) }}
@@ -53,17 +53,3 @@
 {# End the form #}
 {{ form_end(form1) }}
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('formedit');
-    
-    form.addEventListener('submit', function(event) {
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        form.classList.add('was-validated');
-    });
-});
-</script>
