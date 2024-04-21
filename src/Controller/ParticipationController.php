@@ -87,8 +87,8 @@ class ParticipationController extends AbstractController
         ]);
     }*/
 
-    #[Route('/{id}/{iduser}', name: 'app_participation_delete', methods: ['POST'])]
-    public function delete(Request $request, Participation $participation, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}', name: 'app_participation_delete', methods: ['POST'])]
+    public function delete(Security $security, Request $request, Participation $participation, EntityManagerInterface $entityManager): Response
     {
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
@@ -97,7 +97,7 @@ class ParticipationController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_participation_index', [ 'user' => $user], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_Evenement', [ 'user' => $user], Response::HTTP_SEE_OTHER);
     }
 
     /**

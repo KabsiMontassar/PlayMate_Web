@@ -138,7 +138,7 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
         $form->handleRequest($request);
         $existingParticipation = $entityManager->getRepository(Participation::class)
         ->findOneBy(['idmembre' => $user, 'idtournoi' => $tournoi]);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $participation->setIdmembre($user);
             $participation->setIdtournoi($tournoi);
@@ -154,7 +154,8 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
         return $this->render('Front/detaildutournoi.html.twig', [
 
             'tournoi' => $tournoi,
-            'form' => $form->CreateView()
+            'form' => $form->CreateView(),
+            'participation' => $existingParticipation
            
         ]);
     }
