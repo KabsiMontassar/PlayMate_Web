@@ -20,18 +20,7 @@ class TournoiType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('nbmaxequipe', ChoiceType::class, [
-            'choices' => [
-                '4' => '4',
-                '8' => '8',
-                '16 ' => '16',
-                '24' => '24',
-            ],
-            'data' => '8', // Set Option A as the default choice
-
-            'expanded' => true,
-            'multiple' => false,
-        ])
+       
             ->add('nom', TextType::class)
             ->add('affiche', FileType::class, [
                 'mapped' => false, 
@@ -47,7 +36,22 @@ class TournoiType extends AbstractType
             ->add('datefin', DateType::class, [
                 'widget' => 'single_text',
                 'input' => 'datetime',])
-            ->add('idorganisateur')
+
+          ->add('nbmaxequipe', ChoiceType::class, [
+                    'choices' => [
+                        '4' => '4',
+                        '8' => '8',
+                        '16 ' => '16',
+                        '24' => '24',
+                        '32' => '32',
+                    ],
+                    'data' => '8', // Set Option A as the default choice
+                    'label' => false,
+                    'expanded' => false,
+                    'multiple' => false,
+                    'attr' => ['style' => 'display:none;'],
+                ])
+           
         ;
     }
 

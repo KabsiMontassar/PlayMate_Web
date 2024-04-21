@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 //groups = {"registration", "update_profile"  , "login"}
 /**
@@ -14,11 +15,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
 
-
  * @ORM\Entity
  */
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface , PasswordAuthenticatedUserInterface
 {
     /**
      * @var int
@@ -59,7 +59,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @ORM\Column(name="Name", type="string", length=255, nullable=false)
      * @Assert\NotBlank(
+     *  message = "The name cannot be blank.",
      *   groups = {"registration", "update_profile"  }
+     * 
      * )
      * 
      */
@@ -73,6 +75,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * message = "The age cannot be blank.",
      *   groups = { "update_profile" }
      * )
+     * @Assert\Range(
+     *    min = 12,
+     *   max = 100,
+     * notInRangeMessage = "The age must be between {{ min }} and {{ max }}",
+     * groups = { "update_profile" }
+     * )
     
      */
     private $age = NULL;
@@ -84,6 +92,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\NotBlank(
      * message = "The phone cannot be blank.",
      *   groups = { "update_profile" }
+     * )
+     * @Assert\Range(
+     *     min = 10000000,
+     *    max = 99999999,
+     *   notInRangeMessage = "The phone number must be between {{ min }} and {{ max }}",
+     *  groups = { "update_profile" }
      * )
     
      * 
@@ -145,7 +159,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->datedecreation = (new DateTimeImmutable())->format('Y-m-d');
         $this->verificationcode = $this->generateVerificationCode();
-        $this->status = true;
+        $this->status = true; 
     }
 
     private function generateVerificationCode(): string
@@ -308,13 +322,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-
+   
 
     public function getRoles(): array
     {
-        return [$this->role];
+         return [$this->role];
         // guarantee every user at least has ROLE_USER
-
+       
     }
     public function setRoles(array $roles): static
     {
@@ -323,7 +337,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSalt()
+    public function getSalt() 
     {
         // Leave empty unless you are using bcrypt or another hashing method that requires a salt
     }
@@ -337,4 +351,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
+
+   
+
 }
