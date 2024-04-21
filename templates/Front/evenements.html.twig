@@ -232,7 +232,7 @@
 
 <div class="container">
     <button id="open-calendar" class="btn btn-primary">Voir Calendrier</button>
-    <div id="calendar-popup" class="calendar-popup" style="display:none;">
+    <div id="calendar-popup" class="calendar-popup" style="display:none; height:400px ">
         <!-- Bouton de fermeture -->
         <div class="close-btn" id="close-calendar">&times;</div>
         <div id="calendar"></div>
@@ -245,8 +245,8 @@
         
     </div>
     <!-- Events End -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
     // ...
@@ -268,12 +268,7 @@
         modalBackdrop.style.display = 'none';
     });
 
-    // ...
-});
-    </script>
-    <script>
-   document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         events: [
@@ -292,10 +287,11 @@
     document.getElementById('open-calendar').addEventListener('click', function() {
         document.getElementById('calendar-popup').style.display = 'block';
     });
-
-    // Vous pouvez ajouter un bouton ou un moyen de fermer la popup
+    // ...
 });
     </script>
+   
+   
    {% endblock %}
 
    
