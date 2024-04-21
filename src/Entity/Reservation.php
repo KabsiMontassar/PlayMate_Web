@@ -61,6 +61,8 @@ class Reservation
      */
     private $type;
 
+
+
     /**
      * @var \Terrain
      *

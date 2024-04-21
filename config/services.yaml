@@ -19,6 +19,10 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    App\Entity\PaymentAPI:
+        autowire: true
+    App\Entity\MailJettAPI:
+        autowire: true
 parameters:
     image_directory: '%kernel.project_dir%/public/uploads/images'
     # add more service definitions when explicit configuration is needed

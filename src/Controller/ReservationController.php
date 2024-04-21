@@ -48,16 +48,34 @@ class ReservationController extends AbstractController
     }
 
     #[Route('/{idreservation}', name: 'app_reservation_show', methods: ['GET'])]
-    public function show(Reservation $reservation): Response
+    public function show(int $idreservation, EntityManagerInterface $entityManager): Response
     {
+        $reservationRepository = $entityManager->getRepository(Reservation::class);
+
+
+        $reservation = $reservationRepository->find($idreservation);
+
+        if (!$reservation) {
+            throw $this->createNotFoundException('Réservation non trouvée');
+        }
+
         return $this->render('Back/GestionReservation/reservation/show.html.twig', [
             'reservation' => $reservation,
         ]);
     }
 
     #[Route('/{idreservation}/edit', name: 'app_reservation_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, int $idreservation, EntityManagerInterface $entityManager): Response
     {
+        $reservationRepository = $entityManager->getRepository(Reservation::class);
+
+        // Récupérer la réservation à éditer à partir de la base de données
+        $reservation = $reservationRepository->find($idreservation);
+
+        if (!$reservation) {
+            throw $this->createNotFoundException('Réservation non trouvée');
+        }
+
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
@@ -88,14 +106,14 @@ class ReservationController extends AbstractController
     public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager): Response
     {
 
-        // convert date to DateTimeInterface 
+
         $date = new \DateTime($date);
-        // idterrain must be of type ?App\Entity\Terrain
+
         $idTerrain = $entityManager->getRepository(Terrain::class)->find($idTerrain);
-        // Effectuer la logique de vérification de disponibilité du terrain
+
         $terrainDisponible = $entityManager->getRepository(Reservation::class)->findByDisponibility($idTerrain, $horaire, $date, $entityManager);
 
-        // Retourner une réponse JSON en fonction du résultat de la vérification
+        // Retourner  JSON 
         if ($terrainDisponible) {
             $reservation = new Reservation();
             $reservation->setIsconfirm(false);

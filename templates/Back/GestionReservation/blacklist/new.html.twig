@@ -1,11 +1,120 @@
-<!DOCTYPE html>
+{% extends 'BaseBack.html.twig' %}
 
-<title>New Blacklist</title>
+{% block title %}User index{% endblock %}
 
 {% block body %}
-<h1>Create new Blacklist</h1>
+<header id="header" class="header fixed-top d-flex align-items-center">
 
-{{ include('Back/GestionReservation/blacklist/_form.html.twig') }}
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="#" class="logo d-flex align-items-center"> <!-- home -->
+            <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
+            <span class="d-none d-lg-block">PlayMate</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
 
-<a href="{{ path('app_blacklist_index') }}">back to list</a>
+
+
+
+
+</header>
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+
+
+        <li class="nav-heading">Gestion User</li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_user_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>Users</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_user_dashboard') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <!-- End Nav Item -->
+        <li class="nav-heading">GestionTerrain</li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_terrain_index') }}">
+                <i class="bi bi-grid"></i>
+                <span>Terrain</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_avis_index') }}">
+                <i class="bi bi-grid"></i>
+                <span>Avis</span>
+            </a>
+        </li>
+
+        <!-- End Nav Item -->
+        <li class="nav-heading">Gestion Reservation</li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_reservation_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Reservation</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_historique_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Historique</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_blacklist_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Blacklist</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_payment_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Paiement</span>
+            </a>
+        </li>
+
+        <!-- End Nav Item -->
+        <li class="nav-heading">Gestion Evenement</li>
+        <li class="nav-item">
+            <a class="nav-link collapsed " href="{{ path('app_tournoi_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Tournoi</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ path('app_participation_index') }}"> <!-- user pROFILE PAGE -->
+                <i class="bi bi-grid"></i>
+                <span>Participation</span>
+            </a>
+        </li>
+        <!-- End Nav Item -->
+    </ul>
+
+</aside>
+
+
+
+<main id="main" class="main">
+
+    <section class="section">
+
+        <h1>Create new Blacklist</h1>
+
+        {{ include('Back/GestionReservation/blacklist/_form.html.twig') }}
+
+        <a href="{{ path('app_blacklist_index') }}">back to list</a>
+
+    </section>
+
+</main>
+
+
 {% endblock %}

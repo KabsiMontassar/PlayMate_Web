@@ -26,16 +26,16 @@ class Payment
      * @var \DateTime
      *
      * @ORM\Column(type="date", nullable=false)
+     * @Assert\GreaterThan("today", message="La date de paiement doit être aujourd'hui ou ultérieure.")
      */
     private $datepayment;
-
     /**
      * @var string
      *
      * @ORM\Column(name="horairePayment", type="string", length=255, nullable=false)
      * @Assert\Regex(
-     *     pattern="/^([01][0-9]|2[0-3]):[0-5][0-9]$/",
-     *     message="L'heure doit être au format HH:MM"
+     *     pattern="/^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/",
+     *     message="L'horaire doit être au format hh:mm"
      * )
      */
     private $horairepayment;

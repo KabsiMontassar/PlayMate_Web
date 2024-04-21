@@ -43,16 +43,34 @@ class BlacklistController extends AbstractController
     }
 
     #[Route('/{idblacklist}', name: 'app_blacklist_show', methods: ['GET'])]
-    public function show(Blacklist $blacklist): Response
+    public function show(int $idblacklist, EntityManagerInterface $entityManager): Response
     {
+        $blacklistRepository = $entityManager->getRepository(Blacklist::class);
+
+        // Récupérer l'entité Blacklist à afficher à partir de la base de données
+        $blacklist = $blacklistRepository->find($idblacklist);
+
+        if (!$blacklist) {
+            throw $this->createNotFoundException('Blacklist non trouvée');
+        }
+
         return $this->render('Back/GestionReservation/blacklist/show.html.twig', [
             'blacklist' => $blacklist,
         ]);
     }
 
     #[Route('/{idblacklist}/edit', name: 'app_blacklist_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Blacklist $blacklist, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, int $idblacklist, EntityManagerInterface $entityManager): Response
     {
+        $blacklistRepository = $entityManager->getRepository(Blacklist::class);
+
+        // Récupérer l'entité Blacklist à éditer à partir de la base de données
+        $blacklist = $blacklistRepository->find($idblacklist);
+
+        if (!$blacklist) {
+            throw $this->createNotFoundException('Blacklist non trouvée');
+        }
+
         $form = $this->createForm(BlacklistType::class, $blacklist);
         $form->handleRequest($request);
 
@@ -69,8 +87,17 @@ class BlacklistController extends AbstractController
     }
 
     #[Route('/{idblacklist}', name: 'app_blacklist_delete', methods: ['POST'])]
-    public function delete(Request $request, Blacklist $blacklist, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, int $idblacklist, EntityManagerInterface $entityManager): Response
     {
+        $blacklistRepository = $entityManager->getRepository(Blacklist::class);
+
+        // Récupérer l'entité Blacklist à supprimer à partir de la base de données
+        $blacklist = $blacklistRepository->find($idblacklist);
+
+        if (!$blacklist) {
+            throw $this->createNotFoundException('Blacklist non trouvée');
+        }
+
         if ($this->isCsrfTokenValid('delete' . $blacklist->getIdblacklist(), $request->request->get('_token'))) {
             $entityManager->remove($blacklist);
             $entityManager->flush();

@@ -4,6 +4,42 @@
 {% block body %}
 
 <body>
+
+    <style>
+        .article {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .article:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-header {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .article-body {
+            padding: 15px;
+        }
+
+        .article-body p {
+            margin-bottom: 10px;
+        }
+
+        .article-footer {
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+    </style>
     {% if app.user %}
     {% set user = app.user %}
     {% endif %}
@@ -67,5 +103,33 @@
         </div>
     </div>
     <!--end image centre-->
+
+    <section class="section">
+        {% if historiques is not empty %}
+        {% for historique in historiques %}
+        <article class="article">
+            <div class="article-header">
+                Historique ID: {{ historique.idhistorique }}
+            </div>
+            <div class="article-body">
+                <p>Reservation ID: {{ historique.reservation.idreservation }}</p>
+                <p>Date Reservation: {{ historique.reservation.datereservation|date('Y-m-d') }}</p>
+                <p>Heure Reservation: {{ historique.reservation.heurereservation }}</p>
+                <p>nom terrain: {{ historique.reservation.idTerrain.nomTerrain }}</p>
+                <p>addresse terrain: {{ historique.reservation.idTerrain.address }}</p>
+                <p>prix terrain: {{ historique.reservation.idTerrain.prix }}</p>
+            </div>
+        </article>
+
+        {% endfor %}
+        {% else %}
+        <div class="card">
+            <div class="card-body">
+                <p>No records found</p>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
 </body>
 {% endblock %}

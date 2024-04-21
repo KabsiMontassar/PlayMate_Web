@@ -9,6 +9,7 @@ use App\Form\UserType;
 use App\Controller\Reservation;
 use App\Controller\Payment;
 use App\Form\Login;
+use App\Repository\HistoriqueRepository;
 use App\Repository\UserRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -108,30 +109,15 @@ class HomeController extends AbstractController
     }
 
     #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
-    public function Historique(EntityManagerInterface $entityManager, Security $security): Response
+    public function Historique(HistoriqueRepository $historiqueRepository): Response
     {
-        $user = $this->getUser();
 
-        // Vérifie si l'utilisateur est connecté
-        if ($user instanceof User) {
-            $userId = $user->getId();
 
-            $historiques = $entityManager->createQueryBuilder()
-                ->select('h')
-                ->from(Historique::class, 'h')
-                ->join('h.reservation', 'r')
-                ->join('r.payment', 'p')
-                ->where('p.idmembre = :userId')
-                ->setParameter('userId', $userId)
-                ->getQuery()
-                ->getResult();
+        $historiques = $historiqueRepository->ListHistoriqueParMembre(/*$user->getId()*/46);
 
-            return $this->render('Front/historique.html.twig', [
-                'historiques' => $historiques,
-            ]);
-        } else {
-            return $this->redirectToRoute('app_login');
-        }
+        return $this->render('Front/historique.html.twig', [
+            'historiques' => $historiques,
+        ]);
     }
 
 

@@ -338,7 +338,7 @@
                 .then(response => response.json())
                 .then(reservations => {
                     var reservationContainer = document.getElementById('reservation-container');
-                    reservationContainer.innerHTML = ''; // Clear existing content
+                    reservationContainer.innerHTML = '';
                     reservations.forEach(reservation => {
                         var reservationDiv = document.createElement('div');
                         reservationDiv.classList.add('col-md-12', 'mb-4', 'pb-2');
@@ -414,12 +414,12 @@
         }
 
 
-        // Convertir la date saisie en objet Date
+        // forage de type daate
         var dateSaisie = new Date(dateInput);
-        // Obtenir la date actuelle
+        // lw9t
         var dateActuelle = new Date();
 
-        // Vérifier si la date saisie est dans le futur
+        //future
         if (dateSaisie > dateActuelle) {
             return true; // La date est dans le futur
         } else {
@@ -438,12 +438,12 @@
         var horaire = horaireInput.value;
 
 
-        // Extraire les heures et les minutes de l'heure saisie
+        // nekhdo b d9i9a w se3a
         var heuresMinutes = horaire.split(":");
         var heures = parseInt(heuresMinutes[0]);
         var minutes = parseInt(heuresMinutes[1]);
 
-        // Vérifier si l'heure est entre 07:59 et 00:00
+        // heure est entre 07:59 et 00:00
         if ((heures > 7 || (heures === 7 && minutes >= 59)) && (heures < 24 || (heures === 0 && minutes === 0))) {
             return true; // L'heure est valide
         } else {
@@ -460,7 +460,7 @@
         typeReservation = 'Postuler_Comme_Adversaire';
         alert(date + " \n" + horaire + "\n" + terrain + "\n" + typeReservation);
         $.post("/reservation/getTerrain/" + typeReservation + "/" + terrain + "/" + date + "/" + horaire, function (data) {
-            // Traitez la réponse ici
+
             if (data === 'Terrain disponible') {
                 alert('ok')
             } else {
@@ -474,9 +474,9 @@
 
         if (typeReservation != '') {
             alert(terrain + "\n" + typeReservation);
-            event.preventDefault(); // Empêcher la soumission par défaut du formulaire
+            event.preventDefault(); // ajax bloque ly mhjtkch bih
 
-            // Obtenez les valeurs des champs du formulaire
+            // nekho attribut id lhme
             if (typeReservation == 'Creer_Partie') {
                 var equipe = document.getElementById("EquipeReservationId").value;
                 var date = document.getElementById("dateReservationId").value;
@@ -491,7 +491,7 @@
                 var date = document.getElementById("dateReservationId2").value;
                 var horaire = document.getElementById("horaireReservationId2").value;
             }
-            // Vérifiez la date et l'heure
+            // nchofo lw9t w date
             if (!verifierHoraire()) {
                 return;
             }
@@ -500,9 +500,9 @@
             }
 
             alert(terrain + "\n" + typeReservation + "\n" + date + "\n" + horaire + "\n");
-            // Effectuez la requête AJAX avec les bons paramètres
+            // AJAX 
             $.post("/reservation/getTerrain/" + typeReservation + "/" + terrain + "/" + date + "/" + horaire, function (data) {
-                // Traitez la réponse ici
+                // rj3 el hhtp ly fel controller
                 if (data === 'Terrain disponible') {
                     alert('ok')
                 } else {
