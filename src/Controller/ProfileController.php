@@ -129,11 +129,13 @@ class ProfileController extends AbstractController
         }
     }
     
+    $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
       
         return $this->render('Front/ProfileElements/Forms/FormEdit.html.twig', [
             'form1' => $form1->createView(),
             'form2' => $form2->createView(),
-            'user' => $user
+            'user' => $user,
+            'tournois' => $tournois
            
         ]);
     }
