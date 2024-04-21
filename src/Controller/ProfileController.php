@@ -38,6 +38,21 @@ class ProfileController extends AbstractController
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
   
        
+            return $this->render('userBase.html.twig',[
+              
+                'user' => $user
+            ]);
+        
+      
+    }
+
+    #[Route('/update', name: 'update', methods: ['GET', 'POST'])]
+    public function update(Security $security, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, Request $request): Response
+    {
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+  
+       
         $form1 = $this->createForm(UserUpdateType::class , $user , ['validation_groups' => ['update_profile']]);
         $form2 = $this->createForm(UserPasswordType::class  );
     
@@ -99,7 +114,6 @@ class ProfileController extends AbstractController
            if($form2->get('CurrentPassword')->getData() == $user ->getPassword()){
 
 
-
               if($form2->get('NewPassword')->getData() == $form2->get('ConfirmPassword')->getData()){
                 
                 $user->setPassword($form2->get('NewPassword')->getData());
@@ -110,21 +124,18 @@ class ProfileController extends AbstractController
                    $this->addFlash('danger', 'New password and confirm password do not match');
                   
               }
-
         }
-        
+        else{
+        }
     }
-    $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
-
-            return $this->render('userBase.html.twig',[
-                'form1' => $form1->createView(),
-                'form2' => $form2->createView(),
-                'user' => $user,
-                'terrains' => $terrains
-
-            ]);
-        
+    
       
+        return $this->render('Front/ProfileElements/Forms/FormEdit.html.twig', [
+            'form1' => $form1->createView(),
+            'form2' => $form2->createView(),
+            'user' => $user
+           
+        ]);
     }
 
 
