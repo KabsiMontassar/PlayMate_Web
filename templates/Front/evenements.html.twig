@@ -17,6 +17,60 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+    /* Fond sombre semi-transparent pour le modal */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    display: none; /* caché par défaut */
+}
+
+/* Popup du calendrier */
+.calendar-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    max-width: 90%;
+    max-height: 80%; /* Utilisez vh pour un pourcentage de la hauteur de l'écran */
+    overflow: hidden; /* Vous pouvez le changer en 'scroll' si nécessaire */
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1050; /* Assurez-vous que c'est supérieur à tout le reste */
+    padding: 20px;
+    display: block; /* ou flex si vous voulez centrer le contenu */
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajustements pour les mobiles et tablettes */
+@media (max-width: 768px) {
+    .calendar-popup {
+        width: 95vw; /* Presque toute la largeur de l'écran */
+        max-height: 95vh; /* Presque toute la hauteur de l'écran */
+        overflow: auto; /* Permettre le défilement */
+    }
+}
+
+
+
+/* Bouton de fermeture */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #000;
+}
+
+
         </style>
     {% endblock %}
 {% block body %}
@@ -172,15 +226,76 @@
             </a>
         {% endfor %}
                 
-                    </div>
-                 
-                </div>
-            </div>
-        </div>
+         </div>
+        
+  <div class="modal-backdrop" id="modal-backdrop" style="display:none;"></div>
+
+<div class="container">
+    <button id="open-calendar" class="btn btn-primary">Voir Calendrier</button>
+    <div id="calendar-popup" class="calendar-popup" style="display:none;">
+        <!-- Bouton de fermeture -->
+        <div class="close-btn" id="close-calendar">&times;</div>
+        <div id="calendar"></div>
+    </div>
+</div>
+                
+      </div>
+     </div>
+     </div>
         
     </div>
     <!-- Events End -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // ...
+    var modalBackdrop = document.getElementById('modal-backdrop');
 
+    document.getElementById('open-calendar').addEventListener('click', function() {
+        document.getElementById('calendar-popup').style.display = 'block';
+        modalBackdrop.style.display = 'block'; // Afficher le fond
+    });
+
+    document.getElementById('close-calendar').addEventListener('click', function() {
+        document.getElementById('calendar-popup').style.display = 'none';
+        modalBackdrop.style.display = 'none'; // Cacher le fond
+    });
+
+    // Fermer la popup en cliquant sur le fond
+    modalBackdrop.addEventListener('click', function() {
+        document.getElementById('calendar-popup').style.display = 'none';
+        modalBackdrop.style.display = 'none';
+    });
+
+    // ...
+});
+    </script>
+    <script>
+   document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: [
+            // Bouclez sur vos événements pour les ajouter ici
+            {% for tournoi in tournois %}
+            {
+                title: '{{ tournoi.getNom() }}',
+                start: '{{ tournoi.getDatedebut()|date('Y-m-d') }}'
+            },
+            {% endfor %}
+        ]
+    });
+    calendar.render();
+
+    // Gestion de la popup
+    document.getElementById('open-calendar').addEventListener('click', function() {
+        document.getElementById('calendar-popup').style.display = 'block';
+    });
+
+    // Vous pouvez ajouter un bouton ou un moyen de fermer la popup
+});
+    </script>
+   {% endblock %}
 
    
-   {% endblock %}
