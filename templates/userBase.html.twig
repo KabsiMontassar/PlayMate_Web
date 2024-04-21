@@ -4,10 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('Front/css/profiletournoi.scss') }}">
+
 <link rel="stylesheet" href="{{ asset('Front/css/userprofile.css') }}">
+<style>
 
 
+
+
+</style>
 </head>
 <body>
 
@@ -20,20 +24,23 @@
     <label for="menu-icon"></label>
     <nav class="navbox"> 		
         <ul class="pt-5"  id="listelements">
-          
-          
         </ul>
     </nav>
 
 <main id="main">
 
 </main>
-
+<div class="bg"></div>
+<div class="bg bg2"></div>
+<div class="bg bg3"></div>
 <script>
   var Membreelemnts = ` 
-<div class="container" id="overview" >
+<div class="container" id="overview"  style="display:block;">
     {{ include('Front/ProfileElements/userProfile.html.twig' ) }}
        
+</div>
+<div class="container" id="equipe" style="display:none;" >
+    {{ include('Front/ProfileElements/userEquipe.html.twig' ) }}
 </div>
 <div class="container" id="reservation" style="display:none;">
     {{include('Front/ProfileElements/userReservation.html.twig')}}
@@ -90,6 +97,7 @@ var MembreListelements = `
             <li><a href="#reservation" onclick="out('reservation')">Reservation</a></li>
             <li><a href="#participation" onclick="out('participation')">Participation</a></li>
             <li><a href="#commande" onclick="out('commande')">Commande</a></li>
+            <li><a href="#equipe" onclick="out('equipe')">Equipe</a></li>
   `
   var OrganisateurListelements = `
   <li><a href="#overview" onclick="out('overview')" class="active">Profile</a></li>
@@ -132,16 +140,8 @@ var MembreListelements = `
         // Call the function when the DOM content is fully loaded
         document.addEventListener('DOMContentLoaded', function() {
             changeMainContent();
-            var form = document.getElementById('formedit');
     
-    form.addEventListener('submit', function(event) {
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        form.classList.add('was-validated');
-    });
+ 
         });
 
 
@@ -159,8 +159,23 @@ var MembreListelements = `
   }
 
 
+function ivertStatus(userEmail) {
+  const confirmDeactivationBtn = document.getElementById('confirmDeactivationBtn');
+ 
+  $.post("/user/inverStatus/" + userEmail , function(data) {
+        if (data === 'success') {
+            window.location.href = '/logout';
+        } else {
+            console.log('error');
+         } 
+    });
+}
+  
+ 
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="{{ asset('Back/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+
 </body>
 </html>
