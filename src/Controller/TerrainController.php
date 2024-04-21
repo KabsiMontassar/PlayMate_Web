@@ -9,6 +9,7 @@ use App\Form\TerrainType;
 use App\Form\AvisType;
 use App\Repository\TerrainRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use blackknight467\StarRatingBundle\StarRatingBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

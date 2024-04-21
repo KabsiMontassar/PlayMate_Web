@@ -114,11 +114,14 @@ class ProfileController extends AbstractController
         }
         
     }
-       
+    $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+
             return $this->render('userBase.html.twig',[
                 'form1' => $form1->createView(),
                 'form2' => $form2->createView(),
-                'user' => $user
+                'user' => $user,
+                'terrains' => $terrains
+
             ]);
         
       
