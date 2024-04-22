@@ -131,12 +131,16 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
 
         $city = $request->query->get('city');
     $forecast = null;
+    $errorMsg = null;
 
     // Si une ville est spécifiée, alors seulement faites l'appel au service météorologique.
     if ($city) {
-        $forecast = $weatherService->getWeatherForecast($city);
+        $weatherData = $weatherService->getWeatherForecast($city);
+        $forecast = $weatherData['data'];
+        $errorMsg = $weatherData['error'];
+    }else {
+        $forecast = null;
     }
-
         
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
@@ -167,7 +171,8 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
             'participation' => $existingParticipation,
             'forecast' => $forecast,
             'city' => $city,
-            'forecastAvailable' => $forecast !== null // Ajoutez cette ligne
+            'forecastAvailable' => $forecast !== null,
+            'errorMsg' => $errorMsg,
            
         ]);
     }

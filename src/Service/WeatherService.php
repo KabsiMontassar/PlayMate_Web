@@ -28,6 +28,20 @@ class WeatherService
             ]
         ]);
 
+        if ($response->getStatusCode() === 200) {
+            // La réponse est OK, retourner les données.
+            return [
+                'data' => $response->toArray(),
+                'error' => null
+            ];
+        } else {
+            // Il y a eu un problème, retourner un message d'erreur.
+            return [
+                'data' => null,
+                'error' => "La ville spécifiée est invalide."
+            ];
+        }
+
         return $response->toArray();
        
     }
