@@ -37,10 +37,12 @@ class ProfileController extends AbstractController
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
   
-       
+        $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+
             return $this->render('userBase.html.twig',[
               
-                'user' => $user
+                'user' => $user,
+                'terrains' => $terrains
             ]);
         
       
