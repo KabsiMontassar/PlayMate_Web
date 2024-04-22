@@ -1,3 +1,6 @@
+
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v10.0" nonce="{{ nonce }}"></script>
 <div class="event-cards-container">
   {% for tournoi in tournois %}
     <div class="event-card" style="padding:14px; background-color:white; border-radius:20px;">
@@ -19,6 +22,11 @@
           <a href="#" class="btn-more">En savoir plus</a>
         </div> <!-- Fermeture de event-card-back -->
       </div>
+      <div class="fb-share-button" 
+           data-href="{{ url('First', {'id': tournoi.id}) }}" 
+           data-layout="button_count">
+      </div>
     </div>
   {% endfor %}
 </div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v10.0" nonce="{{ nonce }}"></script>

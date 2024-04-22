@@ -38,11 +38,12 @@ class ProfileController extends AbstractController
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
   
         $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
-
+        $nonce = base64_encode(random_bytes(16));
             return $this->render('userBase.html.twig',[
               
                 'user' => $user,
-                'tournois' => $tournois
+                'tournois' => $tournois,
+                'nonce'  => $nonce,
             ]);
         
       

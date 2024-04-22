@@ -1,6 +1,16 @@
 {% extends 'BaseFront.html.twig' %}
 
 {% block title %}Détails du Terrain{% endblock %}
+{% block head %}
+<head>
+    <!-- ... autres métadonnées ... -->
+    <meta property="og:url" content="{{ url('app_tournoi_detail', {'id': tournoi.id}) }}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{{ tournoi.getNom() }}" />
+    <meta property="og:description" content="{{ tournoi.getDescription() }}" />
+    <meta property="og:image" content="{{ asset('uploads/images/' ~ tournoi.affiche) }}" />
+</head>
+{% endblock %}
 {% block stylesheets %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 

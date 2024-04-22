@@ -2,6 +2,7 @@
 
 {% block title %}Evenements{% endblock %}
 {% block stylesheets %}
+
         <style>
       .blog-date {
     position: absolute;
@@ -35,10 +36,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80vw; /* Largeur accrue */
+    width: 90vw; /* Largeur accrue */
     height: auto;
     max-width: 95%; /* Utilisez une largeur maximale pour éviter de toucher les bords de l'écran */
-    max-height: 95vh; /* Hauteur maximale accrue pour prendre plus de place verticalement */
+    max-height: 105vh; /* Hauteur maximale accrue pour prendre plus de place verticalement */
     overflow: auto; /* Permettre le défilement si nécessaire */
     background: white;
     border: 1px solid #ccc;
@@ -47,7 +48,8 @@
     padding: 20px; /* Gardez un padding pour éviter que le contenu touche les bords */
     display: flex;
     align-items: center; /* Centre verticalement le contenu */
-    justify-content: center; /* Centre horizontalement le contenu */
+    justify-content: center;
+     padding: 30px; /* Centre horizontalement le contenu */
 }
 
 /* Ajustements pour les mobiles et tablettes */

@@ -40,6 +40,7 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
     $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
 
     $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
+   
     
     // Render the template with the tournaments
     return $this->render('Back/GestionEvenement/tournoi/profiletournoi.html.twig', [
