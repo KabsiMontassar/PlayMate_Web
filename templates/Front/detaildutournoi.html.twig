@@ -94,6 +94,25 @@
     </div>
 </div>
 
+{# Formulaire de recherche #}
+<form method="get" action="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}">
+    <input type="text" name="city" placeholder="Entrez le nom d'une ville" required>
+    <button type="submit">Rechercher</button>
+</form>
+
+{# Affichage de la météo #}
+{% if forecast %}
+    {% for day in forecast.list %}
+        <div>
+            <p>Date et heure : {{ day.dt_txt }}</p>
+            <p>Température : {{ day.main.temp }} °C</p>
+             <p>Vitesse du vent : {{ day.wind.speed }} m/s</p>
+             <p>Humidité : {{ day.main.humidity }}%</p>
+             <p>Nuages : {{ day.clouds.all }}%</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div class="modal fade" id="participationModal" tabindex="-1" role="dialog" aria-labelledby="participationModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

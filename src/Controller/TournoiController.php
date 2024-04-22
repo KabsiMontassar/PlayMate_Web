@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use App\Service\WeatherService;
 
 
 #[Route('/tournoi')]
@@ -125,10 +126,13 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
     /**
      * @Route("/tournoi/{id}", name="app_tournoi_detail")
      */
-    public function detail(Security $security, Request $request, $id, EntityManagerInterface $entityManager)
+    public function detail(WeatherService $weatherService, Security $security, Request $request, $id, EntityManagerInterface $entityManager)
     {
 
-       
+        $city = $request->query->get('city', 'Paris'); // 'Paris' est une valeur par défaut
+        $forecast = $weatherService->getWeatherForecast($city);
+
+        
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
@@ -155,7 +159,9 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
 
             'tournoi' => $tournoi,
             'form' => $form->CreateView(),
-            'participation' => $existingParticipation
+            'participation' => $existingParticipation,
+            'forecast' => $forecast,
+            'city' => $city
            
         ]);
     }
