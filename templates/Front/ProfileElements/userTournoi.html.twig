@@ -1,4 +1,24 @@
-
-
-   <h1 class="text-center">tournoi</h1>
- 
+<div class="event-cards-container">
+  {% for tournoi in tournois %}
+    <div class="event-card" style="padding:14px; background-color:white; border-radius:20px;">
+      <div class="event-card-inner">
+        <div class="event-card-front">
+          {% if tournoi.affiche %}
+            <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ tournoi.affiche) }}" alt="Affiche de {{ tournoi.getNom() }}">
+          {% endif %}
+        </div> <!-- Fermeture de event-card-front -->
+        <div class="event-card-back">
+          <h3 class="event-title">{{ tournoi.getNom() }}</h3>
+          <p class="event-date">{{ tournoi.getDatedebut()|date('d F')|replace({
+            'January': 'Janvier', 'February': 'Février', 'March': 'Mars', 'April': 'Avril', 
+            'May': 'Mai', 'June': 'Juin', 'July': 'Juillet', 'August': 'Août', 
+            'September': 'Septembre', 'October': 'Octobre', 'November': 'Novembre', 
+            'December': 'Décembre'
+          }) }}</p>
+          <p class="event-description">{{ tournoi.getAddress() }}</p>
+          <a href="#" class="btn-more">En savoir plus</a>
+        </div> <!-- Fermeture de event-card-back -->
+      </div>
+    </div>
+  {% endfor %}
+</div>
