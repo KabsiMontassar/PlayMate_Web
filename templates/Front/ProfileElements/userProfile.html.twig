@@ -1,89 +1,128 @@
+{% set user = app.user %}
 
+<div style="margin-top: 50px;">
 
-    {% set user = app.user %}
-	
-    <div   style="margin-top:50px;">
-    
-      {% if user.image == null %}
+    {% if user.image == null %}
         {% set imagePath = 'uploads/images/default.jpg' %}
-      {% else %}
+    {% else %}
         {% set imagePath = 'uploads/images/' ~ user.image %}
-      {% endif %}
+    {% endif %}
 
-      <section >
- 
-  <div class="row">
-    <div class="col-md-4">
-      <div class="card profile-card">
-        <div class="card-body text-center">
-          <img src="{{ asset(imagePath) }}" alt="Profile" class="img-fluid rounded-circle mb-3 profile-image">
-          <h2>{{ user.Name }}</h2>
-          <h3>{{ user.Role }}</h3>
+    <section>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card profile-card">
+                    <div class="card-body text-center">
+                        <img src="{{ asset(imagePath) }}" alt="Profile" class="img-fluid rounded-circle mb-3 profile-image">
+                        <h2>{{ user.Name }}</h2>
+                        <h3>{{ user.Role }}</h3>
+                    </div>
+                </div>
+                {% if user.Role == 'Membre' %}
+
+                    <div class="card profile-card" style="margin-top: 25px;">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Teams</h5>
+                            <ul class="list-group list-group-flush">
+
+                                {% for teamName, members in teamsWithMembers %}
+                                    <li class="list-group-item">
+                                        <button class="badge bg-primary team-toggle-btn" style="padding: 10px 15px; border: none;" data-team="{{ teamName }}">{{ teamName }}</button>
+                                        <ul class="list-group list-group-flush team-members" >
+                                            {% for member in members %}
+                                                <li class="list-group-item">
+                                                    <strong>Name:</strong> {{ member.idmembre.Name }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endfor %}
+
+                                {% if teams|length < 5 %}
+                                    <li class="list-group-item">
+                                        <a class="btn btn-success" href='{{ path('app_equipe_new') }}'>Add Team</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            </div>
+            <div class="col-md-8">
+                <div class="card profile-details">
+                    <div class="card-body">
+                        <h5 class="card-title">Profile Details</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Name:</strong> {{ user.Name }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Email:</strong> {{ user.Email }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Age:</strong> {{ user.Age }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Phone:</strong> {{ user.Phone }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Address:</strong> {{ user.Address }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Member since:</strong> {{ user.datedecreation }}
+                            </li>
+                        </ul>
+                        <div class="mt-3">
+                            <a class="btn btn-info me-2 btn-edit" href="{{ path('update') }}">Edit Profile</a>
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deactivateAccountModal">Deactivate Account</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12" style="margin-top: 25px;">
+                    <div class="card profile-details">
+                        <div class="card-body" style="height: 300px;">
+                            <h5 class="card-title text-center">Team members</h5>
+                            <ul class="list-group list-group-flush" id="teamMembersContainer">
+
+                                <!-- Team members will be dynamically loaded here -->
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
         </div>
-      </div>
-      
 
 
-    </div>
-    <div class="col-md-8">
-      <div class="card profile-details">
-        <div class="card-body">
-          <h5 class="card-title">Profile Details</h5>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <strong>Name:</strong> {{ user.Name }}
-            </li>
-            <li class="list-group-item">
-              <strong>Email:</strong> {{ user.Email }}
-            </li>
-            <li class="list-group-item">
-              <strong>Age:</strong> {{ user.Age }}
-            </li>
-            <li class="list-group-item">
-              <strong>Phone:</strong> {{ user.Phone }}
-            </li>
-            <li class="list-group-item">
-              <strong>Address:</strong> {{ user.Address }}
-            </li>
-            <li class="list-group-item">
-              <strong>Member since:</strong> {{ user.datedecreation }}
-            </li>
-          </ul>
-          <div class="mt-3">
-            <a class="btn btn-info me-2 btn-edit" href="{{ path('update') }}" >Edit Profile</a>
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deactivateAccountModal">Deactivate Account</button>
-          </div>
-        </div>
-      </div>
-      
+
+    </section>
 
 
-    </div>
-   
-  </div>
-  
+</div>
 
-
-      </section>
-
-      
-    </div>
-   
 <!-- Modal -->
 <div class="modal fade" id="deactivateAccountModal" tabindex="-1" aria-labelledby="deactivateAccountModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deactivateAccountModalLabel">Deactivate Account</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to deactivate your account?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" id="confirmDeactivationBtn" onclick="invertStatus('{{ user.Email }}')">Deactivate</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deactivateAccountModalLabel">Deactivate Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to deactivate your account?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="confirmDeactivationBtn" onclick="invertStatus('{{ user.Email }}')">Deactivate</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

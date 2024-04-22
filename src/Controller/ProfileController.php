@@ -13,6 +13,8 @@ use App\Form\forgetpassword;
 use App\Repository\TerrainRepository;
 use App\Repository\TournoiRepository;
     
+use App\Entity\Equipe;
+use App\Entity\Membreparequipe;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -36,11 +38,25 @@ class ProfileController extends AbstractController
         }
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-  
+        $teams = $entityManager->getRepository(Equipe::class)->findByUser($user);
+
+        $teamsWithMembers = [];
+        foreach ($teams as $team) {
+            $members = $entityManager->getRepository(Membreparequipe::class)->findBy(['idequipe' => $team]);
+            $teamsWithMembers[$team->getNomequipe()] = $members;
+        }
+
        
+
+    
+
             return $this->render('userBase.html.twig',[
               
-                'user' => $user
+                'user' => $user,
+                'teams' => $teams,
+                'teamsWithMembers' => $teamsWithMembers
+
+
             ]);
         
       

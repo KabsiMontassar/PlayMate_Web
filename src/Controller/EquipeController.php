@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use App\Entity\Membreparequipe;
+
 use Symfony\Component\Security\Core\Security;
 use App\Form\UserType;
 use App\Form\UserUpdateType;
@@ -38,22 +39,14 @@ class EquipeController extends AbstractController
         ]);
     }
 
-    #[Route('/profile', name: 'app_equipe_profile', methods: ['GET'])]
-    public function profile(EntityManagerInterface $entityManager): Response
-    {
-        
-        $equipes = $entityManager
-            ->getRepository(Equipe::class)
-            ->findAll();
-
-        return $this->render('Back/Gestionequipe/Equipe/EquipeProfile.html.twig', [
-            'equipes' => $equipes,
-        ]);
-    }
+   
     
     #[Route('/new', name: 'app_equipe_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Security $security,Request $request, EntityManagerInterface $entityManager): Response
     {
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+          
         $equipe = new Equipe();
         $form = $this->createForm(EquipeType::class, $equipe);
         $form->handleRequest($request);
@@ -61,11 +54,17 @@ class EquipeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($equipe);
             $entityManager->flush();
+           $membreparequipe = new Membreparequipe();
+              $membreparequipe->setIdequipe($equipe);
+                $membreparequipe->setIdmembre($user);
+            $entityManager->persist($membreparequipe);
+            $entityManager->flush();
+        
 
-            return $this->redirectToRoute('app_equipe_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('Back/Gestionequipe/Equipe/new.html.twig', [
+        return $this->renderForm('Front/ProfileElements/Forms/FormAddTeam.html.twig', [
             'equipe' => $equipe,
             'form' => $form,
         ]);

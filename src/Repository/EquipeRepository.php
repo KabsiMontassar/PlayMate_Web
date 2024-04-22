@@ -23,60 +23,48 @@ class EquipeRepository extends ServiceEntityRepository
         parent::__construct($registry, Equipe::class);
     }
 
-//    /**
-//     * @return Equipe[] Returns an array of Equipe objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Equipe
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 
-    public function findEquipeByUser($idmembre): array
-    {
+public function findByUser(User $user): array
+{
+    try {
         $entityManager = $this->getEntityManager();
 
         $query = $entityManager->createQuery(
             'SELECT e
             FROM App\Entity\Equipe e
             JOIN App\Entity\Membreparequipe m
-            WHERE m.idmembre = :idmembre'
-        )->setParameter('idmembre', $idmembre);
+            WITH e = m.idequipe
+            WHERE m.idmembre = :user'
+        )->setParameter('user', $user);
 
         return $query->getResult();
+    } catch (\Exception $e) {
+        // Handle the exception, log it, or rethrow it as needed
+        throw new \RuntimeException('An error occurred while fetching data: ' . $e->getMessage());
     }
+}
 
-// give me a function that takes a equipe and returns all the users associated by the table membreparequipe 
-
- public function findUsersbyEquipe($idequipe): array
-    {
+public function findByEquipe(Equipe $equipe): array
+{
+  
+   
+    try {
         $entityManager = $this->getEntityManager();
 
         $query = $entityManager->createQuery(
-            'SELECT u
-            FROM App\Entity\User u
-            JOIN App\Entity\Membreparequipe m
-            WHERE m.idequipe = :idequipe'
-        )->setParameter('idequipe', $idequipe);
-
+            'SELECT m
+            FROM App\Entity\Membreparequipe m
+            WHERE m.idequipe = :equipe'
+          
+        )->setParameter('equipe', $equipe);
         return $query->getResult();
+    } catch (\Exception $e) {
+        // Handle the exception, log it, or rethrow it as needed
+        throw new \RuntimeException('An error occurred while fetching data: ' . $e->getMessage());
     }
+}
+
 
 
 }
