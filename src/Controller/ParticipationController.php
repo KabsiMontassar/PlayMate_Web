@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\UserController;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\Security;
+use App\Entity\Tournoi;
 
 
 #[Route('/participation')]
@@ -30,36 +32,37 @@ class ParticipationController extends AbstractController
         ]);
     }
 
-    #[Route('/new/{iduser}/{id}', name: 'app_participation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, $id): Response
+    #[Route('/new/{id}', name: 'app_participation_new', methods: ['GET', 'POST'])]
+    public function new(Security $security, Request $request, EntityManagerInterface $entityManager, $id): Response
     {
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
+        
         $participation = new Participation();
         $form = $this->createForm(ParticipationType::class, $participation);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            $formdata=$form->getData();
-            $formdata->setIdmembre($user);
-            $entityManager->persist($formdata);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $participation->setIdmembre($user);
+            $participation->setIdtournoi($tournoi);
+            $entityManager->persist($participation);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_participation_index', [], Response::HTTP_SEE_OTHER,);
+           
+            return $this->redirectToRoute('app_Evenement', [], Response::HTTP_SEE_OTHER);
         }
-
-        return $this->renderForm('Back/GestionEvenement/participation/new.html.twig', [
-            'participation' => $participation,
-            'form' => $form,
-            
+        
+        return $this->render('Back/GestionEvenement/participation/new.html.twig', [
+            'form' => $form->createView(),
+            'tournoi' => $tournoi,
+            'user' => $user,
         ]);
     }
+    
 
     #[Route('/{id}/{iduser}', name: 'app_participation_show', methods: ['GET'])]
     public function show(Participation $participation,  int $iduser,EntityManagerInterface $entityManager): Response
     {
-
-
         return $this->render('Back/GestionEvenement/participation/show.html.twig', [
             'participation' => $participation,
             
@@ -84,8 +87,8 @@ class ParticipationController extends AbstractController
         ]);
     }*/
 
-    #[Route('/{id}/{iduser}', name: 'app_participation_delete', methods: ['POST'])]
-    public function delete(Request $request, Participation $participation, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}', name: 'app_participation_delete', methods: ['POST'])]
+    public function delete(Security $security, Request $request, Participation $participation, EntityManagerInterface $entityManager): Response
     {
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
@@ -94,6 +97,25 @@ class ParticipationController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_participation_index', [ 'user' => $user], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_Evenement', [ 'user' => $user], Response::HTTP_SEE_OTHER);
     }
+
+    /**
+ * @Route("/form/{id}", name="app_participation_form")
+ */
+public function formAction(Request $request, EntityManagerInterface $entityManager, $id): Response
+{
+    $user = $this->getUser();
+    $tournoi = $entityManager->getRepository(Tournoi::class)->find($id);
+
+    $participation = new Participation();
+    $form = $this->createForm(ParticipationType::class, $participation);
+
+    // No form handling here, just create the form view
+
+    return $this->render('Back/GestionEvenement/participation/_form.html.twig', [
+        'form' => $form->createView(),
+        'tournoi' => $tournoi
+    ]);
+}
 }

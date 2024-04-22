@@ -15,14 +15,18 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Form\UserUpdateType;
+use App\Form\UserPasswordType;
+use Symfony\Component\Runtime\Runner\Symfony\ResponseRunner;
+use Symfony\Component\Security\Core\Security;
 
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'start', methods: ['GET', 'POST'])] 
-    public function index(): RedirectResponse
+    public function index(): Response
     {
-        return $this->redirectToRoute('app_Home');
+     return $this->redirectToRoute('app_Home');
     }
 
     #[Route('/Apropos', name: 'app_Apropos', methods: ['GET', 'POST'])]
