@@ -17,6 +17,8 @@ class WeatherService
 
     public function getWeatherForecast($city)
     {
+
+    
         $response = $this->client->request('GET', 'http://api.openweathermap.org/data/2.5/forecast', [
             'query' => [
                 'q' => $city,

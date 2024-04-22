@@ -129,8 +129,13 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
     public function detail(WeatherService $weatherService, Security $security, Request $request, $id, EntityManagerInterface $entityManager)
     {
 
-        $city = $request->query->get('city', 'Paris'); // 'Paris' est une valeur par défaut
+        $city = $request->query->get('city');
+    $forecast = null;
+
+    // Si une ville est spécifiée, alors seulement faites l'appel au service météorologique.
+    if ($city) {
         $forecast = $weatherService->getWeatherForecast($city);
+    }
 
         
         $userIdentifier = $security->getUser()->getUserIdentifier();
@@ -161,7 +166,8 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
             'form' => $form->CreateView(),
             'participation' => $existingParticipation,
             'forecast' => $forecast,
-            'city' => $city
+            'city' => $city,
+            'forecastAvailable' => $forecast !== null // Ajoutez cette ligne
            
         ]);
     }
