@@ -85,7 +85,11 @@
    
     <span> <a href="{{ path('app_forgot_password') }}">Forgot your password ?</a></span>
 {% endif %}
+ 
 
+   <div class="d-flex justify-content-center pt-2">
+    <a href="{{ path('connect_google_start') }}" class="btn btn-lg btn-primary">Sign in with Google</a>
+</div> 
 
 <span>Don't have an account yet? <a href="{{ path('app_register') }}">Register</a></span>
 </form>
