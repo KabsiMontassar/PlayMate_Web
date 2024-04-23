@@ -39,9 +39,14 @@ class ProfileController extends AbstractController
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
 
-        $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
-        $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
-        $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+        $terrains = null;
+        $tournois = null;
+        if($user->getRole() == 'Proprietaire de Terrain'){
+            $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+        }
+        if($user->getRole() == 'Organisateur'){
+            $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
+        }
 
   
        
