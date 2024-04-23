@@ -38,19 +38,14 @@ class ProfileController extends AbstractController
         }
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+        $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
 
-      
+  
        
-
-    
-
             return $this->render('userBase.html.twig',[
               
                 'user' => $user,
-                
-               
-
-
+                'tournois' => $tournois
             ]);
         
       
@@ -143,11 +138,13 @@ class ProfileController extends AbstractController
         }
     }
     
+   
       
         return $this->render('Front/ProfileElements/Forms/FormEdit.html.twig', [
             'form1' => $form1->createView(),
             'form2' => $form2->createView(),
-            'user' => $user
+            'user' => $user,
+           
            
         ]);
     }

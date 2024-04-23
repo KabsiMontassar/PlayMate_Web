@@ -20,6 +20,8 @@ use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
 use Symfony\Component\Runtime\Runner\Symfony\ResponseRunner;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class HomeController extends AbstractController
 {
@@ -81,6 +83,9 @@ class HomeController extends AbstractController
        
         ]);
     }
+
+
+
     #[Route('/Home', name: 'app_Home', methods: ['GET', 'POST'])]
     public function Home(  EntityManagerInterface $entityManager): Response
     { 
@@ -190,7 +195,6 @@ class HomeController extends AbstractController
             
     //     ]);
     // }
-
 
 }
 

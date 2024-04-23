@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use App\Service\WeatherService;
 
 
 #[Route('/tournoi')]
@@ -125,10 +126,22 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
     /**
      * @Route("/tournoi/{id}", name="app_tournoi_detail")
      */
-    public function detail(Security $security, Request $request, $id, EntityManagerInterface $entityManager)
+    public function detail(WeatherService $weatherService, Security $security, Request $request, $id, EntityManagerInterface $entityManager)
     {
 
-       
+        $city = $request->query->get('city');
+    $forecast = null;
+    $errorMsg = null;
+
+    // Si une ville est spécifiée, alors seulement faites l'appel au service météorologique.
+    if ($city) {
+        $weatherData = $weatherService->getWeatherForecast($city);
+        $forecast = $weatherData['data'];
+        $errorMsg = $weatherData['error'];
+    }else {
+        $forecast = null;
+    }
+        
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
@@ -155,7 +168,11 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
 
             'tournoi' => $tournoi,
             'form' => $form->CreateView(),
-            'participation' => $existingParticipation
+            'participation' => $existingParticipation,
+            'forecast' => $forecast,
+            'city' => $city,
+            'forecastAvailable' => $forecast !== null,
+            'errorMsg' => $errorMsg,
            
         ]);
     }
