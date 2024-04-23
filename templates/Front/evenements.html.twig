@@ -17,6 +17,60 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+    /* Fond sombre semi-transparent pour le modal */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    display: none; /* caché par défaut */
+}
+
+/* Popup du calendrier */
+.calendar-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw; /* Largeur accrue */
+    height: auto;
+    max-width: 95%; /* Utilisez une largeur maximale pour éviter de toucher les bords de l'écran */
+    max-height: 95vh; /* Hauteur maximale accrue pour prendre plus de place verticalement */
+    overflow: auto; /* Permettre le défilement si nécessaire */
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1050;
+    padding: 20px; /* Gardez un padding pour éviter que le contenu touche les bords */
+    display: flex;
+    align-items: center; /* Centre verticalement le contenu */
+    justify-content: center; /* Centre horizontalement le contenu */
+}
+
+/* Ajustements pour les mobiles et tablettes */
+@media (max-width: 768px) {
+    .calendar-popup {
+        width: 95vw; /* Agrandir le pop-up pour les petits appareils */
+        max-height: 95vh; /* Agrandir le pop-up en hauteur pour les petits appareils */
+    }
+}
+
+
+
+/* Bouton de fermeture */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #000;
+}
+
+
         </style>
     {% endblock %}
 {% block body %}
@@ -172,15 +226,80 @@
             </a>
         {% endfor %}
                 
-                    </div>
-                 
-                </div>
-            </div>
-        </div>
+         </div>
+        
+  <div class="modal-backdrop" id="modal-backdrop" style="display:none;"></div>
+
+<div class="container">
+    <button id="open-calendar" class="btn btn-primary">Voir Calendrier</button>
+    <div id="calendar-popup" class="calendar-popup" style="display:none; height:400px ">
+        <!-- Bouton de fermeture -->
+        <div class="close-btn" id="close-calendar">&times;</div>
+        <div id="calendar"></div>
+    </div>
+</div>
+                
+      </div>
+     </div>
+     </div>
         
     </div>
     <!-- Events End -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // ...
+    var modalBackdrop = document.getElementById('modal-backdrop');
 
+    document.getElementById('open-calendar').addEventListener('click', function() {
+        document.getElementById('calendar-popup').style.display = 'block';
+        modalBackdrop.style.display = 'block'; // Afficher le fond
+    });
 
+    document.getElementById('close-calendar').addEventListener('click', function() {
+        document.getElementById('calendar-popup').style.display = 'none';
+        modalBackdrop.style.display = 'none'; // Cacher le fond
+    });
+
+    // Fermer la popup en cliquant sur le fond
+    modalBackdrop.addEventListener('click', function() {
+        document.getElementById('calendar-popup').style.display = 'none';
+        modalBackdrop.style.display = 'none';
+    });
+
+var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: [
+            // Bouclez sur vos événements pour les ajouter ici
+            {% for tournoi in tournois %}
+            {
+                 id: '{{ tournoi.getId() }}',
+                title: '{{ tournoi.getNom() }}',
+                start: '{{ tournoi.getDatedebut()|date('Y-m-d') }}',
+                url: '{{ path('app_tournoi_detail', {'id': tournoi.getId()}) }}'
+            },
+            {% endfor %}
+        ],
+         eventClick: function(info) {
+        info.jsEvent.preventDefault(); // Empêche l'action par défaut
+        if (info.event.url) {
+            window.location.href = info.event.url; // Redirige vers l'URL de l'événement
+        }
+    }
+    });
+    calendar.render();
+
+    // Gestion de la popup
+    document.getElementById('open-calendar').addEventListener('click', function() {
+        document.getElementById('calendar-popup').style.display = 'block';
+    });
+    // ...
+});
+    </script>
+   
    
    {% endblock %}
+
+   
