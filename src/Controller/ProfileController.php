@@ -37,11 +37,14 @@ class ProfileController extends AbstractController
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
   
+
+        $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
         $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
 
             return $this->render('userBase.html.twig',[
               
                 'user' => $user,
+                'terrains' => $terrains,
                 'tournois' => $tournois
             ]);
         
