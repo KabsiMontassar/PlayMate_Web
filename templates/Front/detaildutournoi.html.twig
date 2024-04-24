@@ -1,7 +1,39 @@
 {% extends 'BaseFront.html.twig' %}
 
 {% block title %}Détails du Terrain{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 
+<style>
+    .forecast-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: stretch;
+    }
+    .forecast-item {
+        flex: 1;
+        min-width: 220px;
+        border: 1px solid #ddd;
+        margin: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        background: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .forecast-item p {
+        margin: 5px 0;
+    }
+    .temp {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    .icon {
+        width: 50px;
+        height: 50px;
+    }
+</style>
+{% endblock %}
 {% block body %}
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
@@ -93,6 +125,37 @@
         {% endif %}
     </div>
 </div>
+
+{# Formulaire de recherche #}
+<form method="get" action="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}">
+    <input type="text" name="city" placeholder="Entrez le nom d'une ville" required>
+    <button type="submit">Rechercher</button>
+</form>
+
+{# Affichage de la météo #}
+{% if errorMsg %}
+    <p class="error">{{ errorMsg }}</p>
+{% endif %}
+
+{% if forecast %}
+    <div class="forecast-container">
+        {% set lastDate = null %}
+        {% for day in forecast.list %}
+            {% set currentDate = day.dt_txt|date('Y-m-d') %}
+            {% if currentDate != lastDate %}
+                <div class="forecast-item">
+                    <p>Date : <strong>{{ day.dt_txt|date('Y-m-d') }}</strong></p>
+                    <p class="temp">{{ day.main.temp_max }} °C / {{ day.main.temp_min }} °C</p>
+                    <p><i class="fas fa-wind"></i> Vitesse du vent : {{ day.wind.speed }} m/s</p>
+                    <p><i class="fas fa-tint"></i> Humidité : {{ day.main.humidity }}%</p>
+                    <p><i class="fas fa-cloud"></i> Nuages : {{ day.clouds.all }}%</p>
+                    <p><i class="fas fa-umbrella"></i> Précipitations : {{ day.rain['3h']|default('0') }} mm</p>
+                </div>
+                {% set lastDate = currentDate %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
 
 <div class="modal fade" id="participationModal" tabindex="-1" role="dialog" aria-labelledby="participationModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">

@@ -147,73 +147,51 @@
     </ul>
   
   </aside>
-
-  <main id="main" class="main">
-<div class="pagetitle">
+<main id="main" class="main">
+    <div class="pagetitle">
         <h1>Table Page</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
+                <li class="breadcrumb-item">Pages</li>
                 <li class="breadcrumb-item active">Table</li>
-
             </ol>
         </nav>
     </div>
     <!-- End Page Title -->
 
     <section class="section">
-    <table class="table datatable">
- 
-        <thead>
-            <tr>
-                 <th>Address</th>
-                <th>Gradin</th>
-                <th>Vestiaire</th>
-                <th>Status</th>
-                <th>Nomterrain</th>
-                <th>Prix</th>
-                <th>Duree</th>
-                <th>Gouvernorat</th>
-                <th>Image</th>
-                <th>Video</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for terrain in terrains %}
-            <tr>
-                 <td>{{ terrain.address }}</td>
-                <td>{{ terrain.gradin ? 'disponible' : 'indisponible' }}</td>
-                <td>{{ terrain.vestiaire ? 'disponible' : 'indisponible' }}</td>
-                <td>{{ terrain.status ? 'disponible' : 'en travaux' }}</td>
-                <td>{{ terrain.nomterrain }}</td>
-                <td>{{ terrain.prix }}</td>
-                <td>{{ terrain.duree }}</td>
-                <td>{{ terrain.gouvernorat }}</td>
-                <td>{{ terrain.image }}</td>
-                <td>{{ terrain.video }}</td>
-                <td>
-                     <button onclick="window.location='{{ path('app_terrain_edit', {'id': terrain.id}) }}'" class="btn btn-success btn-custom" style="margin-right: 10px;">Modifier</button>
+        <div class="row">
+            {% for terrain in terrains %}
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="{{ terrain.image }}" class="card-img-top" alt="Terrain Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ terrain.nomterrain }}</h5>
+                        <p class="card-text">Address: {{ terrain.address }}</p>
+                        <p class="card-text">Prix: {{ terrain.prix }}</p>
+                        <p class="card-text">Duree: {{ terrain.duree }}</p>
+                        <p class="card-text">Gouvernorat: {{ terrain.gouvernorat }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ path('app_terrain_edit', {'id': terrain.id}) }}" class="btn btn-success btn-custom" style="margin-right: 10px;">Modifier</a>
+                        <form action="{{ path('app_terrain_delete', {'id': terrain.id}) }}" method="post" onsubmit="return confirm('Voulez-vous supprimer ce terrain?');">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ terrain.id) }}">
+                            <button type="submit" class="btn btn-success btn-custom" style="margin-right: 10px;">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-md-12">
+                <p>no records found</p>
+            </div>
+            {% endfor %}
+        </div>
+        <button onclick="window.location='{{ path('app_terrain_new') }}'" class="btn btn-success">Ajouter</button>
+    </section>
+</main>
 
-<form action="{{ path('app_terrain_delete', {'id': terrain.id}) }}" method="post" onsubmit="return confirm('Voulez-vous supprimer ce terrain?');">
-    <input type="hidden" name="_method" value="DELETE">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ terrain.id) }}">
-    <button type="submit" class="btn btn-success btn-custom" style="margin-right: 10px;">Supprimer</button>
-</form>
-
-             </tr>
-        {% else %}
-            <tr>
-                <td colspan="12">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <button onclick="window.location='{{ path('app_terrain_new') }}'" class="btn btn-success">Ajouter</button>
-  </section>
-
-       
-  </main>
    
     
 

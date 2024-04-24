@@ -153,7 +153,20 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      */
     private $verificationcode;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_Verified", type="boolean", nullable=false)
+     */
+    
+    private $isVerified = false;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="google_id", type="string", length=255, nullable=true)
+     */
+    private $googleId;
     // construct 
     public function __construct()
     {
@@ -176,6 +189,17 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    public function setGoogleId(?string $googleId): static
+    {
+        $this->googleId = $googleId;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -317,6 +341,8 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
 
     private $roles;
 
+  
+
     public function getUserIdentifier(): string
     {
         return $this->email;
@@ -350,6 +376,18 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     public function getUsername()
     {
         return $this->email;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
     }
 
    
