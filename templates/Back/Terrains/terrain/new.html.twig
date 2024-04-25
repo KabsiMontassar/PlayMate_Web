@@ -3,10 +3,9 @@
 <title>New Terrain</title>
 
 {% block body %}
-    <h1>Ajouter un terrain</h1>
-    
+     
 
     {{ include('Back/Terrains/terrain/_form.html.twig') }}
 
-     <a href="{{ path('app_user_terrain') }}">back to list</a>
+    <a href="{{ path('app_user_terrain') }}" class="btn btn-secondary">Retourner aux terrains</a>
 {% endblock %}

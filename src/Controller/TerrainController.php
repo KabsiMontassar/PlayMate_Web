@@ -25,7 +25,7 @@ class TerrainController extends AbstractController
     {
         // Récupérer les terrains avec le statut "disponible"
         $terrainsDisponibles = $terrainRepository->findBy(['status' => true]);
-        return $this->render('Back/Terrains/terrain/index.html.twig', [
+        return $this->render('Front/ProfileElements/userTerrain.html.twig', [
             'terrains' => $terrainRepository->findAll(),]);
     }
 
@@ -40,7 +40,7 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
     $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
     
     // Render the template with the tournaments
-    return $this->render('Back/Terrains/terrain/profileterrain.html.twig', [
+    return $this->render('Front/ProfileElements/userTerrain.html.twig', [
         'terrains' => $terrains,
     ]);
 }

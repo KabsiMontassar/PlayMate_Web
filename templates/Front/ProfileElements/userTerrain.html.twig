@@ -1,22 +1,51 @@
-<div class="box-container">
-  {% for terrain in terrains %}
-  <div class="box-item">
-    <div class="flip-box">
-      <div class="flip-box-front text-center" style="background-image: url('{{ asset('uploads/images/' ~ terrain.image) }}');">
-        <div class="inner color-white">
-          <h3 class="flip-box-header">{{ terrain.nomterrain }}</h3>
-          <p>{{ terrain.address }}</p>
-          <img src="https://s25.postimg.cc/65hsttv9b/cta-arrow.png" alt="" class="flip-box-img">
+{% extends 'userBase.html.twig' %}
+{% block title %}aaaa{% endblock %}
+{% block body %}
+<head>
+ 
+ 
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('Front/css/userprofile.css') }}">
+
+    <!-- Vos autres balises meta, stylesheets, etc. -->
+</head> 
+ 
+<body>
+ 
+ 
+    <div class="box-container">
+        {% for terrain in terrains %}
+        <div class="box-item">
+            <div class="flip-box">
+                <div class="flip-box-front text-center" style="background-image: url('{{ asset('uploads/images/' ~ terrain.image) }}');">
+                    <div class="inner color-white">
+                        <h3 class="flip-box-header">{{ terrain.nomterrain }}</h3>
+                        <p>{{ terrain.address }}</p>
+                        <img src="https://s25.postimg.cc/65hsttv9b/cta-arrow.png" alt="" class="flip-box-img">
+                    </div>
+                </div>
+                <div class="flip-box-back text-center" style="background-image: url('{{ asset('uploads/images/' ~ terrain.image) }}');">
+                    <div class="inner color-white">
+                        <h3 class="flip-box-header">{{ terrain.nomterrain }}</h3>
+                        <p>{{ terrain.address }}</p>
+                        <button class="flip-box-button" data-bs-toggle="modal" data-bs-target="#terrainModal" data-terrain-id="{{ terrain.id }}">voir détails</button>
+                        <div>
+<a href="{{ path('app_terrain_edit', {'id': terrain.id}) }}" class="btn btn-info"><i class="fas fa-edit" style="color: navy;"></i></a>
+<a href="{{ path('app_terrain_delete', {'id': terrain.id}) }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');"><i class="fas fa-trash-alt"></i></a>
+
+</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="flip-box-back text-center" style="background-image: url('{{ asset('uploads/images/' ~ terrain.image) }}');">
-        <div class="inner color-white">
-          <h3 class="flip-box-header">{{ terrain.nomterrain }}</h3>
-          <p>{{ terrain.address }}</p>
-          <button class="flip-box-button" data-bs-toggle="modal" data-bs-target="#terrainModal" data-terrain-id="{{ terrain.id }}">voir détails</button>
-        </div>
-      </div>
+        {% endfor %}
     </div>
-  </div>
-  {% endfor %}
-</div>
+
+    <div class="text-center mt-4">
+        <a href="{{ path('app_terrain_new') }}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+    </div>
+
+    <!-- Vos autres scripts, balises, etc. -->
+</body>
+    {% endblock %}
