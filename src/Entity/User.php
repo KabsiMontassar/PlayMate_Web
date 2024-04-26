@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * User
  *
- * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
+ * @ORM\Table(name="utilisateur", uniqueConstraints={@ORM\UniqueConstraint(name="Email", columns={"Email"})})
 
  * @ORM\Entity
  */
@@ -167,6 +167,8 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      * @ORM\Column(name="google_id", type="string", length=255, nullable=true)
      */
     private $googleId;
+
+
     // construct 
     public function __construct()
     {
@@ -201,6 +203,8 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    
 
     public function getEmail(): ?string
     {

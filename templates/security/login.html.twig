@@ -86,10 +86,13 @@
     <span> <a href="{{ path('app_forgot_password') }}">Forgot your password ?</a></span>
 {% endif %}
  
-
+<div class="g-recaptcha" data-sitekey="6LfWj4kpAAAAABmVczVIXo8NXJOcpDvMcsr9-D0B" data-action="LOGIN"></div>
+      <br/>
+   
    <div class="d-flex justify-content-center pt-2">
     <a href="{{ path('connect_google_start') }}" class="btn btn-lg btn-primary">Sign in with Google</a>
 </div> 
+ 
 
 <span>Don't have an account yet? <a href="{{ path('app_register') }}">Register</a></span>
 </form>
@@ -133,5 +136,18 @@
 
   <!-- Template Main JS File -->
   <script src="{{ asset('Back/assets/js/main.js') }}"></script>
+
+    <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
+
+
+
+
+
+
+
+
+
+
+
     </body>
 </html>

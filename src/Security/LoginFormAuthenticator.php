@@ -16,6 +16,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use App\Repository\UserRepository;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 
 
 
