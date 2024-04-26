@@ -65,6 +65,27 @@ public function findByEquipe(Equipe $equipe): array
     }
 }
 
+public function findOneMembreparequipe(User $user,Equipe $equipe ): Membreparequipe
+ {
+    try {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Membreparequipe m
+            WHERE m.idmembre = :user AND m.idequipe = :equipe'
+        )->setParameter('user', $user)
+        ->setParameter('equipe', $equipe);
+
+        return $query->getOneOrNullResult();
+    } catch (\Exception $e) {
+        // Handle the exception, log it, or rethrow it as needed
+        throw new \RuntimeException('An error occurred while fetching data: ' . $e->getMessage());
+    }
+
+ }
+
+
 
 
 }

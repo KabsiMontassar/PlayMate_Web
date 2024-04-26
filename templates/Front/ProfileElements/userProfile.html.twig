@@ -19,36 +19,7 @@
                         <h3>{{ user.Role }}</h3>
                     </div>
                 </div>
-                {% if user.Role == 'Membre' %}
-
-                    <div class="card profile-card" style="margin-top: 25px;">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Teams</h5>
-                            <ul class="list-group list-group-flush">
-
-                                {% for teamName, members in teamsWithMembers %}
-                                    <li class="list-group-item">
-                                        <button class="badge bg-primary team-toggle-btn" style="padding: 10px 15px; border: none;" data-team="{{ teamName }}">{{ teamName }}</button>
-                                        <ul class="list-group list-group-flush team-members" >
-                                            {% for member in members %}
-                                                <li class="list-group-item">
-                                                    <strong>Name:</strong> {{ member.idmembre.Name }}
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                {% endfor %}
-
-                                {% if teams|length < 5 %}
-                                    <li class="list-group-item">
-                                        <a class="btn btn-success" href='{{ path('app_equipe_new') }}'>Add Team</a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </div>
-
-                {% endif %}
+               
 
             </div>
             <div class="col-md-8">
@@ -82,19 +53,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12" style="margin-top: 25px;">
-                    <div class="card profile-details">
-                        <div class="card-body" style="height: 300px;">
-                            <h5 class="card-title text-center">Team members</h5>
-                            <ul class="list-group list-group-flush" id="teamMembersContainer">
-
-                                <!-- Team members will be dynamically loaded here -->
-
-                            </ul>
-                        </div>
-                    </div>
-
-                </div>
+               
 
 
             </div>
