@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Reservation;
 use App\Form\ReservationType;
 // use App\Controller\JsonResponse;
@@ -27,6 +28,7 @@ use App\Entity\Blacklist;
 use App\Controller\BlacklistController;
 
 use App\Controller\PaymentController;
+use Symfony\Component\Security\Core\Security;
 
 #[Route('/reservation')]
 class ReservationController extends AbstractController
@@ -121,9 +123,11 @@ class ReservationController extends AbstractController
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
     /**reserver terrain */
+
     #[Route('/getTerrain/{choix}/{idTerrain}/{date}/{horaire}', name: 'app_reservation_getTerrain', methods: ['POST'])]
     public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager, MailerInterface $mailer, PaymentController $paymentController): Response
     {
+
 
 
         $date = new \DateTime($date);
@@ -138,7 +142,7 @@ class ReservationController extends AbstractController
         // Retourner  JSON 
         if ($terrainDisponible) {
 
-            $url = $paymentController->appelPaymentAPI($entityManager, 60, 46);
+
 
             $reservation = new Reservation();
             $reservation->setIsconfirm(false);
@@ -146,11 +150,24 @@ class ReservationController extends AbstractController
             $reservation->setHeurereservation($horaire);
             $reservation->setType($choix);
             $reservation->setIdterrain($terrain);
-
             $entityManager->persist($reservation);
             $entityManager->flush();
             // $this->sendEmail($mailer);
-            return new Response($url, Response::HTTP_OK);
+
+            // RECUPERE DERNIER RESERVATION
+            /* $reservation2 = $entityManager->createQueryBuilder()
+                ->select('r')
+                ->from(Reservation::class, 'r')
+                ->orderBy('r.datereservation', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+*/
+            $reservation2  = $entityManager->getRepository(Reservation::class)->findOneBy([], ['idreservation' => 'DESC']);
+            if ($reservation2) {
+                $url = $paymentController->appelPaymentAPI($entityManager, $reservation2->getIdterrain()->getPrix(), 46, $reservation2);
+                return new Response($url, Response::HTTP_OK);
+            }
         } else {
             return new Response('Terrain non disponible', 202);
         }

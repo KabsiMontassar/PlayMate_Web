@@ -22,14 +22,11 @@ class PaymentRepository extends ServiceEntityRepository
     }
 
 
-    public function findLatestPayment(): ?Payment
-    {
-        return $this->createQueryBuilder('p')
-            ->orderBy('p.idpayment', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
+
+
+
+
+
 
     //    /**
     //     * @return Payment[] Returns an array of Payment objects

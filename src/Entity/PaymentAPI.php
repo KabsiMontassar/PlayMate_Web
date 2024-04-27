@@ -75,15 +75,15 @@ class PaymentAPI
         return [
             'receiverWalletId' => '65e2061d0ed588b99337c12f',
             'token' => 'TND',
-            'amount' => 12000,
+            'amount' => $price,
             'description' => 'Payment for PlayMate',
             'acceptedPaymentMethods' => ['wallet', 'bank_card'],
-            'firstName' => "aziz",
-            'lastName' => "benzekri",
-            'email' => "aziz@gmail.com",
-            'orderId' => 55,
+            'firstName' => $payment->getIdmembre()->getName(),
+            'lastName' => "",
+            'email' => $payment->getIdmembre()->getEmail(),
+            'orderId' => 65841125,
             'successUrl' => $this->router->generate('payment_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            'failUrl' => $this->router->generate('payment_fail', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            //'failUrl' => $this->router->generate('payment_fail', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
     }
 }

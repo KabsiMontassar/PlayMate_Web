@@ -23,6 +23,13 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    App\Entity\PaymentAPI:
+        autowire: true
+    App\Entity\MailJettAPI:
+        autowire: true
+    App\Entity\PdfService:
+        autowire: true
+
 
     # Explicitly configure the WeatherService
     App\Service\WeatherService:
