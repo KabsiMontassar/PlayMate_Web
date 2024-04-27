@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Email Address</title>
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hi there!</h1>
+        <p>
+            Thank you for signing up with us. To complete your registration, please confirm your email address by clicking the button below:
+        </p>
+        <p>
+            <a href="{{ signedUrl|raw }}" class="button">Confirm my Email</a>
+            <br><br>
+            If the button above doesn't work, you can also copy and paste the following link into your browser:
+            <br>
+            <a href="{{ signedUrl|raw }}">{{ signedUrl|raw }}</a>
+        </p>
+        <p>
+            This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+        </p>
+      
+        <hr>
+        <p>
+            Thank you for choosing us! If you have any questions or need further assistance, feel free to reach out to our support team.
+        </p>
+        <p>
+            Best regards,<br>
+            PlayMate
+        </p>
+    </div>
+</body>
+</html>

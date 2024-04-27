@@ -1,68 +1,74 @@
 {# templates/_formedit.html.twig #}
 
-{# Start the form with custom attributes, if needed #}
-{{ form_start(form1, {'attr': {'class': 'g-3 row mb-3 needs-validation', 'novalidate': 'novalidate', 'id': 'formedit'}}) }}
-
+{{ form_start(form1, {'attr': {'class': 'g-3 row mb-3 ', 'novalidate': 'novalidate', 'id': 'formedit'}}) }}
 
 <div class="col-md-4 col-lg-3">
     {{ form_label(form1.name, 'Name', {'label_attr': {'class': 'form-label'}}) }}
 </div>
 <div class="col-md-8 col-lg-9">
-    {{ form_widget(form1.name, {'attr': {'class': 'form-control', 'pattern': '^([a-zA-Zéàùèç]+[ ]{0,1})+$', 'minlength': '5',  'maxlength':'20'}}) }}
-    <div class="invalid-feedback">Please enter a valid name (only letters and spaces, minimum length 5 characters).</div>
-  
+    {{ form_widget(form1.name, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form1.name) }}
 </div>
 <div class="col-md-4 col-lg-3">
     {{ form_label(form1.age, 'Age', {'label_attr': {'class': 'form-label'}}) }}
 </div>
 <div class="col-md-8 col-lg-9">
-    {{ form_widget(form1.age, {'attr': {'class': 'form-control', 'pattern': '^[1-9]\d{1}$', 'min': '12', 'max': '99'}}) }}
-    <div class="invalid-feedback">Please enter a valid age (only numbers between 12 and 99).</div>
+    {{ form_widget(form1.age, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form1.age) }}
 </div>
 <div class="col-md-4 col-lg-3">
     {{ form_label(form1.phone, 'Phone', {'label_attr': {'class': 'form-label'}}) }}
 </div>
 <div class="col-md-8 col-lg-9">
-    {{ form_widget(form1.phone, {'attr': {'class': 'form-control', 'pattern': '^[1-9]\d{7}$' , 'min': '10000000', 'max': '99999999'}}) }}
-    <div class="invalid-feedback">Please enter a valid phone number (8 digits).</div>
-    
+    {{ form_widget(form1.phone, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form1.phone) }}
 </div>
-
 <div class="col-md-4 col-lg-3">
     {{ form_label(form1.address, 'Address', {'label_attr': {'class': 'form-label'}}) }}
 </div>
-<div class="col-md-8 col-lg-9">
-    {{ form_widget(form1.address, {'attr': {'class': 'form-control', 'minlength': '5',  'maxlength':'35' }}) }}
-    <div class="invalid-feedback">Please enter a valid address (minimum length 5 characters).</div>
-  
+<div class="col-md-6 col-lg-7">
+    {{ form_widget(form1.address, {'attr': {'id':'formedit_address', 'class': 'form-control'}}) }}
+    {{ form_errors(form1.address) }}
 </div>
-
- 
-       <div class="col-md-4 col-lg-3">
-        {{ form_label(form1.imageFile, 'Image', {'label_attr': {'class': 'form-label'}}) }}
-    </div>
-    <div class="col-md-8 col-lg-9">
-        {{ form_widget(form1.imageFile, {'attr': {'class': 'form-control'}}) }}
-
-    </div>
-
+<div class="col-md-2 col-lg-2">
+    <button type="button" id="getLocationBtn" class="btn btn-primary">Get Location</button>
+</div>
+<div class="col-md-4 col-lg-3">
+    {{ form_label(form1.imageFile, 'Image', {'label_attr': {'class': 'form-label'}}) }}
+</div>
+<div class="col-md-8 col-lg-9">
+    {{ form_widget(form1.imageFile, {'attr': {'class': 'form-control'}}) }}
+</div>
 <div class="col-12 text-center">
     <button id="update-button-edit" type="submit" class="btn" style="background-color:#033E6A; color:white;">Update</button>
 </div>
-
-{# End the form #}
 {{ form_end(form1) }}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('formedit');
-    
-    form.addEventListener('submit', function(event) {
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
 
-        form.classList.add('was-validated');
-    });
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+
+$(document).ready(function() {
+    let addressinput = document.getElementById('user_update_address');
+
+   $('#getLocationBtn').click(function() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            
+            // Send AJAX request to Symfony controller
+            $.get('/get-address/' + lat + '/' + lon, function(data) {
+                var address = data.address;
+              
+                addressinput.value = address.suburb + ' ' + address.county+ ' ' +  address.country;
+            
+            });
+        });
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+});
 });
 </script>
