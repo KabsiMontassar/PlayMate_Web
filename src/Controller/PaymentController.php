@@ -47,7 +47,7 @@ class PaymentController extends AbstractController
     public function appelPaymentAPI(EntityManagerInterface $entityManage, float $prix, $membreId): string
     {
         try {
-            $paiement = $this->creerPaiement($entityManage, $prix, $membreId);
+            $paiement = $this->creerPaiement($this->getDoctrine()->getManager(), $prix, $membreId);
 
             // Initialise le paiement
             $response = $this->paymentAPI->initPayment($paiement, $prix);
@@ -77,6 +77,46 @@ class PaymentController extends AbstractController
         $response = $this->paymentAPI->initPayment($paiement, 10);
         return $this->json($response);
     }
+
+    /**
+     * 
+     * 
+     * *
+     * **
+     * **
+     * *
+     * *
+     */
+    #[Route('/payment-success', name: 'payment_success')]
+    public function paymentSuccess(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        /* a ajouter colonne base de donnee ref  */
+        $paymentRef = $request->query->get('payment_ref');
+        $payment = $entityManager->getRepository(Payment::class)->findLatestPayment();
+        if ($payment) {
+            $payment->setPaymentRef($paymentRef);
+            $entityManager->persist($payment);
+            $entityManager->flush();
+            return $this->json(['message' => 'Payment successful']);
+        } else {
+            return $this->json(['error' => 'Payment not found']);
+        }
+    }
+
+
+    /**
+     * 
+     * 
+     * 
+     */
+
+
+
+
+
+
+
+
 
     private function creerPaiement(EntityManagerInterface $entityManager, float $prix, int $membreId): Payment
     {
@@ -191,79 +231,3 @@ class PaymentController extends AbstractController
         return $this->redirectToRoute('app_payment_index', [], Response::HTTP_SEE_OTHER);
     }
 }
-/*
-public function appelPaymentAPI(int $prix): void
-    {
-        try {
-            $paiement = $this->creerPaiement();
-
-            // Initialise le paiement
-            $response = $this->paymentAPI->initPayment($paiement, $prix);
-
-            // Récupère l'URL de paiement
-            $payUrl = $this->paymentAPI->extractPayUrlFromResponse($response);
-
-            if (!empty($payUrl)) {
-                // Ouvre l'URL de paiement dans le navigateur
-                $browser = new HttpBrowser();
-                $browser->get($payUrl);
-
-                // Attendre un certain temps pour que l'utilisateur effectue le paiement
-                sleep(60); // Attend 1 min (par exemple)
-
-                // Vérifie si le paiement est réussi en utilisant la référence de paiement
-                $paymentSuccessful = $this->paymentAPI->isPaymentSuccessful();
-
-                if ($paymentSuccessful) {
-                    // Récupère la référence de paiement
-                    $paymentRef = $this->paymentAPI->getPaymentRef();
-
-                    // Ajoute le paiement avec sa référence
-                    $this->paiementService->AjouterPaiement($paiement, $paymentRef);
-
-                    // Envoie un email de confirmation
-                    $this->mailJettAPI->send('aziztaraji1@gmail.com', 'playmatepidev@gmail.com', $paymentRef);
-                } else {
-                    echo "Erreur de paiement";
-                }
-            }
-        } catch (TransportExceptionInterface $e) {
-            echo "Erreur de requête HTTP";
-        } catch (\Exception $e) {
-            echo "Une erreur s'est produite : " . $e->getMessage();
-        }
-
-
-
- public function ajouterPaiement(Payment $paiement, string $paymentRef): bool
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-
-        // Créez une nouvelle instance de Paiement
-        $newPayment = new Payment();
-        $newPayment->setIdMembre($paiement->getIdMembre());
-        $newPayment->setIdReservation($paiement->getIdReservation());
-        $newPayment->setDatePayment($paiement->getDatePayment());
-        $newPayment->setHorairePayment($paiement->getHorairePayment());
-        //$newPayment->setPaymentRef($paymentRef);
-
-        // Persistez et flush pour sauvegarder les modifications dans la base de données
-        $entityManager->persist($newPayment);
-        $entityManager->flush();
-
-        // Vérifiez si une ligne a été affectée
-        return $newPayment->getIdpayment() !== null;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    }*/

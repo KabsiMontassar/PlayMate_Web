@@ -9,6 +9,9 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 
 class PaymentAPI
 {
@@ -18,9 +21,11 @@ class PaymentAPI
     private HttpClientInterface $client;
     private $entityManager;
 
-    public function __construct(HttpClientInterface $client)
+    private $router;
+    public function __construct(HttpClientInterface $client, RouterInterface $router)
     {
         $this->client = $client;
+        $this->router = $router;
     }
 
     public function checkPayment(string $paymentId): bool
@@ -76,103 +81,9 @@ class PaymentAPI
             'firstName' => "aziz",
             'lastName' => "benzekri",
             'email' => "aziz@gmail.com",
-            'orderId' => 99,
-            //'returnUrl' => ,
+            'orderId' => 55,
+            'successUrl' => $this->router->generate('payment_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'failUrl' => $this->router->generate('payment_fail', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
     }
-    /**
-     * *
-     * *
-     * **
-     * *
-     * *
-     * **
-     * *
-     * *
-     * *
-     * 
-     */
-    /*
-    public function getPaymentRef(): ?string
-    {
-        return $this->paymentRef;
-    }
-
-    public function initPayment(Payment $paiement, int $prix): ?string
-    {
-        $httpClient = HttpClient::create();
-        $response = $httpClient->request('POST', self::API_URL, [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'x-api-key' => self::API_KEY,
-            ],
-            'body' => $this->buildJsonPayload($paiement, $prix),
-        ]);
-
-        try {
-            $content = $response->getContent();
-            $paymentRef = $this->extractPaymentRef($content);
-            return $paymentRef;
-        } catch (TransportExceptionInterface $e) {
-            // Gérer les erreurs de requête HTTP
-            return null;
-        }
-    }
-
-    private function extractPaymentRef(string $response): string
-    {
-        $responseData = json_decode($response, true);
-        return $responseData['paymentRef'] ?? '';
-    }
-
-    private function buildJsonPayload(Payment $paiement, int $prix): string
-    {
-        // Construire la charge JSON basée sur les propriétés de l'objet Paiement
-        // Exemple de charge utile. Adapter les champs en fonction des propriétés de votre Paiement et des exigences de l'API
-        $userId = $paiement->getIdmembre();
-        $user = $this->entityManager->getRepository(User::class)->find($userId);
-        $firstName = $user ? $user->getName() : '';
-        $email = $user ? $user->getEmail() : '';
-
-        $price = $prix * 1000;
-        return json_encode([
-            'receiverWalletId' => '65e2061d0ed588b99337c12f',
-            'token' => 'TND',
-            'amount' => $price,
-            'description' => 'Payment for playmate',
-            'acceptedPaymentMethods' => ['wallet', 'bank_card'],
-            'firstName' => $firstName,
-            'lastName' => 'NoLastName',
-            'email' => $email,
-            'orderId' => '658435', // Remplacer par un identifiant d'ordre réel
-        ]);
-    }
-
-
-
-    public function extractPayUrlFromResponse(string $response): string
-    {
-        $jsonResponse = json_decode($response, true);
-        return $jsonResponse['payUrl'] ?? '';
-    }
-
-    public function isPaymentSuccessful(): bool
-    {
-        try {
-            $client = HttpClient::create();
-            $response = $client->request('GET', "https://api.preprod.konnect.network/api/v2/payments/{$paymentRef}");
-
-            if ($response->getStatusCode() === 200) {
-                $responseData = $response->toArray();
-                $successfulTransactions = $responseData['payment']['successfulTransactions'] ?? 0;
-                return $successfulTransactions > 0;
-            } else {
-                // Gérer l'échec de la requête
-                return false;
-            }
-        } catch (TransportExceptionInterface $e) {
-            // Gérer les erreurs de transport
-            return false;
-        }
-    }*/
 }
