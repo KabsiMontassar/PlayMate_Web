@@ -123,10 +123,10 @@ class ReservationController extends AbstractController
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
     /**reserver terrain */
-
     #[Route('/getTerrain/{choix}/{idTerrain}/{date}/{horaire}', name: 'app_reservation_getTerrain', methods: ['POST'])]
     public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager, MailerInterface $mailer, PaymentController $paymentController): Response
     {
+
 
 
 
@@ -150,9 +150,11 @@ class ReservationController extends AbstractController
             $reservation->setHeurereservation($horaire);
             $reservation->setType($choix);
             $reservation->setIdterrain($terrain);
+
             $entityManager->persist($reservation);
             $entityManager->flush();
             // $this->sendEmail($mailer);
+
 
             // RECUPERE DERNIER RESERVATION
             /* $reservation2 = $entityManager->createQueryBuilder()

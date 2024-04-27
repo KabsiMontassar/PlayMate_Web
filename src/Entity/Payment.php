@@ -68,7 +68,6 @@ class Payment
      * })
      */
     private $idreservation;
-
     /**
      * @var string
      *
@@ -87,10 +86,6 @@ class Payment
 
         return $this;
     }
-
-
-
-
     public function getIdpayment(): ?int
     {
         return $this->idpayment;

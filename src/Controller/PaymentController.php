@@ -68,11 +68,29 @@ class PaymentController extends AbstractController
             return "erreur";
         }
     }
+    /*
+    #[Route('/test', name: 'test', methods: ['GET'])]
+    public function test(): Response
+    {
+        $paiement = $this->creerPaiement($this->getDoctrine()->getManager(), 6000, 46);
 
+        $response = $this->paymentAPI->initPayment($paiement, 10);
+        return $this->json($response);
+    }
+*/
+    /**
+     * 
+     * 
+     * *
+     * **
+     * **
+     * *
+     * *
+     */
     #[Route('/payment-success', name: 'payment_success')]
     public function paymentSuccess(Request $request, EntityManagerInterface $entityManager): Response
     {
-
+        /* a ajouter colonne base de donnee ref  */
         $paymentRef = $request->query->get('payment_ref');
         $payment = $entityManager->createQueryBuilder()
             ->select('p')
@@ -81,7 +99,6 @@ class PaymentController extends AbstractController
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
-
         if ($payment) {
             $payment->setPaymentRef($paymentRef);
             $entityManager->persist($payment);
@@ -91,6 +108,19 @@ class PaymentController extends AbstractController
             return $this->json(['error' => 'Payment not found']);
         }
     }
+
+
+    /**
+     * 
+     * 
+     * 
+     */
+
+
+
+
+
+
 
 
 
@@ -207,14 +237,3 @@ class PaymentController extends AbstractController
         return $this->redirectToRoute('app_payment_index', [], Response::HTTP_SEE_OTHER);
     }
 }
-/*
-    #[Route('/test', name: 'test', methods: ['GET'])]
-    public function test(): Response
-    {
-        $paiement = $this->creerPaiement($this->getDoctrine()->getManager(), 6000, 46);
-
-        $response = $this->paymentAPI->initPayment($paiement, 10);
-        return $this->json($response);
-    }
-
-*/
