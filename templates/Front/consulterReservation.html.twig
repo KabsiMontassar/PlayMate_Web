@@ -69,7 +69,7 @@
                                     Événement</a>
                                 <a href="{{ path('app_Historique' ) }}" class="dropdown-item">Votre Historique</a>
                                 <a href="{{ path('app_reservation_future' ) }}" class="dropdown-item">Vos
-                                    Reservation</a>
+                                    Reservations</a>
                             </div>
                         </div>
                         <a href="{{ path('app_Contact' ) }}" class="nav-item nav-link">Contact</a>
@@ -107,25 +107,22 @@
     <!--end image centre-->
 
     <section class="section">
-        {% if historiques is not empty %}
-        {% for historique in historiques %}
+        {% if reservation is not empty %}
+        {% for reservation in reservation %}
         <article class="article">
-            <div class="article-header">
-                Historique ID: {{ historique.idhistorique }}
-            </div>
             <div class="article-body">
-                <p>Reservation ID: {{ historique.reservation.idreservation }}</p>
-                <p>Date Reservation: <span id="dateres">{{ historique.reservation.datereservation|date('Y-m-d')
-                        }}</span> </p>
-                <p>Heure Reservation: <span id="heureres">{{ historique.reservation.heurereservation }}</span></p>
-                <p>nom terrain: <span id="nomterrain">{{ historique.reservation.idTerrain.nomTerrain }}</span></p>
-                <p>addresse terrain: <span id="addresseTerrain">{{ historique.reservation.idTerrain.address }}</span>
-                </p>
-                <p>prix terrain:<span id="prixterrain">{{ historique.reservation.idTerrain.prix }}</span> </p>
+                <p>Reservation ID: <span id="idreservation">{{ reservation.idreservation }}</span></p>
+                <p>Date Reservation: <span id="dateres">{{ reservation.datereservation|date('Y-m-d')}}</span> </p>
+                <p>Heure Reservation: <span id="heureres">{{ reservation.heurereservation }}</span></p>
+                <p>nom terrain: <span id="nomterrain">{{ reservation.idTerrain.nomTerrain }}</span></p>
+                <p>addresse terrain: <span id="addresseTerrain">{{ reservation.idTerrain.address }}</span></p>
+                <p>prix terrain:<span id="prixterrain">{{ reservation.idTerrain.prix }}</span> </p>
             </div>
             <button class="btn btn-primary" type="submit" style="height: 47px; margin-top: -2px;"
                 onclick="imprimerPdf()">Imprimer
                 Pdf</button>
+            <button class="btn btn-danger" type="submit" style="height: 47px; margin-top: -2px;"
+                onclick="annulerReservation()">Annuler</button>
         </article>
 
         {% endfor %}
@@ -142,6 +139,17 @@
 
 
 <script>
+
+    function annulerReservation() {
+        event.preventDefault();
+        var idreservation = document.getElementById("idreservation").innerText;
+
+        $.post("/reservation/annulerReservation/" + idreservation, function (data) {
+            alert('annuler!')
+        });
+
+    }
+
     function imprimerPdf() {
         event.preventDefault();
         var date = document.getElementById("dateres").innerText;

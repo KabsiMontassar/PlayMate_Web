@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Payment;
 use App\Form\PaymentType;
 use App\Repository\PaymentRepository;
@@ -16,10 +17,14 @@ use DateTime;
 use DateTimeZone;
 
 
+
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
+use App\Entity\Reservation;
 use App\Entity\PaymentAPI;
 use App\Entity\MailJettAPI;
 
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[Route('/payment')]
@@ -33,57 +38,47 @@ class PaymentController extends AbstractController
     private $mailJettAPI;
 
 
-    public function __construct(PaymentAPI $paymentAPI, HttpClientInterface $httpClient,  MailJettAPI $mailJettAPI)
+    public function __construct(PaymentAPI $paymentAPI, HttpClientInterface $httpClient)
     {
         $this->paymentAPI = $paymentAPI;
         $this->httpClient = $httpClient;
-
-        $this->mailJettAPI = $mailJettAPI;
     }
 
-    public function appelPaymentAPI(int $prix): void
+    public function appelPaymentAPI(EntityManagerInterface $entityManage, float $prix, $membreId): string
     {
         try {
-            $paiement = $this->creerPaiement();
+            $paiement = $this->creerPaiement($entityManage, $prix, $membreId);
 
             // Initialise le paiement
             $response = $this->paymentAPI->initPayment($paiement, $prix);
 
-            // Récupère l'URL de paiement
-            $payUrl = $this->paymentAPI->extractPayUrlFromResponse($response);
 
-            if (!empty($payUrl)) {
-                // Ouvre l'URL de paiement dans le navigateur
-                $browser = new HttpBrowser();
-                $browser->get($payUrl);
-
-                // Attendre un certain temps pour que l'utilisateur effectue le paiement
-                sleep(60); // Attend 1 min (par exemple)
-
-                // Vérifie si le paiement est réussi en utilisant la référence de paiement
-                $paymentSuccessful = $this->paymentAPI->isPaymentSuccessful();
-
-                if ($paymentSuccessful) {
-                    // Récupère la référence de paiement
-                    $paymentRef = $this->paymentAPI->getPaymentRef();
-
-                    // Ajoute le paiement avec sa référence
-                    $this->paiementService->AjouterPaiement($paiement, $paymentRef);
-
-                    // Envoie un email de confirmation
-                    $this->mailJettAPI->send('aziztaraji1@gmail.com', 'playmatepidev@gmail.com', $paymentRef);
-                } else {
-                    echo "Erreur de paiement";
-                }
+            if ($response != null) {
+                // update 
+                return $response['payUrl'];
+            } else {
+                // delete
+                return "erreur";
             }
         } catch (TransportExceptionInterface $e) {
             echo "Erreur de requête HTTP";
+            return "erreur";
         } catch (\Exception $e) {
             echo "Une erreur s'est produite : " . $e->getMessage();
+            return "erreur";
         }
     }
 
-    private function creerPaiement(): Payment
+    #[Route('/test', name: 'test', methods: ['GET'])]
+    public function test(): Response
+    {
+        $paiement = $this->creerPaiement($this->getDoctrine()->getManager(), 6000, 46);
+
+        $response = $this->paymentAPI->initPayment($paiement, 10);
+        return $this->json($response);
+    }
+
+    private function creerPaiement(EntityManagerInterface $entityManager, float $prix, int $membreId): Payment
     {
         // Obtenir la date et l'heure actuelles
         $dateCourante = new DateTime('now', new DateTimeZone('UTC'));
@@ -94,35 +89,29 @@ class PaymentController extends AbstractController
 
         $dateCourante2 = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
         // Créer un nouvel objet Paiement
+
+        $user = $entityManager->getRepository(User::class)->find($membreId);
+        if (!$user) {
+            throw new \Exception("Membre non trouvé.");
+        }
+        $reservation = $entityManager->getRepository(Reservation::class)->find(40);
+        if (!$reservation) {
+            throw new \Exception("Reservation not found.");
+        }
+
         $paiement = new Payment();
-        $paiement->setIdmembre(/* Remplacer par l'ID de l'utilisateur */30);
-        $paiement->setIdReservation(/* Remplacer par l'ID de la réservation */8);
+        $paiement->setIdmembre($user);
+        $paiement->setIdreservation($reservation);
         $paiement->setDatepayment($dateCourante2);
         $paiement->setHorairepayment($heureEnString);
-        //$paiement->setRef(''); // Remplacer par la valeur de votre champ
-
+        //$paiement->setRef($idRef); // Remplacer par la valeur de votre champ
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($paiement);
+        $entityManager->flush();
         return $paiement;
     }
 
-    public function ajouterPaiement(Payment $paiement, string $paymentRef): bool
-    {
-        $entityManager = $this->getDoctrine()->getManager();
 
-        // Créez une nouvelle instance de Paiement
-        $newPayment = new Payment();
-        $newPayment->setIdMembre($paiement->getIdMembre());
-        $newPayment->setIdReservation($paiement->getIdReservation());
-        $newPayment->setDatePayment($paiement->getDatePayment());
-        $newPayment->setHorairePayment($paiement->getHorairePayment());
-        //$newPayment->setPaymentRef($paymentRef);
-
-        // Persistez et flush pour sauvegarder les modifications dans la base de données
-        $entityManager->persist($newPayment);
-        $entityManager->flush();
-
-        // Vérifiez si une ligne a été affectée
-        return $newPayment->getIdpayment() !== null;
-    }
 
     #[Route('/', name: 'app_payment_index', methods: ['GET'])]
     public function index(PaymentRepository $paymentRepository): Response
@@ -202,3 +191,79 @@ class PaymentController extends AbstractController
         return $this->redirectToRoute('app_payment_index', [], Response::HTTP_SEE_OTHER);
     }
 }
+/*
+public function appelPaymentAPI(int $prix): void
+    {
+        try {
+            $paiement = $this->creerPaiement();
+
+            // Initialise le paiement
+            $response = $this->paymentAPI->initPayment($paiement, $prix);
+
+            // Récupère l'URL de paiement
+            $payUrl = $this->paymentAPI->extractPayUrlFromResponse($response);
+
+            if (!empty($payUrl)) {
+                // Ouvre l'URL de paiement dans le navigateur
+                $browser = new HttpBrowser();
+                $browser->get($payUrl);
+
+                // Attendre un certain temps pour que l'utilisateur effectue le paiement
+                sleep(60); // Attend 1 min (par exemple)
+
+                // Vérifie si le paiement est réussi en utilisant la référence de paiement
+                $paymentSuccessful = $this->paymentAPI->isPaymentSuccessful();
+
+                if ($paymentSuccessful) {
+                    // Récupère la référence de paiement
+                    $paymentRef = $this->paymentAPI->getPaymentRef();
+
+                    // Ajoute le paiement avec sa référence
+                    $this->paiementService->AjouterPaiement($paiement, $paymentRef);
+
+                    // Envoie un email de confirmation
+                    $this->mailJettAPI->send('aziztaraji1@gmail.com', 'playmatepidev@gmail.com', $paymentRef);
+                } else {
+                    echo "Erreur de paiement";
+                }
+            }
+        } catch (TransportExceptionInterface $e) {
+            echo "Erreur de requête HTTP";
+        } catch (\Exception $e) {
+            echo "Une erreur s'est produite : " . $e->getMessage();
+        }
+
+
+
+ public function ajouterPaiement(Payment $paiement, string $paymentRef): bool
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        // Créez une nouvelle instance de Paiement
+        $newPayment = new Payment();
+        $newPayment->setIdMembre($paiement->getIdMembre());
+        $newPayment->setIdReservation($paiement->getIdReservation());
+        $newPayment->setDatePayment($paiement->getDatePayment());
+        $newPayment->setHorairePayment($paiement->getHorairePayment());
+        //$newPayment->setPaymentRef($paymentRef);
+
+        // Persistez et flush pour sauvegarder les modifications dans la base de données
+        $entityManager->persist($newPayment);
+        $entityManager->flush();
+
+        // Vérifiez si une ligne a été affectée
+        return $newPayment->getIdpayment() !== null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    }*/

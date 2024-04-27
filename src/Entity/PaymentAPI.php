@@ -7,21 +7,92 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class PaymentAPI
 {
-    private const API_URL = 'https://api.preprod.konnect.network/api/v2/payments/init-payment';
-    private const API_KEY = '65e2061d0ed588b99337c12b:lfeWlefzQi2IKdIYGZa5vjfCh9jDdbR';
+    private const API_URL = 'https://api.preprod.konnect.network/api/v2/payments/';
+    private const API_KEY = '65e2061d0ed588b99337c12b:Hphdip8xVt5KwPOPyAfgVv1H2n';
     private $paymentRef = "";
-
+    private HttpClientInterface $client;
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(HttpClientInterface $client)
     {
-        $this->entityManager = $entityManager;
+        $this->client = $client;
     }
 
+    public function checkPayment(string $paymentId): bool
+    {
+        try {
+            $response = $this->client->request('GET', self::API_URL . $paymentId, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'x-api-key' => self::API_KEY,
+                ],
+            ]);
 
+            $data = $response->toArray(); // Converts JSON to array
+            return $data['payment']['successfulTransactions'] === 1;
+        } catch (\Exception $e) {
+            // Log error or handle it as required
+            return false;
+        }
+    }
+
+    public function initPayment(Payment $payment, float $prix): ?array
+    {
+        try {
+            $response = $this->client->request('POST', self::API_URL . 'init-payment', [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'x-api-key' => self::API_KEY,
+                ],
+                'json' => $this->buildJsonPayload($payment, $prix),
+            ]);
+
+            $data = $response->toArray();
+            //var_dump($data);
+            return [
+                'payUrl' => $data['payUrl'] ?? '',
+                'paymentId' => $data['paymentRef'] ?? '',
+            ];
+        } catch (\Exception $e) {
+            var_dump($e);
+            return null;
+        }
+    }
+
+    private function buildJsonPayload(Payment $payment, float $prix): array
+    {
+        $price = $prix * 1000;
+        return [
+            'receiverWalletId' => '65e2061d0ed588b99337c12f',
+            'token' => 'TND',
+            'amount' => 12000,
+            'description' => 'Payment for PlayMate',
+            'acceptedPaymentMethods' => ['wallet', 'bank_card'],
+            'firstName' => "aziz",
+            'lastName' => "benzekri",
+            'email' => "aziz@gmail.com",
+            'orderId' => 99,
+            //'returnUrl' => ,
+        ];
+    }
+    /**
+     * *
+     * *
+     * **
+     * *
+     * *
+     * **
+     * *
+     * *
+     * *
+     * 
+     */
+    /*
     public function getPaymentRef(): ?string
     {
         return $this->paymentRef;
@@ -103,5 +174,5 @@ class PaymentAPI
             // Gérer les erreurs de transport
             return false;
         }
-    }
+    }*/
 }

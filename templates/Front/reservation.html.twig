@@ -31,6 +31,7 @@
                             <a href="{{ path('app_Evenement' ) }}" class="dropdown-item">Nos
                                 Événement</a>
                             <a href="{{ path('app_Historique' ) }}" class="dropdown-item">Votre Historique</a>
+                            <a href="{{ path('app_reservation_future' ) }}" class="dropdown-item">Vos Reservations</a>
                         </div>
                     </div>
                     <a href="{{ path('app_Contact' ) }}" class="nav-item nav-link">Contact</a>
@@ -503,10 +504,15 @@
             // AJAX 
             $.post("/reservation/getTerrain/" + typeReservation + "/" + terrain + "/" + date + "/" + horaire, function (data) {
                 // rj3 el hhtp ly fel controller
-                if (data === 'Terrain disponible') {
-                    alert('ok')
+                if (data === 'Terrain non disponible') {
+                    alert('non disponible');
+
+                } else if (data === "erreur") {
+                    alert("erreur");
                 } else {
+
                     alert(data);
+                    window.open(data, '_blank');
                 }
             });
         }

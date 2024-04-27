@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+use App\Entity\Reservation;
+
 #[Route('/blacklist')]
 class BlacklistController extends AbstractController
 {
@@ -104,5 +107,21 @@ class BlacklistController extends AbstractController
         }
 
         return $this->redirectToRoute('app_blacklist_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+
+    public function addToBlacklist(Reservation $reservation, EntityManagerInterface $entityManager): void
+    {
+
+        $blacklist = new Blacklist();
+        $blacklist->setIdreservation($reservation->getIdreservation());
+        $blacklist->setDuree(30);
+        $blacklist->setCause('Annulation de la réservation');
+
+
+
+        $entityManager->persist($blacklist);
+        $entityManager->flush();
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
 use App\Entity\User;
@@ -20,117 +21,153 @@ use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
 use Symfony\Component\Runtime\Runner\Symfony\ResponseRunner;
 use Symfony\Component\Security\Core\Security;
+use App\Entity\Historique;
+
+use App\Controller\Payment;
+
+use App\Repository\HistoriqueRepository;
+use Symfony\Component\Serializer\SerializerInterface;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\ReservationRepository;
+
+
+
+
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'start', methods: ['GET', 'POST'])] 
+
+    private $entityManager;
+    private $security;
+
+    public function __construct(EntityManagerInterface $entityManager, Security $security)
+    {
+        $this->entityManager = $entityManager;
+        $this->security = $security;
+    }
+
+    #[Route('/', name: 'start', methods: ['GET', 'POST'])]
     public function index(): Response
     {
-     return $this->redirectToRoute('app_Home');
+        return $this->redirectToRoute('app_Home');
     }
 
     #[Route('/Apropos', name: 'app_Apropos', methods: ['GET', 'POST'])]
     public function Apropos(EntityManagerInterface $em): Response
     {
-    
-        return $this->render('Front/apropos.html.twig', [
-          
-        ]);
+
+        return $this->render('Front/apropos.html.twig', []);
     }
     #[Route('/Boutique', name: 'app_Boutique', methods: ['GET', 'POST'])]
-    public function Boutique( EntityManagerInterface $em): Response
+    public function Boutique(EntityManagerInterface $em): Response
     {
-     
 
-        return $this->render('Front/boutique.html.twig', [
-          
-           
-            
-       
-        ]);
+
+        return $this->render('Front/boutique.html.twig', []);
     }
     #[Route('/Contact', name: 'app_Contact', methods: ['GET', 'POST'])]
     public function Contact(EntityManagerInterface $em): Response
     {
-       
 
-        return $this->render('Front/contact.html.twig', [
-          
-           
-            
-       
-        ]);
+
+        return $this->render('Front/contact.html.twig', []);
     }
     #[Route('/Evenement', name: 'app_Evenement', methods: ['GET', 'POST'])]
-    public function Evenement( EntityManagerInterface $entityManager): Response
+    public function Evenement(EntityManagerInterface $entityManager): Response
     {
         $tournois = $entityManager
             ->getRepository(Tournoi::class)
             ->findAll();
-            
-            $recentTournois =  $entityManager
+
+        $recentTournois =  $entityManager
             ->getRepository(Tournoi::class)
             ->findBy([], ['id' => 'DESC'], 2);
 
 
         return $this->render('Front/evenements.html.twig', [
-          
+
             'tournois' => $tournois,
             'tournoirecent'  => $recentTournois,
-            
-       
+
+
         ]);
     }
     #[Route('/Home', name: 'app_Home', methods: ['GET', 'POST'])]
-    public function Home(  EntityManagerInterface $entityManager): Response
-    { 
-        return $this->render('Front/index.html.twig', [
-          
-           
-            
-       
-        ]);
+    public function Home(EntityManagerInterface $entityManager): Response
+    {
+        return $this->render('Front/index.html.twig', []);
     }
     #[Route('/Reservation', name: 'app_Reservation', methods: ['GET', 'POST'])]
-    public function Reservation( EntityManagerInterface $entityManager): Response
+    public function Reservation(EntityManagerInterface $entityManager): Response
     {
         $terrainRepository = $entityManager->getRepository(Terrain::class);
         $terrains = $terrainRepository->findAll();
 
         return $this->render('Front/reservation.html.twig', [
-             
-                'terrains' => $terrains,
-          
-           
-            
-       
+
+            'terrains' => $terrains,
+
         ]);
     }
     #[Route('/Service', name: 'app_Service', methods: ['GET', 'POST'])]
-    public function Service( EntityManagerInterface $entityManager): Response
+    public function Service(EntityManagerInterface $entityManager): Response
     {
-       
 
-        return $this->render('Front/service.html.twig', [
-          
-           
-            
-       
-        ]);
+
+        return $this->render('Front/service.html.twig', []);
     }
     #[Route('/Terrains', name: 'app_Terrains', methods: ['GET', 'POST'])]
-    public function Terrains( EntityManagerInterface $entityManager): Response
+    public function Terrains(EntityManagerInterface $entityManager): Response
     {
-       
+
 
         $terrainRepository = $entityManager->getRepository(Terrain::class);
         $terrains = $terrainRepository->findAll();
 
         return $this->render('Front/terrains.html.twig', [
-          
+
             'terrains' => $terrains,
-            
-       
+
+
+        ]);
+    }
+
+    #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
+    public function Historique(HistoriqueRepository $historiqueRepository): Response
+    {
+
+
+        $historiques = $historiqueRepository->ListHistoriqueParMembre(/*$user->getId()*/46);
+
+        return $this->render('Front/historique.html.twig', [
+            'historiques' => $historiques,
+        ]);
+    }
+
+
+    private $serializer;
+
+    public function __construct2(EntityManagerInterface $entityManager, Security $security, SerializerInterface $serializer)
+    {
+        $this->entityManager = $entityManager;
+        $this->security = $security;
+        $this->serializer = $serializer;
+    }
+    // ajout id
+    #[Route('/FutureReservations', name: 'app_reservation_future', methods: ['GET'])]
+    public function getFuturReservationsByIdUser(/*$idUser,*/ReservationRepository $reservationRepository): Response
+    {
+        // ajout iduser
+        $futureReservations = $reservationRepository->findFutureReservationsForMember(46);
+
+
+        // Sérialiser les données pour les passer à la vue Twig
+        // $serializedReservations =  $this->serializer->serialize($futureReservations, 'json');
+
+        // Rendre la vue Twig en lui transmettant les données des réservations
+        return $this->render('Front/consulterReservation.html.twig', [
+            'reservation' => $futureReservations,
         ]);
     }
 
@@ -139,12 +176,12 @@ class HomeController extends AbstractController
     // public function login(Request $request, EntityManagerInterface $entityManager): Response
     // {
     //     $userRepository = $entityManager->getRepository(User::class);
-        
+
     //     $user = new User();
     //     $formlogin = $this->createForm(Login::class , $user , ['validation_groups' => ['login']]);
     //     $formlogin->handleRequest($request);
     //     if ($formlogin->isSubmitted() && $formlogin->isValid()) {
-           
+
     //         $user = $userRepository->findOneByemail($formlogin->get('email')->getData());
 
     //         if($user){
@@ -154,12 +191,12 @@ class HomeController extends AbstractController
     //                 $this->addFlash('error', 'Password is incorrect');
     //             }
     //             }
-        
+
     //         }
     //     return $this->renderForm('login.html.twig', [
-            
+
     //         'formlogin' => $formlogin,
-          
+
     //     ]);
     // }
 
@@ -180,24 +217,16 @@ class HomeController extends AbstractController
     //             $entityManager->flush();
     //             return $this->redirectToRoute('app_user_login', [], Response::HTTP_SEE_OTHER);
     //         }
-            
+
 
     //         return $this->redirectToRoute('app_user_register', [], Response::HTTP_SEE_OTHER);
     //     }
 
     //     return $this->renderForm('register.html.twig', [
     //         'form' => $form
-            
+
     //     ]);
     // }
 
 
 }
-
-
-    
-    
-   
-   
-  
-

@@ -23,6 +23,9 @@ services:
         autowire: true
     App\Entity\MailJettAPI:
         autowire: true
+    App\Entity\PdfService:
+        autowire: true
+    
 parameters:
     image_directory: '%kernel.project_dir%/public/uploads/images'
     # add more service definitions when explicit configuration is needed

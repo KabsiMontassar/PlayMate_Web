@@ -122,12 +122,36 @@ class Payment
         return $this;
     }
 
+    public function getIdmembreById(): int
+    {
+        return $this->idmembre;
+    }
+
+    public function setIdmembreById(int $idmembre): static
+    {
+        $this->idmembre = $idmembre;
+
+        return $this;
+    }
+
     public function getIdreservation(): ?Reservation
     {
         return $this->idreservation;
     }
 
     public function setIdreservation(?Reservation $idreservation): static
+    {
+        $this->idreservation = $idreservation;
+
+        return $this;
+    }
+
+    public function getIdreservationById(): ?int
+    {
+        return $this->idreservation;
+    }
+
+    public function setIdreservationById(?int $idreservation): static
     {
         $this->idreservation = $idreservation;
 
