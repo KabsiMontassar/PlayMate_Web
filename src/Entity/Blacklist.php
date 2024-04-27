@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Blacklist
@@ -25,6 +26,8 @@ class Blacklist
      * @var int
      *
      * @ORM\Column(name="duree", type="integer", nullable=false)
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero
      */
     private $duree;
 
@@ -32,6 +35,7 @@ class Blacklist
      * @var string
      *
      * @ORM\Column(name="cause", type="string", length=255, nullable=false)
+     * @Assert\NotBlank
      */
     private $cause;
 

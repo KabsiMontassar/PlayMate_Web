@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Reservation;
 use App\Form\ReservationType;
 // use App\Controller\JsonResponse;
@@ -15,6 +16,19 @@ use App\Entity\Terrain;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+
+use Mailtrap\Config;
+use Mailtrap\Helper\ResponseHelper;
+use Mailtrap\MailtrapSandboxClient;
+
+use App\Entity\Blacklist;
+use App\Controller\BlacklistController;
+
+use App\Controller\PaymentController;
+use Symfony\Component\Security\Core\Security;
 
 #[Route('/reservation')]
 class ReservationController extends AbstractController
@@ -48,16 +62,41 @@ class ReservationController extends AbstractController
     }
 
     #[Route('/{idreservation}', name: 'app_reservation_show', methods: ['GET'])]
-    public function show(Reservation $reservation): Response
+    public function show(int $idreservation, EntityManagerInterface $entityManager): Response
     {
+        $reservationRepository = $entityManager->getRepository(Reservation::class);
+
+        $reservation = $reservationRepository->find($idreservation);
+
+        if (!$reservation) {
+            throw $this->createNotFoundException('Réservation non trouvée');
+        }
+
+        // Récupérer l'identifiant du terrain à partir de l'objet Reservation
+        $idTerrain = $reservation->getIdterrain()->getId();
+
+        // Appeler la méthode countUniqueReservationsByTerrain() avec l'identifiant du terrain
+        $nb = $reservationRepository->countUniqueReservationsByTerrain($idTerrain);
+
         return $this->render('Back/GestionReservation/reservation/show.html.twig', [
             'reservation' => $reservation,
+            'nbreReservation' => $nb,
         ]);
     }
 
+
     #[Route('/{idreservation}/edit', name: 'app_reservation_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, int $idreservation, EntityManagerInterface $entityManager): Response
     {
+        $reservationRepository = $entityManager->getRepository(Reservation::class);
+
+        // Récupérer la réservation à éditer à partir de la base de données
+        $reservation = $reservationRepository->find($idreservation);
+
+        if (!$reservation) {
+            throw $this->createNotFoundException('Réservation non trouvée');
+        }
+
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
@@ -83,35 +122,66 @@ class ReservationController extends AbstractController
 
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
-
+    /**reserver terrain */
     #[Route('/getTerrain/{choix}/{idTerrain}/{date}/{horaire}', name: 'app_reservation_getTerrain', methods: ['POST'])]
-    public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager): Response
+    public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager, MailerInterface $mailer, PaymentController $paymentController): Response
     {
 
-        // convert date to DateTimeInterface 
-        $date = new \DateTime($date);
-        // idterrain must be of type ?App\Entity\Terrain
-        $idTerrain = $entityManager->getRepository(Terrain::class)->find($idTerrain);
-        // Effectuer la logique de vérification de disponibilité du terrain
-        $terrainDisponible = $entityManager->getRepository(Reservation::class)->findByDisponibility($idTerrain, $horaire, $date, $entityManager);
 
-        // Retourner une réponse JSON en fonction du résultat de la vérification
+
+
+        $date = new \DateTime($date);
+        $terrain = $entityManager->getRepository(Terrain::class)->find($idTerrain);
+
+        if (!$terrain) {
+            return new Response('Terrain non trouvé', Response::HTTP_NOT_FOUND);
+        }
+
+        $terrainDisponible = $entityManager->getRepository(Reservation::class)->findByDisponibility($terrain, $horaire, $date, $entityManager);
+
+        // Retourner  JSON 
         if ($terrainDisponible) {
+
+
+
             $reservation = new Reservation();
             $reservation->setIsconfirm(false);
             $reservation->setDatereservation($date);
             $reservation->setHeurereservation($horaire);
             $reservation->setType($choix);
-            $reservation->setIdterrain($idTerrain);
+            $reservation->setIdterrain($terrain);
 
             $entityManager->persist($reservation);
             $entityManager->flush();
+            // $this->sendEmail($mailer);
 
-            return new Response('Terrain disponible', Response::HTTP_OK);
+
+            // RECUPERE DERNIER RESERVATION
+            /* $reservation2 = $entityManager->createQueryBuilder()
+                ->select('r')
+                ->from(Reservation::class, 'r')
+                ->orderBy('r.datereservation', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+*/
+            $reservation2  = $entityManager->getRepository(Reservation::class)->findOneBy([], ['idreservation' => 'DESC']);
+            if ($reservation2) {
+                $url = $paymentController->appelPaymentAPI($entityManager, $reservation2->getIdterrain()->getPrix(), 46, $reservation2);
+                return new Response($url, Response::HTTP_OK);
+            }
         } else {
-            return new Response('Terrain non disponible', Response::HTTP_OK);
+            return new Response('Terrain non disponible', 202);
         }
     }
+
+
+
+
+
+
+
+
     #[Route('/reservations', name: 'get_reservations', methods: ['GET'])]
     public function getReservations(ReservationRepository $reservationRepository): JsonResponse
     {
@@ -133,8 +203,86 @@ class ReservationController extends AbstractController
                 ],
             ];
         }
-
         // Format JSON
         return new JsonResponse($formattedReservations);
+    }
+
+
+
+    public function sendEmail(MailerInterface $mailer)
+    {
+        $apikey = '6775274d71a8a7c5aa766d4fc491bdcf';
+        $mailtrap = new MailtrapSandboxClient(new Config($apikey));
+        $email = (new Email())
+            ->from('ahmeddouss35@gmail.com')
+            ->to('you@example.com')
+            ->subject('testt!')
+            ->text('Sending emails is fun again!')
+            ->html('<p>See Twig integration for better HTML integration!</p>');
+
+
+        $response = $mailtrap->emails()->send($email, '2815840'); // Email sending API (real)
+
+        var_dump(ResponseHelper::toArray($response)); // body (array)
+
+
+
+    }
+
+    #[Route('/reservations/{idUser}', name: 'get_reservations', methods: ['GET'])]
+    public function getFuturReservationsByIdUser($idUser, ReservationRepository $reservationRepository): JsonResponse
+    {
+        $FutureReservationsByUser = $reservationRepository->findFutureAndUniqueReservationsByIdUser($idUser);
+
+
+        $formattedReservations = [];
+        foreach ($FutureReservationsByUser as $reservation) {
+            $formattedReservations[] = [
+                'id' => $reservation->getIdreservation(),
+                'datereservation' => $reservation->getDatereservation()->format('Y-m-d'),
+                'heurereservation' => $reservation->getHeurereservation(),
+                'idterrain' => [
+                    'id' => $reservation->getIdterrain()->getId(),
+                    'nom' => $reservation->getIdterrain()->getNomterrain(),
+                    'adresse' => $reservation->getIdterrain()->getAddress(),
+                    'prix' => $reservation->getIdterrain()->getPrix(),
+                    'duree' => $reservation->getIdterrain()->getDuree()
+                ],
+            ];
+        }
+        // Format JSON
+        return new JsonResponse($formattedReservations);
+    }
+
+    #[Route('/annulerReservation/{idReservation}', name: 'app_annuler_reservation', methods: ['GET', 'POST'])]
+    public function annulerReservation($idReservation, Request $request, EntityManagerInterface $entityManager, BlacklistController $blacklistController): Response
+    {
+
+        $reservationRepository = $entityManager->getRepository(Reservation::class);
+        $reservation = $reservationRepository->find($idReservation);
+        if (!$reservation) {
+            throw new \InvalidArgumentException('Réservation non trouvée.');
+        }
+
+        $currentTime = new \DateTime();
+        $twentyFourHoursLater = (clone $currentTime)->modify('+24 hours');
+
+        if ($reservation->getDatereservation() < $twentyFourHoursLater) {
+
+            $reservation->setType('Compte_desactive');
+            $entityManager->persist($reservation);
+            $entityManager->flush();
+
+            $blacklistController->addToBlacklist($reservation, $entityManager);
+        }
+
+        $reservation->setHeurereservation('02:00');
+        $reservation->setType('Annulation');
+        $entityManager->persist($reservation);
+        $entityManager->flush();
+
+
+
+        return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
 }

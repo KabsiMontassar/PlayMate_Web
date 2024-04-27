@@ -27,16 +27,16 @@ class Payment
      * @var \DateTime
      *
      * @ORM\Column(type="date", nullable=false)
+     * @Assert\GreaterThan("today", message="La date de paiement doit être aujourd'hui ou ultérieure.")
      */
     private $datepayment;
-
     /**
      * @var string
      *
      * @ORM\Column(name="horairePayment", type="string", length=255, nullable=false)
      * @Assert\Regex(
-     *     pattern="/^([01][0-9]|2[0-3]):[0-5][0-9]$/",
-     *     message="L'heure doit être au format HH:MM"
+     *     pattern="/^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/",
+     *     message="L'horaire doit être au format hh:mm"
      * )
      */
     private $horairepayment;
@@ -68,7 +68,24 @@ class Payment
      * })
      */
     private $idreservation;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="paymentRef", type="string", length=255, nullable=true)
+     */
+    private $paymentRef;
 
+
+    public function getPaymentRef(): ?string
+    {
+        return $this->paymentRef;
+    }
+    public function setPaymentRef(string $paymentRef): static
+    {
+        $this->paymentRef = $paymentRef;
+
+        return $this;
+    }
     public function getIdpayment(): ?int
     {
         return $this->idpayment;
@@ -122,12 +139,36 @@ class Payment
         return $this;
     }
 
+    public function getIdmembreById(): int
+    {
+        return $this->idmembre;
+    }
+
+    public function setIdmembreById(int $idmembre): static
+    {
+        $this->idmembre = $idmembre;
+
+        return $this;
+    }
+
     public function getIdreservation(): ?Reservation
     {
         return $this->idreservation;
     }
 
     public function setIdreservation(?Reservation $idreservation): static
+    {
+        $this->idreservation = $idreservation;
+
+        return $this;
+    }
+
+    public function getIdreservationById(): ?int
+    {
+        return $this->idreservation;
+    }
+
+    public function setIdreservationById(?int $idreservation): static
     {
         $this->idreservation = $idreservation;
 
