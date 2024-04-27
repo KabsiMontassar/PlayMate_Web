@@ -24,10 +24,6 @@ class PaymentRepository extends ServiceEntityRepository
 
 
 
-
-
-
-
     //    /**
     //     * @return Payment[] Returns an array of Payment objects
     //     */

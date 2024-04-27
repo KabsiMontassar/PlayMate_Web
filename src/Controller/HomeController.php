@@ -21,7 +21,7 @@ use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
 use Symfony\Component\Runtime\Runner\Symfony\ResponseRunner;
 use Symfony\Component\Security\Core\Security;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use App\Entity\Historique;
 
@@ -30,15 +30,17 @@ use App\Controller\Payment;
 use App\Repository\HistoriqueRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
+
 use App\Repository\ReservationRepository;
-
-
-
-
 
 class HomeController extends AbstractController
 {
+    #[Route('/', name: 'start', methods: ['GET', 'POST'])]
+    public function index(): Response
+    {
+        return $this->redirectToRoute('app_Home');
+    }
+
 
     private $serializer;
 
@@ -56,11 +58,6 @@ class HomeController extends AbstractController
         $this->entityManager = $entityManager;
         $this->security = $security;
         $this->serializer = $serializer;
-    }
-    #[Route('/', name: 'start', methods: ['GET', 'POST'])]
-    public function index(): Response
-    {
-        return $this->redirectToRoute('app_Home');
     }
 
     #[Route('/Apropos', name: 'app_Apropos', methods: ['GET', 'POST'])]
@@ -148,8 +145,6 @@ class HomeController extends AbstractController
 
         ]);
     }
-
-
     #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
     public function Historique(HistoriqueRepository $historiqueRepository): Response
     {

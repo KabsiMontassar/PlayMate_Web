@@ -123,10 +123,12 @@ class ReservationController extends AbstractController
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
     /**reserver terrain */
-
     #[Route('/getTerrain/{choix}/{idTerrain}/{date}/{horaire}', name: 'app_reservation_getTerrain', methods: ['POST'])]
     public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager, MailerInterface $mailer, PaymentController $paymentController): Response
     {
+
+
+
 
         $date = new \DateTime($date);
         $terrain = $entityManager->getRepository(Terrain::class)->find($idTerrain);
@@ -148,11 +150,21 @@ class ReservationController extends AbstractController
             $reservation->setHeurereservation($horaire);
             $reservation->setType($choix);
             $reservation->setIdterrain($terrain);
+
             $entityManager->persist($reservation);
             $entityManager->flush();
-            $this->sendEmail($mailer);
+            // $this->sendEmail($mailer);
 
 
+            // RECUPERE DERNIER RESERVATION
+            /* $reservation2 = $entityManager->createQueryBuilder()
+                ->select('r')
+                ->from(Reservation::class, 'r')
+                ->orderBy('r.datereservation', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+*/
             $reservation2  = $entityManager->getRepository(Reservation::class)->findOneBy([], ['idreservation' => 'DESC']);
             if ($reservation2) {
                 $url = $paymentController->appelPaymentAPI($entityManager, $reservation2->getIdterrain()->getPrix(), 46, $reservation2);

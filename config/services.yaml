@@ -23,14 +23,11 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
     App\Entity\PaymentAPI:
-        autowire: true
-    App\Entity\MailJettAPI:
-        autowire: true
-    App\Entity\PdfService:
-        autowire: true
-
-
+        arguments:
+            $client: '@Symfony\Contracts\HttpClient\HttpClientInterface'
+            $router: '@Symfony\Component\Routing\RouterInterface'
     # Explicitly configure the WeatherService
     App\Service\WeatherService:
         arguments:
