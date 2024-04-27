@@ -69,6 +69,28 @@ class Payment
      */
     private $idreservation;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="paymentRef", type="string", length=255, nullable=true)
+     */
+    private $paymentRef;
+
+
+    public function getPaymentRef(): ?string
+    {
+        return $this->paymentRef;
+    }
+    public function setPaymentRef(string $paymentRef): static
+    {
+        $this->paymentRef = $paymentRef;
+
+        return $this;
+    }
+
+
+
+
     public function getIdpayment(): ?int
     {
         return $this->idpayment;

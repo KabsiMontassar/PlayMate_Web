@@ -44,10 +44,10 @@ class PaymentController extends AbstractController
         $this->httpClient = $httpClient;
     }
 
-    public function appelPaymentAPI(EntityManagerInterface $entityManage, float $prix, $membreId): string
+    public function appelPaymentAPI(EntityManagerInterface $entityManage,  $prix, $membreId,  $idReservation): string
     {
         try {
-            $paiement = $this->creerPaiement($this->getDoctrine()->getManager(), $prix, $membreId);
+            $paiement = $this->creerPaiement($this->getDoctrine()->getManager(), $prix, $membreId, $idReservation);
 
             // Initialise le paiement
             $response = $this->paymentAPI->initPayment($paiement, $prix);
@@ -69,30 +69,19 @@ class PaymentController extends AbstractController
         }
     }
 
-    #[Route('/test', name: 'test', methods: ['GET'])]
-    public function test(): Response
-    {
-        $paiement = $this->creerPaiement($this->getDoctrine()->getManager(), 6000, 46);
-
-        $response = $this->paymentAPI->initPayment($paiement, 10);
-        return $this->json($response);
-    }
-
-    /**
-     * 
-     * 
-     * *
-     * **
-     * **
-     * *
-     * *
-     */
     #[Route('/payment-success', name: 'payment_success')]
     public function paymentSuccess(Request $request, EntityManagerInterface $entityManager): Response
     {
-        /* a ajouter colonne base de donnee ref  */
+
         $paymentRef = $request->query->get('payment_ref');
-        $payment = $entityManager->getRepository(Payment::class)->findLatestPayment();
+        $payment = $entityManager->createQueryBuilder()
+            ->select('p')
+            ->from(Payment::class, 'p')
+            ->orderBy('p.idpayment', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
         if ($payment) {
             $payment->setPaymentRef($paymentRef);
             $entityManager->persist($payment);
@@ -104,21 +93,8 @@ class PaymentController extends AbstractController
     }
 
 
-    /**
-     * 
-     * 
-     * 
-     */
 
-
-
-
-
-
-
-
-
-    private function creerPaiement(EntityManagerInterface $entityManager, float $prix, int $membreId): Payment
+    public function creerPaiement(EntityManagerInterface $entityManager, float $prix, int $membreId,  $idReservation): Payment
     {
         // Obtenir la date et l'heure actuelles
         $dateCourante = new DateTime('now', new DateTimeZone('UTC'));
@@ -134,7 +110,7 @@ class PaymentController extends AbstractController
         if (!$user) {
             throw new \Exception("Membre non trouvé.");
         }
-        $reservation = $entityManager->getRepository(Reservation::class)->find(40);
+        $reservation = $entityManager->getRepository(Reservation::class)->find($idReservation);
         if (!$reservation) {
             throw new \Exception("Reservation not found.");
         }
@@ -231,3 +207,14 @@ class PaymentController extends AbstractController
         return $this->redirectToRoute('app_payment_index', [], Response::HTTP_SEE_OTHER);
     }
 }
+/*
+    #[Route('/test', name: 'test', methods: ['GET'])]
+    public function test(): Response
+    {
+        $paiement = $this->creerPaiement($this->getDoctrine()->getManager(), 6000, 46);
+
+        $response = $this->paymentAPI->initPayment($paiement, 10);
+        return $this->json($response);
+    }
+
+*/
