@@ -6,6 +6,7 @@ use App\Entity\Tournoi;
 use App\Entity\User;
 use App\Entity\Participation;
 use App\Form\TournoiType;
+use App\Form\ParticipationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use App\Service\WeatherService;
 
 
 #[Route('/tournoi')]
@@ -124,21 +126,54 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
     /**
      * @Route("/tournoi/{id}", name="app_tournoi_detail")
      */
-    public function detail($id)
+    public function detail(WeatherService $weatherService, Security $security, Request $request, $id, EntityManagerInterface $entityManager)
     {
-        // Récupérer les détails du terrain en fonction de $id (par ex. depuis la base de données)
-        $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
 
-        // Vérifier si le terrain existe
+        $city = $request->query->get('city');
+    $forecast = null;
+    $errorMsg = null;
+
+    // Si une ville est spécifiée, alors seulement faites l'appel au service météorologique.
+    if ($city) {
+        $weatherData = $weatherService->getWeatherForecast($city);
+        $forecast = $weatherData['data'];
+        $errorMsg = $weatherData['error'];
+    }else {
+        $forecast = null;
+    }
+        
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+        $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
+        
+        $participation = new Participation();
+        $form = $this->createForm(ParticipationType::class, $participation);
+        $form->handleRequest($request);
+        $existingParticipation = $entityManager->getRepository(Participation::class)
+        ->findOneBy(['idmembre' => $user, 'idtournoi' => $tournoi]);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $participation->setIdmembre($user);
+            $participation->setIdtournoi($tournoi);
+            $entityManager->persist($participation);
+            $entityManager->flush();
+           
+            return $this->redirectToRoute('app_Evenement', [], Response::HTTP_SEE_OTHER);
+        }
         if (!$tournoi) {
             throw $this->createNotFoundException('Tournoi non trouvé');}
 
-        // Vérifier si le terrain existe et s'il est disponible
-         
-        // Passer les détails du terrain au template
+            
         return $this->render('Front/detaildutournoi.html.twig', [
 
-            'tournoi' => $tournoi // Passer le terrain récupéré au template
+            'tournoi' => $tournoi,
+            'form' => $form->CreateView(),
+            'participation' => $existingParticipation,
+            'forecast' => $forecast,
+            'city' => $city,
+            'forecastAvailable' => $forecast !== null,
+            'errorMsg' => $errorMsg,
+           
         ]);
     }
 }

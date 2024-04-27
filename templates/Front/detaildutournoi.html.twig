@@ -1,7 +1,39 @@
 {% extends 'BaseFront.html.twig' %}
 
 {% block title %}Détails du Terrain{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 
+<style>
+    .forecast-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: stretch;
+    }
+    .forecast-item {
+        flex: 1;
+        min-width: 220px;
+        border: 1px solid #ddd;
+        margin: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        background: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .forecast-item p {
+        margin: 5px 0;
+    }
+    .temp {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    .icon {
+        width: 50px;
+        height: 50px;
+    }
+</style>
+{% endblock %}
 {% block body %}
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
@@ -82,44 +114,74 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <div class="col-lg-9 col-md-8">
-                        <button class="btn" data-toggle="modal" data-target="#participateModal">Participer</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal -->
-        <div class="modal fade" id="participateModal" tabindex="-1" aria-labelledby="participateModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="participateModalLabel">Participer</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" onclick="participer('{{ tournoi.id }}')">Participer</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-lg-9 col-md-8">
+        {% if participation %}
+            <form action="{{ path('app_participation_delete', {'id': participation.id}) }}" method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ participation.id) }}">
+                <button type="submit" class="btn btn-danger">Annuler la participation</button>
+            </form>
+        {% else %}
+            <button class="btn btn-custom-blue" data-toggle="modal" data-target="#participationModal">Participer</button>
+        {% endif %}
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+{# Formulaire de recherche #}
+<form method="get" action="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}">
+    <input type="text" name="city" placeholder="Entrez le nom d'une ville" required>
+    <button type="submit">Rechercher</button>
+</form>
 
-    <script>
-        function participer(id) {
-            $.post("/participation/new" + id , function(data) {
-                if (data === 'success') {
-                    window.location.href = '/Home';
-                } else {
-                    console.log('error');
-                }
-            });
-        }
-    </script>
+{# Affichage de la météo #}
+{% if errorMsg %}
+    <p class="error">{{ errorMsg }}</p>
+{% endif %}
+
+{% if forecast %}
+    <div class="forecast-container">
+        {% set lastDate = null %}
+        {% for day in forecast.list %}
+            {% set currentDate = day.dt_txt|date('Y-m-d') %}
+            {% if currentDate != lastDate %}
+                <div class="forecast-item">
+                    <p>Date : <strong>{{ day.dt_txt|date('Y-m-d') }}</strong></p>
+                    <p class="temp">{{ day.main.temp_max }} °C / {{ day.main.temp_min }} °C</p>
+                    <p><i class="fas fa-wind"></i> Vitesse du vent : {{ day.wind.speed }} m/s</p>
+                    <p><i class="fas fa-tint"></i> Humidité : {{ day.main.humidity }}%</p>
+                    <p><i class="fas fa-cloud"></i> Nuages : {{ day.clouds.all }}%</p>
+                    <p><i class="fas fa-umbrella"></i> Précipitations : {{ day.rain['3h']|default('0') }} mm</p>
+                </div>
+                {% set lastDate = currentDate %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="modal fade" id="participationModal" tabindex="-1" role="dialog" aria-labelledby="participationModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="participationModalLabel">Participation au Tournoi</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body"> 
+       {{ include('Back/GestionEvenement/participation/_form.html.twig', {'id': tournoi.id, 'iduser': app.user.id}  )  }}
+    {# {{ render(controller('App\\Controller\\ParticipationController::new', {'id': tournoi.id, 'iduser': app.user.id})) }} #}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+    </div>
+  </div>
+</div>
+                </div>
+            </div>
+        </div>
+
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
 {% endblock %}

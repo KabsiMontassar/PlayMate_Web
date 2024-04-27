@@ -1,0 +1,22 @@
+<div class="box-container">
+  {% for terrain in terrains %}
+  <div class="box-item">
+    <div class="flip-box">
+      <div class="flip-box-front text-center" style="background-image: url('{{ asset('uploads/images/' ~ terrain.image) }}');">
+        <div class="inner color-white">
+          <h3 class="flip-box-header">{{ terrain.nomterrain }}</h3>
+          <p>{{ terrain.address }}</p>
+          <img src="https://s25.postimg.cc/65hsttv9b/cta-arrow.png" alt="" class="flip-box-img">
+        </div>
+      </div>
+      <div class="flip-box-back text-center" style="background-image: url('{{ asset('uploads/images/' ~ terrain.image) }}');">
+        <div class="inner color-white">
+          <h3 class="flip-box-header">{{ terrain.nomterrain }}</h3>
+          <p>{{ terrain.address }}</p>
+          <button class="flip-box-button" data-bs-toggle="modal" data-bs-target="#terrainModal" data-terrain-id="{{ terrain.id }}">voir détails</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

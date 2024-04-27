@@ -124,10 +124,8 @@ class UserController extends AbstractController
     }
     
       
-        return $this->render('Back/GestionUser/userProfile.html.twig', [
-            'form1' => $form1->createView(),
-            'form2' => $form2->createView(),
-            'user' => $user,
+        return $this->render('Front/ProfileElements/userProfile.html.twig', [
+           
         ]);
     }
 
