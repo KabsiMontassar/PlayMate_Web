@@ -22,7 +22,7 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
+            ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
             ->add('name')
             ->add('role', ChoiceType::class, [
@@ -37,6 +37,7 @@ class UserType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
             ])        ;
+            
 
             //how to acces this in twig ? :
     }
@@ -45,6 +46,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'validation_groups' => ['registration'],
         ]);
     }
 }

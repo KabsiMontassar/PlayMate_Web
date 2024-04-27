@@ -1,24 +1,149 @@
 <!DOCTYPE html>
+<html>
+   <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<title>Register</title>
+        <title>{% block title %}Welcome!{% endblock %}</title>
 
-{% block body %}
+
+  <!-- Favicons -->
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+ 
+    <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+{# <link href="{{ asset('Back/assets/css/style.css') }}" rel="stylesheet"> #}
+    <link href="{{ asset('Front/css/style.css') }}" rel="stylesheet">
+    <style>
+    ul{
+      
+        margin:0;
+        margin-left: 20px;
+        padding: 0;
+    }
+    
+     li{
+          margin:0;
+          padding: 0;
+        color: #f56056;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    </style>
+</head>
+
+ <body>
+ <main>
+ <div class="container">
+
+      <section class="section register min-vh-10 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+              <div class="d-flex justify-content-center py-4">
+                <img style="height:130px" src="{{ asset('Back/assets/img/PlayMate.png') }}">
+                </a>
+              </div><!-- End Logo -->
+
+              <div class="card mb-3">
+                <div class="card-body"  style="width:500px;">
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
+                    
+                  </div>
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+   
 
     {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-  
-     {{ form_row(registrationForm.name) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.password) }}
-        {{ form_row(registrationForm.role) }}
+    {{ form_start(registrationForm, {'attr': {'class': 'row g-3 p-4', 'novalidate': 'novalidate'} }) }}
+
+     <div class="col-12">
+        {{ form_label(registrationForm.name, 'Name', {'label_attr': {'class': 'form-label', 'style':'font-weight:500'}}) }}
+        {{ form_widget(registrationForm.name, {'attr': {'class': 'form-control' }}) }}
+
+        
+      {{ form_errors(registrationForm.name) }}
+      </div>
+
+      <div class="col-12">
+        {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'form-label', 'style':'font-weight:500'}}) }}
+        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control' }}) }}
+        {{ form_errors(registrationForm.email) }}</div>
+
+      <div class="col-12">
+    {{ form_label(registrationForm.password, 'Password', {'label_attr': {'class': 'form-label', 'style':'font-weight:500'}}) }}
+    <div class="input-group">
+        {{ form_widget(registrationForm.password, {'attr': {'class': 'form-control', 'type': 'password' }}) }}
+        <div class="input-group-append" style="width:50px">
+            <span class="toggle-password" 
+            onclick="togglePasswordVisibility()" 
+            style="user-select:none;cursor:pointer; padding-top:6px;padding-left:6px;color:#4CAF30;">
+            Show
+            </span>
+        </div>
+    </div>
+    {{ form_errors(registrationForm.password) }}
+</div>
+        
+
+        <div class="col-12">
+        {{ form_label(registrationForm.role, 'Role', {'label_attr': {'class': 'form-label', 'style':'font-weight:500'}}) }}
+        {% for choice in registrationForm.role %}
+            <div class="form-check">
+                {{ form_widget(choice, {'attr': {'class': 'form-check-input','style':'background-color:#4CAF30'}}) }}
+                {{ form_label(choice, null, {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+        {% endfor %}
+        </div>
+
+
+      
       
 
-        <button type="submit" class="btn">Register</button>
+       <div class="col-12" id="register-button-wrapper">
+        <button type="submit" class="btn btn-primary w-100" id="submit-button">Register</button>
+    </div>
+    <div class="col-12">
+        <p class="small mb-0">Already have an account? <a href="{{ path('app_login') }}">Log in</a></p>
+    </div>
     {{ form_end(registrationForm) }}
-{% endblock %}
+    
+                </div>
+              </div>
+
+             
+
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+ </main>
+
+ <script>
+    function togglePasswordVisibility() {
+        const button = document.querySelector('.toggle-password');
+        const passwordField = document.getElementById('user_password');
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            button.textContent = 'Hide';
+
+        } else {
+            passwordField.type = 'password';
+            button.textContent = 'Show';
+        }
+    }
+
+   
+</script>
+ </body>

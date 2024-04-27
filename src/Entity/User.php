@@ -33,13 +33,17 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      * @var string
      *
      * @ORM\Column(name="Email", type="string", length=255, nullable=false)
-     * @Assert\Email(
-     *    message = "The email '{{ value }}' is not a valid email."
-     * )
      * @Assert\NotBlank(
-     *   message = "The email cannot be blank.",
-     *   groups = {"registration", "login"}
+     * message = "The email cannot be blank.",
+     *  groups = {"registration"  , "login"}
      * )
+     * @Assert\Email(
+     * message = "The email '{{ value }}' is not a valid email.",
+     * groups = {"registration"  , "login"}
+     * )
+     * 
+     * 
+     
      * 
      */
     private $email;
@@ -49,8 +53,20 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      *
      * @ORM\Column(name="Password", type="string", length=255, nullable=false)
      * @Assert\NotBlank(
-     *   groups = {"registration"  , "login"}
+     * message = "The password cannot be blank.",
+     * groups = {"registration"  , "login"}
      * )
+     * @Assert\Length(
+     * min = 6,
+     * minMessage = "Your password must be at least {{ limit }} characters long",
+     * groups = {"registration"  , "login"}
+     * )
+     * @Assert\Regex(
+     * pattern="/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/",
+     * message="Your password must contain at least one letter, one number and one special character",
+     * groups = {"registration"  , "login"}
+     * )
+     * 
      */
     private $password;
 
@@ -63,6 +79,19 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      *   groups = {"registration", "update_profile"  }
      * 
      * )
+     * @Assert\Length(
+     * min = 3,
+     * minMessage = "Your name must be at least {{ limit }} characters long",
+     * max = 25,
+     * maxMessage = "Your name cannot be longer than {{ limit }} characters",
+     * groups = { "update_profile", "registration"}
+     * )
+     * @Assert\Regex(
+     * pattern="/^[a-zA-Zéèàùïöüëïÿâêîôûëïüÿæœç]+$/",
+     * message="Your name must contain only letters",
+     * groups = { "update_profile", "registration"}
+     * )
+     * 
      * 
      */
     private $name;
@@ -73,14 +102,15 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      * @ORM\Column(name="Age", type="integer", nullable=true, options={"default"="NULL"})
      * @Assert\NotBlank(
      * message = "The age cannot be blank.",
-     *   groups = { "update_profile" }
+     *  groups = { "update_profile" }
      * )
      * @Assert\Range(
-     *    min = 12,
+     *    min = 18,
      *   max = 100,
      * notInRangeMessage = "The age must be between {{ min }} and {{ max }}",
      * groups = { "update_profile" }
      * )
+     * 
     
      */
     private $age = NULL;

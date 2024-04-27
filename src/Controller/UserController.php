@@ -18,10 +18,22 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\HomeController;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Mime\Address;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
+use App\Security\EmailVerifier;
 
 #[Route('/user')]
 class UserController extends AbstractController
 {
+    private EmailVerifier $emailVerifier;
+    public function __construct(EmailVerifier $emailVerifier)
+    {
+        $this->emailVerifier = $emailVerifier;
+    }
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -229,6 +241,29 @@ public function invertstatus(Request $request , EntityManagerInterface $entityMa
       
 
   }
+
+  /**
+ * @Route("/resend-activation-email", name="app_resend_activation_email", methods={"POST"})
+ */
+public function resendActivationEmail(Request $request, MailerInterface $mailer, EntityManagerInterface $entityManager)
+{
+    $email = $request->request->get('email');
+
+    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+    if(!$user) {
+        return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+    }
+
+    $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+        (new TemplatedEmail())
+            ->from(new Address('playmatepidev@gmail.com', 'PlayMate Bot'))
+            ->to($user->getEmail())
+            ->subject('Please Confirm your Email')
+            ->htmlTemplate('registration/confirmation_email.html.twig')
+    );
+
+    return new JsonResponse(['message' => 'Activation email resent successfully']);
+}
 
   
 
