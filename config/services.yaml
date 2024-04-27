@@ -4,6 +4,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    image_directory: '%kernel.project_dir%/public/uploads/images'
+    terrain_images_directory: '%kernel.project_dir%/public/uploads/images'
+    terrain_videos_directory: '%kernel.project_dir%/public/uploads/videos'
+    weather_api_key: 'c6147ca1bcd86843a87c6f7a0a40673e'
 
 services:
     # default configuration for services in *this* file
@@ -19,19 +23,8 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-    App\Entity\PaymentAPI:
-        autowire: true
-    App\Entity\MailJettAPI:
-        autowire: true
-    App\Entity\PdfService:
-        autowire: true
-    
-parameters:
-    image_directory: '%kernel.project_dir%/public/uploads/images'
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-    # config/services.yaml
 
-    terrain_images_directory: '%kernel.project_dir%/public/uploads/images'
-    terrain_videos_directory: '%kernel.project_dir%/public/uploads/videos'
-
+    # Explicitly configure the WeatherService
+    App\Service\WeatherService:
+        arguments:
+            $apiKey: '%weather_api_key%'
