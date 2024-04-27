@@ -50,9 +50,6 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        if(!$user->isVerified()){
-            throw new CustomUserMessageAuthenticationException('Your account is not active');
-        }
      
        
         $request->getSession()->set(Security::LAST_USERNAME, $email);

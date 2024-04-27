@@ -189,7 +189,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
      * @ORM\Column(name="is_Verified", type="boolean", nullable=false)
      */
     
-    private $isVerified = false;
+    private $is_Verified = false;
 
     /**
      * @var string
@@ -414,12 +414,12 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
 
     public function isVerified(): bool
     {
-        return $this->isVerified;
+        return $this->is_Verified;
     }
 
     public function setIsVerified(bool $isVerified): static
     {
-        $this->isVerified = $isVerified;
+        $this->is_Verified = $isVerified;
 
         return $this;
     }

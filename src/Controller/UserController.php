@@ -25,14 +25,23 @@ use Symfony\Component\Mime\Address;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use App\Security\EmailVerifier;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+
 
 #[Route('/user')]
 class UserController extends AbstractController
 {
+  
     private EmailVerifier $emailVerifier;
-    public function __construct(EmailVerifier $emailVerifier)
+    private MailerInterface $mailer;
+
+    public function __construct(EmailVerifier $emailVerifier, MailerInterface $mailer)
     {
         $this->emailVerifier = $emailVerifier;
+        $this->mailer = $mailer;
+       
+
     }
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
@@ -159,13 +168,33 @@ public function resetPasswordEmail(Request $request, EntityManagerInterface $ent
 {
 
     $email = $request->attributes->get('email');
+  
 
     $user = $entityManager->getRepository(User::class)->findOneByEmail($email);
     if ($user) {
-        // Generate and save a verification code
-       
+        $verificationCode = rand(100000, 999999);
+        $user->setVerificationCode($verificationCode);
+        $entityManager->flush();
+
+        // $email = (new Email())
+        // ->from(new Address('playmatepidev@gmail.com', 'PlayMate Bot'))
+        // ->to($user->getEmail())
+        // ->subject('Verification Code')
+        // ->text('Your verification code is: ' . $verificationCode);
+        $htmlTemplate = $this->renderView('registration/Verification_Code.html.twig', [
+            'verification_code' => $verificationCode,
+        ]);
+        $email = (new Email())
+        ->from(new Address('playmatepidev@gmail.com', 'PlayMate Bot'))
+        ->to($user->getEmail())
+        ->subject('Verification Code')
+        ->html($htmlTemplate);
+        $this->mailer->send($email);
+    
         
-        // Send an email to the user with the verification code 
+         
+         
+      
         
       
       
@@ -234,7 +263,7 @@ public function invertstatus(Request $request , EntityManagerInterface $entityMa
           return new Response('error', Response::HTTP_OK);
        }
 
-       $user->setStatus(!$user->isStatus());
+       $user->setIsVerified(!$user->isVerified());
        $entityManager->persist($user);
        $entityManager->flush();
        return new Response('success', Response::HTTP_OK);
@@ -255,12 +284,12 @@ public function resendActivationEmail(Request $request, MailerInterface $mailer,
     }
 
     $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-        (new TemplatedEmail())
-            ->from(new Address('playmatepidev@gmail.com', 'PlayMate Bot'))
-            ->to($user->getEmail())
-            ->subject('Please Confirm your Email')
-            ->htmlTemplate('registration/confirmation_email.html.twig')
-    );
+                (new TemplatedEmail())
+                    ->from(new Address('playmatepidev@gmail.com', 'PlayMate Bot'))
+                    ->to($user->getEmail())
+                    ->subject('Please Confirm your Email')
+                    ->htmlTemplate('registration/confirmation_email.html.twig')
+            );
 
     return new JsonResponse(['message' => 'Activation email resent successfully']);
 }
