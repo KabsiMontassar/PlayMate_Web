@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class AddressController extends AbstractController
 {
@@ -18,43 +20,39 @@ class AddressController extends AbstractController
     {
         // Prepare the URL for the Nominatim API request with French language preference
         $url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' . urlencode($lat) . '&lon=' . urlencode($lon) . '&zoom=18&addressdetails=1&accept-language=fr';
-
+    
         // Create an HTTP client instance
         $httpClient = HttpClient::create();
-
+    
         try {
             // Send a GET request to the Nominatim API
             $response = $httpClient->request('GET', $url);
-
+    
             // Check if the request was successful (status code 200)
             if ($response->getStatusCode() === 200) {
                 // Get the response content
                 $content = $response->getContent();
-
+    
                 // Decode the JSON response
                 $data = json_decode($content, true);
-
+    
                 // Check if the address components are available
-                if (isset($data['address']['road'], $data['address']['town'], $data['address']['country'])) {
+                if ($data) {
                     // Construct the address string
-                    $address = $data['address']['road'] . ', ' . $data['address']['town'] . ', ' . $data['address']['country'];
-
+    
                     // Return the address as JSON response
-                    return new JsonResponse(['address' => $address]);
+                    return new JsonResponse($data);
                 } else {
                     // Handle missing address components
-                    return new JsonResponse(['error' => 'Address components not found'], 500);
+                    return new JsonResponse(['error' => 'Address components not found'], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             } else {
                 // Handle non-200 HTTP status code
-                return new JsonResponse(['error' => 'Failed to retrieve data from the API'], 500);
+                return new JsonResponse(['error' => 'Failed to retrieve data from the API'], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
-        } catch (ClientException $e) {
-            // Handle client-side errors (e.g., network issues)
-            return new JsonResponse(['error' => 'Client error: ' . $e->getMessage()], 500);
         } catch (\Exception $e) {
-            // Handle other exceptions
-            return new JsonResponse(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+            // Handle any exceptions
+            return new JsonResponse(['error' => 'An error occurred: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
