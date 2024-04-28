@@ -9,6 +9,8 @@ use App\Form\UserPasswordType;
 use App\Form\forgetpassword;
 use App\Form\Login;
 use App\Repository\UserRepository;
+
+use App\Repository\TournoiRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -17,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\HomeController;
+use App\Repository\TerrainRepository;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -27,6 +30,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use App\Security\EmailVerifier;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Service\ActiveSessionTracker; // Import the ActiveSessionTracker service
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 
 
 
@@ -44,29 +51,83 @@ class UserController extends AbstractController
        
 
     }
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
-    {
-        // Fetch all users query
-        $query = $userRepository->createQueryBuilder('u')
-            ->getQuery();
-    
-        // Paginate the query
-        $pagination = $paginator->paginate(
-            $query, // Query to paginate
-            $request->query->getInt('page', 1), // Current page number
-            5 // Items per page
-        );
-    
-        return $this->render('Back/GestionUser/index.html.twig', [
-            'pagination' => $pagination,
-        ]);
+  
+#[Route('/', name: 'app_user_index', methods: ['GET'])]
+public function index(
+  
+    UserRepository $userRepository,
+    PaginatorInterface $paginator,
+    Request $request
+): Response {
+ 
+
+    // Fetch all users query
+    $queryBuilder = $userRepository->createQueryBuilder('u');
+
+    // Apply filtering based on role if provided in the request
+    $Roles = ['Membre', 'Organisateur', 'Proprietaire de Terrain', 'Fournisseur'];
+    $roleFilter = $request->query->get('role');
+    if ($roleFilter && in_array($roleFilter, $Roles)) {
+        $queryBuilder->andWhere('u.role = :role')
+            ->setParameter('role', $roleFilter);
     }
+
+    // Apply search if search term provided in the request
+    $searchTerm = $request->query->get('search');
+    if ($searchTerm) {
+        $queryBuilder->andWhere('u.email LIKE :searchTerm OR u.name LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+    }
+
+    // Get the query
+    $query = $queryBuilder->getQuery();
+
+    // Count users for each role
+   
+
+    // Paginate the query
+    $pagination = $paginator->paginate(
+        $query, // Query to paginate
+        $request->query->getInt('page', 1), // Current page number
+        5 // Items per page
+    );
+    $availableRoles = ['Membre', 'Organisateur', 'Proprietaire de Terrain', 'Fournisseur'];
+
+    // Define available roles
+   
+
+    return $this->render('Back/GestionUser/index.html.twig', [
+        'pagination' => $pagination,
+        'available_roles' => $availableRoles, // Pass available roles to the template
+     
+    ]);
+}
     #[Route('/dashboard', name: 'app_user_dashboard', methods: ['GET'])]
-    public function dashboard(UserRepository $userRepository): Response
+    public function dashboard(TournoiRepository $tournoiRepository  ,UserRepository $userRepository,TerrainRepository $terrainRepository , ActiveSessionTracker $activeSessionTracker,): Response
     {
+        $Roles = ['Membre', 'Organisateur', 'Proprietaire de Terrain', 'Fournisseur'];
+
+        $activeSessionTracker->trackSession(session_id());
+        $activeSessionCount = $activeSessionTracker->countActiveSessions();
+        $userCounts = [];
+        foreach ($Roles as $role) {
+            $userCounts[$role] = $userRepository->countByRole($role);
+        }
+
+        $numberofusers = $userRepository->count([]);
+        $numberofterrain = $terrainRepository->count([]);
+        $numberoftournoi = $tournoiRepository->count([]);
+
+        $availableRoles = ['Membre', 'Organisateur', 'Proprietaire de Terrain', 'Fournisseur'];
         return $this->render('Back/GestionUser/dashboard.html.twig', [
-            'users' => $userRepository->findAll(),
+            'active_sessions' => $activeSessionCount,
+            'available_roles' => $availableRoles, // Pass available roles to the template
+            'user_counts' => $userCounts, // Pass user counts to the template
+            'numberofusers' => $numberofusers
+            ,'numberofterrain' => $numberofterrain
+            ,'numberoftournoi' => $numberoftournoi
+
+
         ]);
     }
 

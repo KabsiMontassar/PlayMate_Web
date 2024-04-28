@@ -30,3 +30,6 @@ services:
     App\Service\WeatherService:
         arguments:
             $apiKey: '%weather_api_key%'
+    App\Service\ActiveSessionTracker:
+        arguments:
+            $session: '@session'
