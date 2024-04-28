@@ -157,14 +157,7 @@ class ReservationController extends AbstractController
 
 
             // RECUPERE DERNIER RESERVATION
-            /* $reservation2 = $entityManager->createQueryBuilder()
-                ->select('r')
-                ->from(Reservation::class, 'r')
-                ->orderBy('r.datereservation', 'DESC')
-                ->setMaxResults(1)
-                ->getQuery()
-                ->getOneOrNullResult();
-*/
+
             $reservation2  = $entityManager->getRepository(Reservation::class)->findOneBy([], ['idreservation' => 'DESC']);
             if ($reservation2) {
                 $url = $paymentController->appelPaymentAPI($entityManager, $reservation2->getIdterrain()->getPrix(), 46, $reservation2);
@@ -209,25 +202,6 @@ class ReservationController extends AbstractController
 
 
 
-    public function sendEmail(MailerInterface $mailer)
-    {
-        $apikey = '6775274d71a8a7c5aa766d4fc491bdcf';
-        $mailtrap = new MailtrapSandboxClient(new Config($apikey));
-        $email = (new Email())
-            ->from('ahmeddouss35@gmail.com')
-            ->to('you@example.com')
-            ->subject('testt!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
-
-
-        $response = $mailtrap->emails()->send($email, '2815840'); // Email sending API (real)
-
-        var_dump(ResponseHelper::toArray($response)); // body (array)
-
-
-
-    }
 
     #[Route('/reservations/{idUser}', name: 'get_reservations', methods: ['GET'])]
     public function getFuturReservationsByIdUser($idUser, ReservationRepository $reservationRepository): JsonResponse
