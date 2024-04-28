@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\LiveScoreService;
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
 use App\Entity\User;
@@ -47,10 +48,13 @@ class HomeController extends AbstractController
     private $entityManager;
     private $security;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security)
+    private $liveScoreService;
+
+    public function __construct(EntityManagerInterface $entityManager, Security $security, LiveScoreService $liveScoreService)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
+        $this->liveScoreService = $liveScoreService;
     }
 
     public function __construct2(EntityManagerInterface $entityManager, Security $security, SerializerInterface $serializer)
@@ -156,7 +160,11 @@ class HomeController extends AbstractController
             'historiques' => $historiques,
         ]);
     }
-
+    #[Route('/game', name: 'game')]
+    public function jeu(): Response
+    {
+        return $this->render('Front/jeuPlayMate.html.twig');
+    }
 
 
     // ajout id
@@ -175,6 +183,25 @@ class HomeController extends AbstractController
             'reservation' => $futureReservations,
         ]);
     }
+
+
+
+
+
+
+
+    #[Route('/LiveScore', name: 'live_score')]
+    public function liveScore(): Response
+    {
+        // Appel du service pour récupérer les données de l'API
+        $matches = $this->liveScoreService->getListLiveMatches();
+
+        // Affichage des données dans le template Twig
+        return $this->render('Front/liveScore.html.twig', [
+            'matches' => $matches,
+        ]);
+    }
+
 
     // #[Route('/login', name: 'app_user_login', methods: ['GET' , 'POST'])]
     // public function login(Request $request, EntityManagerInterface $entityManager): Response
