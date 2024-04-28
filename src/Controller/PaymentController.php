@@ -27,6 +27,29 @@ use App\Entity\MailJettAPI;
 
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+
+use App\Repository\ReservationRepository;
+
+
+use App\Entity\Terrain;
+
+
+
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+
+use Mailtrap\Config;
+use Mailtrap\Helper\ResponseHelper;
+use Mailtrap\MailtrapSandboxClient;
+
+use App\Entity\Blacklist;
+use App\Controller\BlacklistController;
+
+
+use Symfony\Component\Security\Core\Security;
+
 #[Route('/payment')]
 class PaymentController extends AbstractController
 {
@@ -36,13 +59,17 @@ class PaymentController extends AbstractController
     private $httpClient;
     private $paiementService;
     private $mailJettAPI;
+    private $mailer;
 
-
-    public function __construct(PaymentAPI $paymentAPI, HttpClientInterface $httpClient)
+    public function __construct(PaymentAPI $paymentAPI, HttpClientInterface $httpClient, MailerInterface $mailer)
     {
         $this->paymentAPI = $paymentAPI;
         $this->httpClient = $httpClient;
+        $this->mailer = $mailer;
     }
+
+
+
 
     public function appelPaymentAPI(EntityManagerInterface $entityManage,  $prix, $membreId,  $idReservation): string
     {
@@ -88,7 +115,7 @@ class PaymentController extends AbstractController
      * *
      */
     #[Route('/payment-success', name: 'payment_success')]
-    public function paymentSuccess(Request $request, EntityManagerInterface $entityManager): Response
+    public function paymentSuccess(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         /* a ajouter colonne base de donnee ref  */
         $paymentRef = $request->query->get('payment_ref');
@@ -103,12 +130,34 @@ class PaymentController extends AbstractController
             $payment->setPaymentRef($paymentRef);
             $entityManager->persist($payment);
             $entityManager->flush();
+            $this->sendEmail($mailer, $payment);
             return $this->json(['message' => 'Payment successful']);
         } else {
             return $this->json(['error' => 'Payment not found']);
         }
     }
 
+
+    public function sendEmail(MailerInterface $mailer, $payment)
+    {
+
+        $htmlTemplate = $this->renderView('mailer/mailConfirmationReservation.html.twig', [
+            'payment' => $payment,
+        ]);
+        $apikey = '6775274d71a8a7c5aa766d4fc491bdcf';
+        $mailtrap = new MailtrapSandboxClient(new Config($apikey));
+        $email = (new Email())
+            ->from('no-replay@PlayMate.com')
+            ->to($payment->getIdmembre()->getEmail())
+            ->subject('confirmation de reservation!')
+            ->text('Sending emails is fun again!')
+            ->html($htmlTemplate);
+
+
+        $response = $mailtrap->emails()->send($email, '2815840'); // Email sending API (real)
+
+        var_dump(ResponseHelper::toArray($response)); // body (array)
+    }
 
     /**
      * 
