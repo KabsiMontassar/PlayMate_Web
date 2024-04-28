@@ -55,12 +55,17 @@ class ProfileController extends AbstractController
 
 
         $nonce = bin2hex(random_bytes(16));
+
+        if($user->getRole() == 'Proprietaire de Terrain'){
+            $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+        }
             return $this->render('userBase.html.twig',[
               
                 'user' => $user,
                 'tournois' => $tournois,
                 'nonce' => $nonce,
-                'participationsById' => $participationsById
+                'participationsById' => $participationsById,
+                'terrains' => $terrains
             ]);
         
       
