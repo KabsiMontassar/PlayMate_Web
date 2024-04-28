@@ -26,6 +26,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use App\Security\EmailVerifier;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 
@@ -44,10 +45,21 @@ class UserController extends AbstractController
 
     }
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        // Fetch all users query
+        $query = $userRepository->createQueryBuilder('u')
+            ->getQuery();
+    
+        // Paginate the query
+        $pagination = $paginator->paginate(
+            $query, // Query to paginate
+            $request->query->getInt('page', 1), // Current page number
+            5 // Items per page
+        );
+    
         return $this->render('Back/GestionUser/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
     #[Route('/dashboard', name: 'app_user_dashboard', methods: ['GET'])]
