@@ -53,7 +53,7 @@ class Tournoi
      *
      * @ORM\Column(name="address", type="string", length=255, nullable=false)
     * @Assert\Regex(
-     *     pattern="/^[a-zA-Z0-9 ]+$/",
+     *     pattern="/^[a-zA-Z0-9 , .]+$/",
      *     message="L'adresse ne doit contenir que des lettres, des chiffres et des espaces."
      * )
      */

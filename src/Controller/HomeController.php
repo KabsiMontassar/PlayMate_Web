@@ -172,5 +172,37 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/increment-visits/{id}', name: 'app_increment_visits', methods: ['POST'])]
+public function incrementVisits(Tournoi $tournoi, EntityManagerInterface $entityManager): Response
+{
+    $tournoi->setVisite($tournoi->getVisite() + 1);
+    $entityManager->flush();
+    
+    return new JsonResponse(['success' => true]);
+}
+
+/*
+#[Route('/increment-unique-visit/{id}', name: 'app_increment_unique_visit', methods: ['POST'])]
+public function incrementUniqueVisit(Tournoi $tournoi, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+{
+    $user = $this->getUser(); // Récupérer l'utilisateur connecté
+    if (!$user) {
+        return new JsonResponse(['success' => false, 'message' => 'User not logged in']);
+    }
+    
+    $visite = $entityManager->getRepository(TournoiVisite::class)->findOneBy(['tournoi' => $tournoi, 'user' => $user]);
+    
+    if (!$visite) {
+        $visite = new TournoiVisite();
+        $visite->setTournoi($tournoi);
+        $visite->setUser($user);
+        $entityManager->persist($visite);
+        $tournoi->setVisites($tournoi->getVisites() + 1);
+        $entityManager->flush();
+    }
+    
+    return new JsonResponse(['success' => true]);
+}*/
+
     
 }
