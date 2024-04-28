@@ -6,6 +6,8 @@ parameters:
     twilio_number: '%env(TWILIO_NUMBER)%'
 
 services:
+    App\Entity\PdfService:
+        autowire: true
     twilio.client:
         class: Twilio\Rest\Client
         arguments: ['%env(TWILIO_ACCOUNT_SID)%', '%env(TWILIO_AUTH_TOKEN)%']

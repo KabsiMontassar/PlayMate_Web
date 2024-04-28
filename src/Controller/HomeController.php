@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
 use App\Entity\User;
@@ -32,6 +33,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 
 use App\Repository\ReservationRepository;
+use Doctrine\ORM\EntityManager;
 
 class HomeController extends AbstractController
 {
@@ -46,6 +48,8 @@ class HomeController extends AbstractController
 
     private $entityManager;
     private $security;
+
+    private $liveScoreService;
 
     public function __construct(EntityManagerInterface $entityManager, Security $security)
     {
@@ -146,25 +150,33 @@ class HomeController extends AbstractController
         ]);
     }
     #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
-    public function Historique(HistoriqueRepository $historiqueRepository): Response
+    public function Historique(Security $security, HistoriqueRepository $historiqueRepository, EntityManagerInterface $entityManager): Response
     {
 
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
 
-        $historiques = $historiqueRepository->ListHistoriqueParMembre(/*$user->getId()*/46);
+        $historiques = $historiqueRepository->ListHistoriqueParMembre($user->getId());
 
         return $this->render('Front/historique.html.twig', [
             'historiques' => $historiques,
         ]);
     }
-
+    #[Route('/game', name: 'game')]
+    public function jeu(): Response
+    {
+        return $this->render('Front/jeuPlayMate.html.twig');
+    }
 
 
     // ajout id
     #[Route('/FutureReservations', name: 'app_reservation_future', methods: ['GET'])]
-    public function getFuturReservationsByIdUser(/*$idUser,*/ReservationRepository $reservationRepository): Response
+    public function getFuturReservationsByIdUser(Security $security, ReservationRepository $reservationRepository, EntityManagerInterface $entityManager): Response
     {
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         // ajout iduser
-        $futureReservations = $reservationRepository->findFutureReservationsForMember(46);
+        $futureReservations = $reservationRepository->findFutureReservationsForMember($user->getId());
 
 
         return $this->render('Front/consulterReservation.html.twig', [
@@ -172,16 +184,20 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/increment-visits/{id}', name: 'app_increment_visits', methods: ['POST'])]
-public function incrementVisits(Tournoi $tournoi, EntityManagerInterface $entityManager): Response
-{
-    $tournoi->setVisite($tournoi->getVisite() + 1);
-    $entityManager->flush();
-    
-    return new JsonResponse(['success' => true]);
-}
 
-/*
+
+
+
+    #[Route('/increment-visits/{id}', name: 'app_increment_visits', methods: ['POST'])]
+    public function incrementVisits(Tournoi $tournoi, EntityManagerInterface $entityManager): Response
+    {
+        $tournoi->setVisite($tournoi->getVisite() + 1);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    /*
 #[Route('/increment-unique-visit/{id}', name: 'app_increment_unique_visit', methods: ['POST'])]
 public function incrementUniqueVisit(Tournoi $tournoi, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
 {
@@ -203,6 +219,4 @@ public function incrementUniqueVisit(Tournoi $tournoi, EntityManagerInterface $e
     
     return new JsonResponse(['success' => true]);
 }*/
-
-    
 }
