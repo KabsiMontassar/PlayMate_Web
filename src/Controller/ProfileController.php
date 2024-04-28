@@ -26,11 +26,16 @@ use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
 use Symfony\Component\Runtime\Runner\Symfony\ResponseRunner;
 use Symfony\Component\Security\Core\Security;
+use Knp\Component\Pager\PaginatorInterface;
+
+
+
+
 #[Route('/profile')]
 class ProfileController extends AbstractController
 {
     #[Route('/', name: 'First', methods: ['GET', 'POST'])] 
-    public function index(Security $security, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, Request $request): Response
+    public function index(Security $security, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, Request $request, TournoiRepository $tournoiRepository): Response
     {
         $user = $security->getUser();
         if($user == null){
@@ -38,23 +43,24 @@ class ProfileController extends AbstractController
         }
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-
-        $terrains = null;
-        $tournois = null;
-        if($user->getRole() == 'Proprietaire de Terrain'){
-            $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
-        }
-        if($user->getRole() == 'Organisateur'){
-            $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
-        }
-
   
-       
+        $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
+        $participations = $tournoiRepository->countParticipationsForEachTournoi();
+
+        $participationsById = [];
+    foreach ($participations as $participation) {
+        $participationsById[$participation['id']] = $participation['nombre_participations'];
+    }
+
+
+
+        $nonce = bin2hex(random_bytes(16));
             return $this->render('userBase.html.twig',[
               
                 'user' => $user,
-                'terrains' => $terrains,
-                'tournois' => $tournois
+                'tournois' => $tournois,
+                'nonce' => $nonce,
+                'participationsById' => $participationsById
             ]);
         
       

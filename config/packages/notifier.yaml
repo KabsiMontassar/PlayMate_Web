@@ -1,12 +1,13 @@
 framework:
     notifier:
-        chatter_transports:
         texter_transports:
-        channel_policy:
+            twilio: 'twilio://AC61c93ce243f90a47e2252f75b8d35cc5:40ac9a8e9c4d99763dd0d5f3a4805de1@default?from=+12512208457'
+
+        #channel_policy:
             # use chat/slack, chat/telegram, sms/twilio or sms/nexmo
-            urgent: ['email']
-            high: ['email']
-            medium: ['email']
-            low: ['email']
-        admin_recipients:
-            - { email: admin@example.com }
+         #   urgent: ['email']
+          #  high: ['email']
+           # medium: ['email']
+            #low: ['email']
+       # admin_recipients:
+        #     - { email: admin@example.com }

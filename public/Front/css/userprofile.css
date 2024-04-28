@@ -367,10 +367,10 @@ font-size: 8vh;
       transform:translateX(25%);
     }
   }
+
   /******************************************************************/
-  
-  /******************************************************************/
-.event-cards-container {
+
+  .event-cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 90px; /* Ajustez cet espace selon vos besoins */
@@ -628,4 +628,8 @@ html {
   .btn-more:hover {
     background-color: #555;
   }
-  /********************************************/
+
+.modal-body canvas {
+  width: 400px;
+  height: 400px;
+}
