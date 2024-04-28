@@ -43,7 +43,11 @@ class ProfileController extends AbstractController
         }
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-  
+        $terrains = null;
+     
+        if($user->getRole() == 'Proprietaire de Terrain'){
+            $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+        }
         $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
         $participations = $tournoiRepository->countParticipationsForEachTournoi();
 
@@ -60,7 +64,7 @@ class ProfileController extends AbstractController
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
         }
             return $this->render('userBase.html.twig',[
-              
+                'terrains' => $terrains,
                 'user' => $user,
                 'tournois' => $tournois,
                 'nonce' => $nonce,
