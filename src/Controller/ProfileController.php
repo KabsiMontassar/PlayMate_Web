@@ -44,18 +44,26 @@ class ProfileController extends AbstractController
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         $terrains = null;
+        $tournois = null;
+        $participationsById = null;
+        
      
         if($user->getRole() == 'Proprietaire de Terrain'){
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
         }
-        $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
-        $participations = $tournoiRepository->countParticipationsForEachTournoi();
 
-        $participationsById = [];
-    foreach ($participations as $participation) {
-        $participationsById[$participation['id']] = $participation['nombre_participations'];
-    }
 
+        if($user->getRole() == 'Organisateur'){
+            $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
+            $participations = $tournoiRepository->countParticipationsForEachTournoi();
+    
+            $participationsById = [];
+        foreach ($participations as $participation) {
+            $participationsById[$participation['id']] = $participation['nombre_participations'];
+        }
+    
+        }
+      
 
 
         $nonce = bin2hex(random_bytes(16));
@@ -69,7 +77,7 @@ class ProfileController extends AbstractController
                 'tournois' => $tournois,
                 'nonce' => $nonce,
                 'participationsById' => $participationsById,
-                'terrains' => $terrains
+           
             ]);
         
       
