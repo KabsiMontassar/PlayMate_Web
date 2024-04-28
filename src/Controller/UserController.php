@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Notification;
 use App\Form\UserType;
 use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
 use App\Form\forgetpassword;
 use App\Form\Login;
 use App\Repository\UserRepository;
+use App\Repository\NotificationRepository;
 
 use App\Repository\TournoiRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,6 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 
 
+
 #[Route('/user')]
 class UserController extends AbstractController
 {
@@ -58,6 +61,7 @@ public function index(
     UserRepository $userRepository,
     PaginatorInterface $paginator,
     Request $request
+  
 ): Response {
  
 
@@ -103,7 +107,14 @@ public function index(
     ]);
 }
     #[Route('/dashboard', name: 'app_user_dashboard', methods: ['GET'])]
-    public function dashboard(TournoiRepository $tournoiRepository  ,UserRepository $userRepository,TerrainRepository $terrainRepository , ActiveSessionTracker $activeSessionTracker,): Response
+    public function dashboard(
+        TournoiRepository $tournoiRepository  ,
+        UserRepository $userRepository,
+        TerrainRepository $terrainRepository , 
+        ActiveSessionTracker $activeSessionTracker,
+        
+    NotificationRepository $notificationRepository
+        ): Response
     {
         $Roles = ['Membre', 'Organisateur', 'Proprietaire de Terrain', 'Fournisseur'];
 
@@ -126,6 +137,8 @@ public function index(
             'numberofusers' => $numberofusers
             ,'numberofterrain' => $numberofterrain
             ,'numberoftournoi' => $numberoftournoi
+            ,'allNotification' => $notificationRepository->findAll()
+
 
 
         ]);
@@ -339,6 +352,11 @@ public function invertstatus(Request $request , EntityManagerInterface $entityMa
        $user->setIsVerified(!$user->isVerified());
        $entityManager->persist($user);
        $entityManager->flush();
+       $notification = new Notification();
+        $notification->setIduser($user);
+        $notification->setContent('user with email '.$user->getEmail().' has been deactivated');
+        $entityManager->persist($notification);
+       
        return new Response('success', Response::HTTP_OK);
       
 
