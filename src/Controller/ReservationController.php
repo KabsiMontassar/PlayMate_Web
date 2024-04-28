@@ -124,10 +124,11 @@ class ReservationController extends AbstractController
     }
     /**reserver terrain */
     #[Route('/getTerrain/{choix}/{idTerrain}/{date}/{horaire}', name: 'app_reservation_getTerrain', methods: ['POST'])]
-    public function getTerrain(Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager, MailerInterface $mailer, PaymentController $paymentController): Response
+    public function getTerrain(Security $security, Request $request, $choix, $idTerrain, $date, $horaire, EntityManagerInterface $entityManager, MailerInterface $mailer, PaymentController $paymentController): Response
     {
 
-
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
 
 
         $date = new \DateTime($date);
@@ -160,7 +161,7 @@ class ReservationController extends AbstractController
 
             $reservation2  = $entityManager->getRepository(Reservation::class)->findOneBy([], ['idreservation' => 'DESC']);
             if ($reservation2) {
-                $url = $paymentController->appelPaymentAPI($entityManager, $reservation2->getIdterrain()->getPrix(), 46, $reservation2);
+                $url = $paymentController->appelPaymentAPI($entityManager, $reservation2->getIdterrain()->getPrix(), $user->getId(), $reservation2);
                 return new Response($url, Response::HTTP_OK);
             }
         } else {
@@ -250,7 +251,7 @@ class ReservationController extends AbstractController
             $blacklistController->addToBlacklist($reservation, $entityManager);
         }
 
-        $reservation->setHeurereservation('02:00');
+        $reservation->setHeurereservation('03:00');
         $reservation->setType('Annulation');
         $entityManager->persist($reservation);
         $entityManager->flush();

@@ -33,6 +33,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 
 use App\Repository\ReservationRepository;
+use Doctrine\ORM\EntityManager;
 
 class HomeController extends AbstractController
 {
@@ -149,11 +150,13 @@ class HomeController extends AbstractController
         ]);
     }
     #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
-    public function Historique(HistoriqueRepository $historiqueRepository): Response
+    public function Historique(Security $security, HistoriqueRepository $historiqueRepository, EntityManagerInterface $entityManager): Response
     {
 
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
 
-        $historiques = $historiqueRepository->ListHistoriqueParMembre(/*$user->getId()*/46);
+        $historiques = $historiqueRepository->ListHistoriqueParMembre($user->getId());
 
         return $this->render('Front/historique.html.twig', [
             'historiques' => $historiques,
@@ -168,10 +171,12 @@ class HomeController extends AbstractController
 
     // ajout id
     #[Route('/FutureReservations', name: 'app_reservation_future', methods: ['GET'])]
-    public function getFuturReservationsByIdUser(/*$idUser,*/ReservationRepository $reservationRepository): Response
+    public function getFuturReservationsByIdUser(Security $security, ReservationRepository $reservationRepository, EntityManagerInterface $entityManager): Response
     {
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
         // ajout iduser
-        $futureReservations = $reservationRepository->findFutureReservationsForMember(46);
+        $futureReservations = $reservationRepository->findFutureReservationsForMember($user->getId());
 
 
         return $this->render('Front/consulterReservation.html.twig', [
