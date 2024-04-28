@@ -316,56 +316,9 @@ public function index(
 
         return new Response('Password reset successfully', Response::HTTP_OK);
     }
-    #[Route('/inverStatus/{email}', name: 'app_user_inverStatus', methods: ['POST'])]
-    public function invertstatus(Request $request, EntityManagerInterface $entityManager): Response
-    {
-
-        $user = $entityManager->getRepository(User::class)->findOneByEmail($request->attributes->get('email'));
-        if (!$user) {
-            $this->addFlash('danger', 'Email not found');
-            return new Response('error', Response::HTTP_OK);
-        }
+ 
 
 
-    $user = $entityManager->getRepository(User::class)->findOneByEmail($email);
-    if ($user && $user->getVerificationCode() == $verificationCode) {
-       
-  
-
-        return new Response('Verification successful', Response::HTTP_OK);
-    } else {
-       
-        return new Response('Verification failed', Response::HTTP_OK);
-    }
-}
-
-#[Route('/resetpassword/{email}/{code}/{newpassword}/{confirmpassword}', name: 'app_reset_password_complete', methods: ['POST'])]
-public function resetPasswordComplete(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder): Response
-{
-    $email = $request->attributes->get('email');
-    $verificationCode = $request->attributes->get('code');
-    $newPassword = $request->attributes->get('newpassword');
-    $confirmPassword = $request->attributes->get('confirmpassword');
-
-    // Retrieve the user based on the email
-    $user = $entityManager->getRepository(User::class)->findOneByEmail($email);
-    
-    
-            // Update user's password
-            $user->setPassword($encoder->encodePassword($user, $newPassword));
-            $entityManager->flush();
-            
-            // Clear the verification code
-          //  $user->setVerificationCode(null);
-         //   $entityManager->flush();
-
-          
-            return new Response('Password reset successfully', Response::HTTP_OK);
-            
-
-      
-   
-}
 #[Route('/inverStatus/{email}', name: 'app_user_inverStatus', methods: ['POST'])]
 public function invertstatus(Request $request , EntityManagerInterface $entityManager): Response
   {
@@ -401,17 +354,6 @@ public function resendActivationEmail(Request $request, MailerInterface $mailer,
         return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @Route("/resend-activation-email", name="app_resend_activation_email", methods={"POST"})
-     */
-    public function resendActivationEmail(Request $request, MailerInterface $mailer, EntityManagerInterface $entityManager)
-    {
-        $email = $request->request->get('email');
-
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
-        if (!$user) {
-            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
-        }
 
         $this->emailVerifier->sendEmailConfirmation(
             'app_verify_email',
