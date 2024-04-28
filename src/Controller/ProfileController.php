@@ -43,15 +43,27 @@ class ProfileController extends AbstractController
         }
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-  
-        $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
-        $participations = $tournoiRepository->countParticipationsForEachTournoi();
+        $terrains = null;
+        $tournois = null;
+        $participationsById = null;
+        
+     
+        if($user->getRole() == 'Proprietaire de Terrain'){
+            $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+        }
 
-        $participationsById = [];
-    foreach ($participations as $participation) {
-        $participationsById[$participation['id']] = $participation['nombre_participations'];
-    }
 
+        if($user->getRole() == 'Organisateur'){
+            $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
+            $participations = $tournoiRepository->countParticipationsForEachTournoi();
+    
+            $participationsById = [];
+        foreach ($participations as $participation) {
+            $participationsById[$participation['id']] = $participation['nombre_participations'];
+        }
+    
+        }
+      
 
 
         $nonce = bin2hex(random_bytes(16));
@@ -60,12 +72,12 @@ $terrains=NULL;
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
         }
             return $this->render('userBase.html.twig',[
-              
+                'terrains' => $terrains,
                 'user' => $user,
                 'tournois' => $tournois,
                 'nonce' => $nonce,
                 'participationsById' => $participationsById,
-                'terrains' => $terrains
+           
             ]);
         
       

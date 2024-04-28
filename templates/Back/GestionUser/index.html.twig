@@ -2,6 +2,10 @@
 
 {% block title %}User index{% endblock %}
 
+
+
+
+
 {% block body %}
 <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -131,46 +135,40 @@
   <!-- End Page Title -->
 
   <section class="section">
-    <table class="table datatable">
-      <thead>
-        <tr>
-
-          <th>Email</th>
-          <th>Password</th>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Phone</th>
-
-          <th>Role</th>
-
-
-
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-        <tr>
-
-          <td>{{ user.Email }}</td>
-          <td>{{ user.Password }}</td>
-          <td>{{ user.Name }}</td>
-          <td>{{ user.Age }}</td>
-          <td>{{ user.Phone }}</td>
-
-          <td>{{ user.Role }}</td>
-
-
-
-
-        </tr>
-        {% else %}
-        <tr>
-          <td colspan="13">no records found</td>
-        </tr>
-        {% endfor %}
-      </tbody>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Phone</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in pagination %}
+            <tr>
+                <td>{{ user.Email }}</td>
+                <td>{{ user.Password }}</td>
+                <td>{{ user.Name }}</td>
+                <td>{{ user.Age }}</td>
+                <td>{{ user.Phone }}</td>
+                <td>{{ user.Role }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">No records found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-  </section>
+
+    {# Render pagination links #}
+   <div class="pagination" style="justify-content: center;padding-right:50px;">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</section>
 
 </main>
 
