@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\LiveScoreService;
+
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
 use App\Entity\User;
@@ -50,11 +50,10 @@ class HomeController extends AbstractController
 
     private $liveScoreService;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security, LiveScoreService $liveScoreService)
+    public function __construct(EntityManagerInterface $entityManager, Security $security)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
-        $this->liveScoreService = $liveScoreService;
     }
 
     public function __construct2(EntityManagerInterface $entityManager, Security $security, SerializerInterface $serializer)
@@ -175,10 +174,6 @@ class HomeController extends AbstractController
         $futureReservations = $reservationRepository->findFutureReservationsForMember(46);
 
 
-        // Sérialiser les données pour les passer à la vue Twig
-        // $serializedReservations =  $this->serializer->serialize($futureReservations, 'json');
-
-        // Rendre la vue Twig en lui transmettant les données des réservations
         return $this->render('Front/consulterReservation.html.twig', [
             'reservation' => $futureReservations,
         ]);
@@ -188,75 +183,35 @@ class HomeController extends AbstractController
 
 
 
-
-
-    #[Route('/LiveScore', name: 'live_score')]
-    public function liveScore(): Response
+    #[Route('/increment-visits/{id}', name: 'app_increment_visits', methods: ['POST'])]
+    public function incrementVisits(Tournoi $tournoi, EntityManagerInterface $entityManager): Response
     {
-        // Appel du service pour récupérer les données de l'API
-        $matches = $this->liveScoreService->getListLiveMatches();
+        $tournoi->setVisite($tournoi->getVisite() + 1);
+        $entityManager->flush();
 
-        // Affichage des données dans le template Twig
-        return $this->render('Front/liveScore.html.twig', [
-            'matches' => $matches,
-        ]);
+        return new JsonResponse(['success' => true]);
     }
 
-
-    // #[Route('/login', name: 'app_user_login', methods: ['GET' , 'POST'])]
-    // public function login(Request $request, EntityManagerInterface $entityManager): Response
-    // {
-    //     $userRepository = $entityManager->getRepository(User::class);
-
-    //     $user = new User();
-    //     $formlogin = $this->createForm(Login::class , $user , ['validation_groups' => ['login']]);
-    //     $formlogin->handleRequest($request);
-    //     if ($formlogin->isSubmitted() && $formlogin->isValid()) {
-
-    //         $user = $userRepository->findOneByemail($formlogin->get('email')->getData());
-
-    //         if($user){
-    //             if($user->getPassword() == $formlogin->get('password')->getData()){
-    //                 return $this->redirectToRoute('app_user_profile', ['id' => $user->getId()]);
-    //             }else{
-    //                 $this->addFlash('error', 'Password is incorrect');
-    //             }
-    //             }
-
-    //         }
-    //     return $this->renderForm('login.html.twig', [
-
-    //         'formlogin' => $formlogin,
-
-    //     ]);
-    // }
-
-
-    // #[Route('/register', name: 'app_user_register', methods: ['GET' , 'POST'])]
-    // public function register(Request $request, EntityManagerInterface $entityManager): Response
-    // {
-    //     $userRepository = $entityManager->getRepository(User::class);
-
-    //     $user = new User();
-    //     $form = $this->createForm(UserType::class , $user , ['validation_groups' => ['registration']]);
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $userexist = $userRepository->findOneByemail($form->get('email')->getData());
-    //         if(!$userexist){
-    //             $entityManager->persist($user);
-    //             $entityManager->flush();
-    //             return $this->redirectToRoute('app_user_login', [], Response::HTTP_SEE_OTHER);
-    //         }
-
-
-    //         return $this->redirectToRoute('app_user_register', [], Response::HTTP_SEE_OTHER);
-    //     }
-
-    //     return $this->renderForm('register.html.twig', [
-    //         'form' => $form
-
-    //     ]);
-    // }
-
+    /*
+#[Route('/increment-unique-visit/{id}', name: 'app_increment_unique_visit', methods: ['POST'])]
+public function incrementUniqueVisit(Tournoi $tournoi, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+{
+    $user = $this->getUser(); // Récupérer l'utilisateur connecté
+    if (!$user) {
+        return new JsonResponse(['success' => false, 'message' => 'User not logged in']);
+    }
+    
+    $visite = $entityManager->getRepository(TournoiVisite::class)->findOneBy(['tournoi' => $tournoi, 'user' => $user]);
+    
+    if (!$visite) {
+        $visite = new TournoiVisite();
+        $visite->setTournoi($tournoi);
+        $visite->setUser($user);
+        $entityManager->persist($visite);
+        $tournoi->setVisites($tournoi->getVisites() + 1);
+        $entityManager->flush();
+    }
+    
+    return new JsonResponse(['success' => true]);
+}*/
 }

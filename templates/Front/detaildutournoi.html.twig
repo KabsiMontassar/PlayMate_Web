@@ -1,6 +1,16 @@
 {% extends 'BaseFront.html.twig' %}
 
 {% block title %}Détails du Terrain{% endblock %}
+{% block head %}
+<head>
+    <!-- ... autres métadonnées ... -->
+    <meta property="og:url" content="{{ url('app_tournoi_detail', {'id': tournoi.id}) }}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{{ tournoi.getNom() }}" />
+    <meta property="og:description" content="{{ tournoi.getDescription() }}" />
+    <meta property="og:image" content="{{ asset('uploads/images/' ~ tournoi.affiche) }}" />
+</head>
+{% endblock %}
 {% block stylesheets %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 
@@ -146,6 +156,8 @@
                 <div class="forecast-item">
                     <p>Date : <strong>{{ day.dt_txt|date('Y-m-d') }}</strong></p>
                     <p class="temp">{{ day.main.temp_max }} °C / {{ day.main.temp_min }} °C</p>
+                    <!-- Ajout de l'icône météo -->
+                    <img src="http://openweathermap.org/img/wn/{{ day.weather[0].icon }}.png" alt="Weather icon" class="weather-icon">
                     <p><i class="fas fa-wind"></i> Vitesse du vent : {{ day.wind.speed }} m/s</p>
                     <p><i class="fas fa-tint"></i> Humidité : {{ day.main.humidity }}%</p>
                     <p><i class="fas fa-cloud"></i> Nuages : {{ day.clouds.all }}%</p>

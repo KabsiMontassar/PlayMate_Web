@@ -3,18 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
   <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
 
 <link rel="stylesheet" href="{{ asset('Front/css/userprofile.css') }}">
 <style>
 
 
-
-
 </style>
+
 </head>
 <body>
-
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v11.0" nonce="{{ nonce }}"></script>
   <div class="quarter-circle">    <a href="{{ path('app_Home' ) }}" ><img class="logo" style="height:90px" src="{{ asset('Back/assets/img/PlayMate.png') }}"></a>
 </div>
 
@@ -161,7 +166,7 @@ var MembreListelements = `
   }
 
 
-function ivertStatus(userEmail) {
+function invertStatus(userEmail) {
   const confirmDeactivationBtn = document.getElementById('confirmDeactivationBtn');
  
   $.post("/user/inverStatus/" + userEmail , function(data) {
@@ -175,9 +180,48 @@ function ivertStatus(userEmail) {
   
  
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="{{ asset('Back/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+ <script src="{{ asset('Back/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+ <script>
+function shareOnFacebook(url) {
+    FB.ui({
+        method: 'share',
+        href: url,
+    }, function(response){});
+}
+</script>
 
+<script>
+  // Attendre que le contenu du DOM soit chargé avant d'exécuter le script
+  document.addEventListener('DOMContentLoaded', function() {
+    // Pour chaque tournoi, initialiser un graphique
+    {% for tournoi in tournois %}
+      var ctx = document.getElementById('chart-tournoi-{{ tournoi.id }}').getContext('2d');
+      var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Visites', 'Participations'],
+          datasets: [{
+            label: 'Statistiques',
+            data: [
+              {{ tournoi.getVisite }},
+              {{ participationsById[tournoi.id] | default(0) }}
+            ],
+            backgroundColor: ['rgba(0, 123, 255, 0.5)', 'rgba(40, 167, 69, 0.5)'],
+            borderColor: ['rgba(0, 123, 255, 1)', 'rgba(40, 167, 69, 1)'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    {% endfor %}
+  });
+</script>
 
 </body>
 </html>

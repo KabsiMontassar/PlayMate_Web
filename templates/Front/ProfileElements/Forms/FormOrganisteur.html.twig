@@ -79,20 +79,81 @@ body {
     transform:translateX(25%);
   }
 }
- ul{
-      
-        margin:0;
-        margin-left: 20px;
-        padding: 0;
+
+body {
+        background-color: #e9ecef;
+        font-family: 'Nunito', sans-serif;
     }
-    
-     li{
-          margin:0;
-          padding: 0;
-        color: #f56056;
-        font-size: 14px;
-        font-weight: 500;
+    .card {
+        border-radius: 1rem;
+        border: none;
+        overflow: hidden;
+        box-shadow: 0 0.46875rem 2.1875rem rgb(90 97 105 / 10%), 
+                    0 0.9375rem 1.40625rem rgb(90 97 105 / 10%), 
+                    0 0.25rem 0.53125rem rgb(90 97 105 / 12%), 
+                    0 0.125rem 0.1875rem rgb(90 97 105 / 10%);
     }
+    .card-header {
+        background-color: #89c048;
+        color: #89c048;;
+        font-size: 1.25rem;
+        letter-spacing: 0.1rem;
+    }
+    .form-control, .form-range, .btn-primary {
+        border-radius: 0.75rem;
+    }
+    .form-control:focus, .form-range:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    .btn-primary {
+        background-color: #0056b3;
+        border-color: #0086b3;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 123, 255, 0.75);
+        font-weight: bold;
+    }
+    .btn-primary:hover {
+        background-color: #004085;
+        border-color: #003b75;
+    }
+    .img-thumbnail {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        box-shadow: 0 0.46875rem 2.1875rem rgb(90 97 105 / 10%);
+    }
+    .custom-file-input:lang(en)~.custom-file-label::after {
+        content: "Parcourir";
+    }
+    .custom-range::-webkit-slider-thumb {
+        background-color: #89c048;
+    }
+    .custom-range::-moz-range-thumb {
+        background-color: #89c048;
+    }
+    .custom-range::-ms-thumb {
+        background-color: #89c048;;
+    }
+
+    /* Responsive adjustments can be placed here */
+   /* New styles for error messages and input fields */
+    .invalid-feedback {
+        color: #dc3545; /* Red color for the error message */
+        display: block;
+    }
+
+    /* Apply red border and shadow for invalid inputs */
+    .is-invalid {
+        border-color: #dc3545 !important; /* Override Bootstrap styles */
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+     .form-control, .form-select {
+        border-color: #89c048; /* This is the green color you specified */
+        /* If you want to change the focus color as well */
+        border-radius: 0.25rem; /* Adjust as needed */
+    }
+    .card-title {
+      color: #FFFFFF;
+    }
+     
 </style>
 </head>
 <body>
@@ -107,33 +168,20 @@ body {
 
     <div class="container" style="margin-top:100px">
     
-        {% if user.image == null %}
-            {% set imagePath = 'uploads/images/default.jpg' %}
-        {% else %}
-            {% set imagePath = 'uploads/images/' ~ user.image %}
-        {% endif %}
+        
 
         <section class="profile">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
                         <ul class="nav nav-tabs nav-tabs-bordered">
-                            <li class="nav-item">
-                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
-                            </li>
+    
                         </ul>
 
                         <div class="tab-content">
                             <div class="tab-pane fade profile-edit pt-1 show active" id="profile-edit">
-                                <h5 class="card-title">Update Profile</h5>
-                                {{ include('Front/ProfileElements/Forms/_formedit.html.twig', {'button_label': 'Update'}) }}
-                            </div>
-                            <div class="tab-pane fade pt-1" id="profile-change-password">
-                                <h5 class="card-title">Update Password</h5>
-                                {{ include('Front/ProfileElements/Forms/_formpassword.html.twig', {'button_label': 'Update'}) }}
+                                <h5 class="card-title">Ajouter Tournoi</h5>
+                                {{ include('Front/ProfileElements/Forms/_formAjoutTournoi.html.twig', {'button_label': 'Enregister'}) }}
                             </div>
                         </div>
                     </div>
