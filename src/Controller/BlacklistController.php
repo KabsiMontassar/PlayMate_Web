@@ -115,7 +115,7 @@ class BlacklistController extends AbstractController
     {
 
         $blacklist = new Blacklist();
-        $blacklist->setIdreservation($reservation->getIdreservation());
+        $blacklist->setIdreservation($reservation);
         $blacklist->setDuree(30);
         $blacklist->setCause('Annulation de la réservation');
 
