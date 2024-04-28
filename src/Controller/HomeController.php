@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
 use App\Entity\User;
@@ -46,6 +47,8 @@ class HomeController extends AbstractController
 
     private $entityManager;
     private $security;
+
+    private $liveScoreService;
 
     public function __construct(EntityManagerInterface $entityManager, Security $security)
     {
@@ -156,7 +159,11 @@ class HomeController extends AbstractController
             'historiques' => $historiques,
         ]);
     }
-
+    #[Route('/game', name: 'game')]
+    public function jeu(): Response
+    {
+        return $this->render('Front/jeuPlayMate.html.twig');
+    }
 
 
     // ajout id
@@ -172,16 +179,20 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/increment-visits/{id}', name: 'app_increment_visits', methods: ['POST'])]
-public function incrementVisits(Tournoi $tournoi, EntityManagerInterface $entityManager): Response
-{
-    $tournoi->setVisite($tournoi->getVisite() + 1);
-    $entityManager->flush();
-    
-    return new JsonResponse(['success' => true]);
-}
 
-/*
+
+
+
+    #[Route('/increment-visits/{id}', name: 'app_increment_visits', methods: ['POST'])]
+    public function incrementVisits(Tournoi $tournoi, EntityManagerInterface $entityManager): Response
+    {
+        $tournoi->setVisite($tournoi->getVisite() + 1);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    /*
 #[Route('/increment-unique-visit/{id}', name: 'app_increment_unique_visit', methods: ['POST'])]
 public function incrementUniqueVisit(Tournoi $tournoi, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
 {
@@ -203,6 +214,4 @@ public function incrementUniqueVisit(Tournoi $tournoi, EntityManagerInterface $e
     
     return new JsonResponse(['success' => true]);
 }*/
-
-    
 }
