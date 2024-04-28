@@ -156,6 +156,8 @@
                 <div class="forecast-item">
                     <p>Date : <strong>{{ day.dt_txt|date('Y-m-d') }}</strong></p>
                     <p class="temp">{{ day.main.temp_max }} °C / {{ day.main.temp_min }} °C</p>
+                    <!-- Ajout de l'icône météo -->
+                    <img src="http://openweathermap.org/img/wn/{{ day.weather[0].icon }}.png" alt="Weather icon" class="weather-icon">
                     <p><i class="fas fa-wind"></i> Vitesse du vent : {{ day.wind.speed }} m/s</p>
                     <p><i class="fas fa-tint"></i> Humidité : {{ day.main.humidity }}%</p>
                     <p><i class="fas fa-cloud"></i> Nuages : {{ day.clouds.all }}%</p>

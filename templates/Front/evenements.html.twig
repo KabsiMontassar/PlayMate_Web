@@ -161,7 +161,7 @@
                                         <span class="text-primary px-2">|</span>
                                         <a class="text-primary text-uppercase text-decoration-none" href="#" >{{ tournoi.getNom() }}</a>
                                     </div>
-                                     <a href="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}"   class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
+                                    <a href="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}" class="btn btn-primary btn-sm float-right" onclick="incrementVisits('{{ tournoi.id }}')">Voir les détails <i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -300,8 +300,18 @@ var calendarEl = document.getElementById('calendar');
     // ...
 });
     </script>
-   
-   
+   <script>
+   function incrementVisits(tournoiId) {
+    fetch('/increment-visits/' + tournoiId, {
+        method: 'POST'
+    });
+}
+</script>
+   <!-- function incrementUniqueVisits(tournoiId) {
+    fetch('/increment-unique-visit/' + tournoiId, {
+        method: 'POST'
+    });
+}-->
    {% endblock %}
 
    

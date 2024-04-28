@@ -1,6 +1,4 @@
 
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v10.0" nonce="{{ nonce }}"></script>
 <div class="event-cards-container">
   {% for tournoi in tournois %}
     <div class="event-card" style="padding:14px; background-color:white; border-radius:20px;">
@@ -18,15 +16,43 @@
             'September': 'Septembre', 'October': 'Octobre', 'November': 'Novembre', 
             'December': 'Décembre'
           }) }}</p>
-          <p class="event-description">{{ tournoi.getAddress() }}</p>
-          <a href="#" class="btn-more">En savoir plus</a>
+          <p class="event-date">Date de fin : {{ tournoi.getDatefin()|date('d F')|replace({
+            'January': 'Janvier', 'February': 'Février', 'March': 'Mars', 'April': 'Avril', 
+            'May': 'Mai', 'June': 'Juin', 'July': 'Juillet', 'August': 'Août', 
+            'September': 'Septembre', 'October': 'Octobre', 'November': 'Novembre', 
+            'December': 'Décembre'
+          }) }}</p>
+          <p class="event-description">Adresse : {{ tournoi.getAddress() }}</p>
+          <p class="event-description">Nombre maximum d'équipes : {{ tournoi.getNbmaxequipe() }}</p>
+          {{ include('Back/GestionEvenement/tournoi/_delete_form.html.twig') }}
+          <a href="{{ path('app_tournoi_edit', {'id': tournoi.id}) }}" class="btn btn-more">Edit</a>
+          <a href="javascript:void(0);" onclick="shareOnFacebook('{{ url('app_tournoi_detail', {'id': tournoi.id}) }}');" class="btn btn-more">Partager sur Facebook</a>
         </div> <!-- Fermeture de event-card-back -->
+
       </div>
-      <div class="fb-share-button" 
-           data-href="{{ url('First', {'id': tournoi.id}) }}" 
-           data-layout="button_count">
+       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#statsModal-{{ tournoi.id }}">
+      Voir les statistiques
+    </button>
+    </div>
+    
+  <div class="modal" id="statsModal-{{ tournoi.id }}" tabindex="-1" role="dialog" aria-labelledby="statsModalLabel-{{ tournoi.id }}" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="statsModalLabel-{{ tournoi.id }}">Statistiques pour {{ tournoi.nom }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+       <div class="modal-body">
+  <canvas id="chart-tournoi-{{ tournoi.id }}" width="800" height="600"></canvas>
+</div>
+        </div>
       </div>
     </div>
+    <!-- Fin du modal pour les statistiques -->
   {% endfor %}
 </div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v10.0" nonce="{{ nonce }}"></script>
+
+<a href="{{ path('app_tournoi_new') }}" class="btn btn-more">Créer un nouveau tournoi</a>
+
