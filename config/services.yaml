@@ -22,6 +22,11 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Entity\PaymentAPI:
+        arguments:
+            $client: '@Symfony\Contracts\HttpClient\HttpClientInterface'
+            $router: '@Symfony\Component\Routing\RouterInterface'
+    # Explicitly configure the WeatherService
     App\Service\WeatherService:
         arguments:
             $apiKey: '%weather_api_key%'

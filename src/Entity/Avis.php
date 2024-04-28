@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,6 +26,7 @@ class Avis
      * @var string
      *
      * @ORM\Column(name="commentaire", type="string", length=255, nullable=false)
+     * @Assert\NotBlank(message="Veuillez remplir ce champs")
      */
     private $commentaire;
 

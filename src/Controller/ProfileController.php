@@ -13,6 +13,8 @@ use App\Form\forgetpassword;
 use App\Repository\TerrainRepository;
 use App\Repository\TournoiRepository;
     
+use App\Entity\Equipe;
+use App\Entity\Membreparequipe;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -105,6 +107,9 @@ class ProfileController extends AbstractController
            
 
             $this->addFlash('success', 'Profile updated successfully');
+            
+            return $this->redirectToRoute('First');
+
 
         }
       
@@ -142,6 +147,7 @@ class ProfileController extends AbstractController
                    $this->addFlash('danger', 'New password and confirm password do not match');
                   
               }
+              return $this->redirectToRoute('First');
         }
         else{
         }

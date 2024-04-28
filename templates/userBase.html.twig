@@ -166,7 +166,7 @@ var MembreListelements = `
   }
 
 
-function ivertStatus(userEmail) {
+function invertStatus(userEmail) {
   const confirmDeactivationBtn = document.getElementById('confirmDeactivationBtn');
  
   $.post("/user/inverStatus/" + userEmail , function(data) {
