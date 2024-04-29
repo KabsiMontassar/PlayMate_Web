@@ -303,7 +303,8 @@ class ReservationController extends AbstractController
                 'type' => $reservation->getType(),
             ];
         }
-        var_dump(ResponseHelper::toArray($formattedReservations[]));
+
+
         return new JsonResponse($formattedReservations);
     }
 }

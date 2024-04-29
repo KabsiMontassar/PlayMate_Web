@@ -5,7 +5,7 @@
 {% block body %}
 <h1>Payment index</h1>
 
-<table class="table">
+<table class="table" id="myTable">
     <thead>
         <tr>
             <th>ID Payment</th>
@@ -41,5 +41,28 @@
     </tbody>
 </table>
 
+</div>
+<div style="display: flex;align-item:center;justify-content: center;">
+    {{ knp_pagination_render(payment) }}
+</div>
 <a href="{{ path('app_payment_new') }}">Create new</a>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<!-- Include jQuery and DataTables JS -->
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document).ready(function () {
+            $('.dataTables_info').hide();
+        });
+        $('#myTable').DataTable({
+            paging: false,
+            "pageLength": 10,
+
+        });
+    });
+</script>
 {% endblock %}

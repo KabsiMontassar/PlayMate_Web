@@ -95,9 +95,9 @@
                 <span>Participation</span>
             </a>
         </li>
-            <li class="nav-heading">Gestion Equipe</li>
-         
-          <li class="nav-item">
+        <li class="nav-heading">Gestion Equipe</li>
+
+        <li class="nav-item">
             <a class="nav-link collapsed" href="{{ path('app_equipe_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
                 <span>Equipe</span>
@@ -130,7 +130,7 @@
     <!-- End Page Title -->
 
     <section class="section">
-        <table class="table datatable">
+        <table class="table datatable" id="myTable">
             <thead>
                 <tr>
                     <th>ID Payment</th>
@@ -165,10 +165,32 @@
                 {% endfor %}
             </tbody>
         </table>
+        <div style="display: flex;align-item:center;justify-content: center;">
+            {{ knp_pagination_render(payments) }}
+        </div>
         <a href="{{ path('app_payment_new') }}">Create new</a>
     </section>
 
 </main>
 
 
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<!-- Include jQuery and DataTables JS -->
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document).ready(function () {
+            $('.dataTables_info').hide();
+        });
+        $('#myTable').DataTable({
+            paging: false,
+            "pageLength": 10,
+
+        });
+    });
+</script>
 {% endblock %}
