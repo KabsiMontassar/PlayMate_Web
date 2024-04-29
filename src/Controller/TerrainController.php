@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
  
+
 //********************************************************************************************
 
 #[Route('/terrain')]
@@ -66,83 +67,83 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
 
  //********************************************************************************************
 
-    #[Route('/new', name: 'app_terrain_new', methods: ['GET', 'POST'])]
-    public function new(Security $security, Request $request, EntityManagerInterface $entityManager): Response
-    {
-    $userIdentifier = $security->getUser()->getUserIdentifier();
-    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-        $terrain = new Terrain();
-        $form = $this->createForm(TerrainType::class, $terrain);
-        $form->handleRequest($request);
-    
-        if ($form->isSubmitted()) {
-            // Récupérer le nom, le gouvernorat et le prix du formulaire
-            $nomTerrain = $form->get('nomterrain')->getData();
-            $gouvernorat = $form->get('gouvernorat')->getData();
-            $prix = $form->get('prix')->getData();
-    
-            // Vérifier si le nom et le gouvernorat sont des lettres majuscules et minuscules
-            if (!preg_match('/^[a-zA-Z]+$/', $nomTerrain) || !preg_match('/^[a-zA-Z]+$/', $gouvernorat)) {
-                // Gérer l'erreur, par exemple afficher un message à l'utilisateur
-                // Rediriger vers le formulaire avec un message d'erreur
-                return $this->render('Back/Terrains/terrain/new.html.twig', [
-                    'terrain' => $terrain,
-                    'form' => $form->createView(),
-                    'error_message' => 'Le nom et le gouvernorat doivent contenir uniquement des lettres.'
-                ]);
-            }
-    
-            // Vérifier si le prix est un entier
-            if (!is_numeric($prix)) {
-                // Gérer l'erreur, par exemple afficher un message à l'utilisateur
-                // Rediriger vers le formulaire avec un message d'erreur
-                return $this->render('Back/Terrains/terrain/new.html.twig', [
-                    'terrain' => $terrain,
-                    'form' => $form->createView(),
-                    'error_message' => 'Le prix doit être un entier.'
-                ]);
-            }
-    
-            // Continuer le traitement si tout est valide
-            $terrain->setNomterrain($nomTerrain);
-            $terrain->setGouvernorat($gouvernorat);
-            $terrain->setIdprop($user);
-            $terrain->setPrix($prix);
-    
-            // Gérer l'upload de l'image
-            $imageFile = $form['image']->getData();
-            if ($imageFile) {
-                $newFilename = uniqid().'.'.$imageFile->guessExtension();
-                $imageFile->move(
-                    $this->getParameter('terrain_images_directory'),
-                    $newFilename
-                );
-                $terrain->setImage($newFilename);
-            }
-    
-            // Gérer l'upload de la vidéo
-            $videoFile = $form['video']->getData();
-            if ($videoFile) {
-                $newFilename = uniqid().'.'.$videoFile->guessExtension();
-                $videoFile->move(
-                    $this->getParameter('terrain_videos_directory'),
-                    $newFilename
-                );
-                $terrain->setVideo($newFilename);
-            }
-    
-            $entityManager->persist($terrain);
-            $entityManager->flush();
-    
-            return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
-        }
-    
-        return $this->render('Back/Terrains/terrain/new.html.twig', [
-            'terrain' => $terrain,
-            'form' => $form->createView(),
-        ]);
-    }
-    
+ #[Route('/new', name: 'app_terrain_new', methods: ['GET', 'POST'])]
+ public function new(Security $security, Request $request, EntityManagerInterface $entityManager): Response
+ {
+ $userIdentifier = $security->getUser()->getUserIdentifier();
+ $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+     $terrain = new Terrain();
+     $form = $this->createForm(TerrainType::class, $terrain);
+     $form->handleRequest($request);
+ 
+     if ($form->isSubmitted()) {
+         // Récupérer le nom, le gouvernorat et le prix du formulaire
+         $nomTerrain = $form->get('nomterrain')->getData();
+         $gouvernorat = $form->get('gouvernorat')->getData();
+         $prix = $form->get('prix')->getData();
+ 
+         // Vérifier si le nom et le gouvernorat sont des lettres majuscules et minuscules
+         if (!preg_match('/^[a-zA-Z]+$/', $nomTerrain) || !preg_match('/^[a-zA-Z]+$/', $gouvernorat)) {
+             // Gérer l'erreur, par exemple afficher un message à l'utilisateur
+             // Rediriger vers le formulaire avec un message d'erreur
+             return $this->render('Back/Terrains/terrain/new.html.twig', [
+                 'terrain' => $terrain,
+                 'form' => $form->createView(),
+                 'error_message' => 'Le nom et le gouvernorat doivent contenir uniquement des lettres.'
+             ]);
+         }
+ 
+         // Vérifier si le prix est un entier
+         if (!is_numeric($prix)) {
+             // Gérer l'erreur, par exemple afficher un message à l'utilisateur
+             // Rediriger vers le formulaire avec un message d'erreur
+             return $this->render('Back/Terrains/terrain/new.html.twig', [
+                 'terrain' => $terrain,
+                 'form' => $form->createView(),
+                 'error_message' => 'Le prix doit être un entier.'
+             ]);
+         }
+ 
+         // Continuer le traitement si tout est valide
+         $terrain->setNomterrain($nomTerrain);
+         $terrain->setGouvernorat($gouvernorat);
+         $terrain->setIdprop($user);
+         $terrain->setPrix($prix);
+ 
+         // Gérer l'upload de l'image
+         $imageFile = $form['image']->getData();
+         if ($imageFile) {
+             $newFilename = uniqid().'.'.$imageFile->guessExtension();
+             $imageFile->move(
+                 $this->getParameter('terrain_images_directory'),
+                 $newFilename
+             );
+             $terrain->setImage($newFilename);
+         }
+ 
+         // Gérer l'upload de la vidéo
+         $videoFile = $form['video']->getData();
+         if ($videoFile) {
+             $newFilename = uniqid().'.'.$videoFile->guessExtension();
+             $videoFile->move(
+                 $this->getParameter('terrain_videos_directory'),
+                 $newFilename
+             );
+             $terrain->setVideo($newFilename);
+         }
+ 
+         $entityManager->persist($terrain);
+         $entityManager->flush();
+ 
+         return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
+     }
+ 
+     return $this->render('Back/Terrains/terrain/new.html.twig', [
+         'terrain' => $terrain,
+         'form' => $form->createView(),
+     ]);
+ }
+ 
     
 //********************************************************************************************
 

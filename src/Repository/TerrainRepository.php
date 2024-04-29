@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+use App\Entity\Avis;
 
 use App\Entity\Terrain;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -58,6 +59,7 @@ class TerrainRepository extends ServiceEntityRepository
         ->setParameter('query', '%'.$query.'%')
         ->getQuery()
         ->getResult();
-}
+} 
+
 
 }

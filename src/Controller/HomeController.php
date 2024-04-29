@@ -23,7 +23,7 @@ use App\Form\UserPasswordType;
 use Symfony\Component\Runtime\Runner\Symfony\ResponseRunner;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\Historique;
 
 use App\Controller\Payment;
@@ -135,16 +135,20 @@ class HomeController extends AbstractController
         return $this->render('Front/service.html.twig', []);
     }
     #[Route('/Terrains', name: 'app_Terrains', methods: ['GET', 'POST'])]
-    public function Terrains(EntityManagerInterface $entityManager): Response
+    public function Terrains(EntityManagerInterface $entityManager, PaginatorInterface $paginator , Request $request): Response
     {
+        $queryBuilder = $entityManager->getRepository(Terrain::class)->createQueryBuilder('t');
+        $query = $queryBuilder->getQuery();
 
-
-        $terrainRepository = $entityManager->getRepository(Terrain::class);
-        $terrains = $terrainRepository->findAll();
-
+        // Paginate the results of the query
+        $pagination = $paginator->paginate(
+            $query, // query NOT result
+            $request->query->getInt('page', 1), // page number, 1 if not set
+            8 // limit per page
+        );
         return $this->render('Front/terrains.html.twig', [
 
-            'terrains' => $terrains,
+            'pagination' => $pagination,
 
 
         ]);

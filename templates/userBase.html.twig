@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
   <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -160,7 +161,11 @@ var MembreListelements = `
  
         });
 
-
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
 
 
   function out(id){
@@ -198,7 +203,6 @@ function shareOnFacebook(url) {
     }, function(response){});
 }
 </script>
-
 <script>
   // Attendre que le contenu du DOM soit chargé avant d'exécuter le script
   document.addEventListener('DOMContentLoaded', function() {
