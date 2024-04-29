@@ -281,6 +281,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+
+<script>
+   function incrementVisits(tournoiId) {
+    fetch('/increment-visits/' + tournoiId, {
+        method: 'POST'
+    });
+}
+</script>
    <!-- function incrementUniqueVisits(tournoiId) {
     fetch('/increment-unique-visit/' + tournoiId, {
         method: 'POST'

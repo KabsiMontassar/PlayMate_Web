@@ -42,6 +42,11 @@
         width: 50px;
         height: 50px;
     }
+     .weather-icon {
+        width: 50px;
+        height: 50px;
+        filter: invert(59%) sepia(89%) saturate(638%) hue-rotate(198deg) brightness(96%) contrast(89%); /* Example blue color tint */
+    }
 </style>
 {% endblock %}
 {% block body %}
@@ -158,6 +163,7 @@
                     <p class="temp">{{ day.main.temp_max }} °C / {{ day.main.temp_min }} °C</p>
                     <!-- Ajout de l'icône météo -->
                     <img src="http://openweathermap.org/img/wn/{{ day.weather[0].icon }}.png" alt="Weather icon" class="weather-icon">
+                    
                     <p><i class="fas fa-wind"></i> Vitesse du vent : {{ day.wind.speed }} m/s</p>
                     <p><i class="fas fa-tint"></i> Humidité : {{ day.main.humidity }}%</p>
                     <p><i class="fas fa-cloud"></i> Nuages : {{ day.clouds.all }}%</p>
