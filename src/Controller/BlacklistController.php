@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
+use App\Entity\Payment;
 use App\Entity\Reservation;
 
 #[Route('/blacklist')]
@@ -115,13 +115,45 @@ class BlacklistController extends AbstractController
     {
 
         $blacklist = new Blacklist();
-        $blacklist->setIdreservation($reservation->getIdreservation());
+
+        $blacklist->setIdreservation($reservation);
         $blacklist->setDuree(30);
         $blacklist->setCause('Annulation de la réservation');
 
-
-
         $entityManager->persist($blacklist);
+        $entityManager->flush();
+    }
+
+    public function updateStatusFromBlacklist(EntityManagerInterface $entityManager, BlacklistRepository $blacklistRepository): void
+    {
+
+        $reservations = $entityManager->getRepository(Reservation::class)->findAll();
+
+        foreach ($reservations as $reservation) {
+            $payments = $entityManager->getRepository(Payment::class)->findBy(['idreservation' => $reservation]);
+
+            foreach ($payments as $payment) {
+                $user = $payment->getIdmembre();
+                if (!$user) {
+                    continue;
+                }
+                $dateReservation = $reservation->getDatereservation();
+                $blacklistEntry = $blacklistRepository->findOneBy(['idreservation' => $reservation]);
+
+                if (!$blacklistEntry) {
+                    continue;
+                }
+
+                $dureeBlacklist = $blacklistEntry->getDuree();
+                $dateBlacklistExpiration = (clone $dateReservation)->modify("+ $dureeBlacklist days");
+                $currentDate = new \DateTime();
+
+                if ($currentDate > $dateBlacklistExpiration) {
+                    $user->setStatus(true);
+                    $entityManager->persist($user);
+                }
+            }
+        }
         $entityManager->flush();
     }
 }

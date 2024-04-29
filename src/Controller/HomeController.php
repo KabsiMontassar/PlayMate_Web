@@ -152,15 +152,20 @@ class HomeController extends AbstractController
     #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
     public function Historique(Security $security, HistoriqueRepository $historiqueRepository, EntityManagerInterface $entityManager): Response
     {
+        $user = $security->getUser();
+        if ($user == null) {
+            return $this->redirectToRoute('app_login');
+        } else {
 
-        $userIdentifier = $security->getUser()->getUserIdentifier();
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+            $userIdentifier = $security->getUser()->getUserIdentifier();
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
 
-        $historiques = $historiqueRepository->ListHistoriqueParMembre($user->getId());
+            $historiques = $historiqueRepository->ListHistoriqueParMembre($user->getId());
 
-        return $this->render('Front/historique.html.twig', [
-            'historiques' => $historiques,
-        ]);
+            return $this->render('Front/historique.html.twig', [
+                'historiques' => $historiques,
+            ]);
+        }
     }
     #[Route('/game', name: 'game')]
     public function jeu(): Response
@@ -173,15 +178,20 @@ class HomeController extends AbstractController
     #[Route('/FutureReservations', name: 'app_reservation_future', methods: ['GET'])]
     public function getFuturReservationsByIdUser(Security $security, ReservationRepository $reservationRepository, EntityManagerInterface $entityManager): Response
     {
-        $userIdentifier = $security->getUser()->getUserIdentifier();
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-        // ajout iduser
-        $futureReservations = $reservationRepository->findFutureReservationsForMember($user->getId());
+        $user = $security->getUser();
+        if ($user == null) {
+            return $this->redirectToRoute('app_login');
+        } else {
+            $userIdentifier = $security->getUser()->getUserIdentifier();
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+            // ajout iduser
+            $futureReservations = $reservationRepository->findFutureReservationsForMember($user->getId());
 
 
-        return $this->render('Front/consulterReservation.html.twig', [
-            'reservation' => $futureReservations,
-        ]);
+            return $this->render('Front/consulterReservation.html.twig', [
+                'reservation' => $futureReservations,
+            ]);
+        }
     }
 
 

@@ -150,4 +150,12 @@ class ReservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+    public function findByType(string $type): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.type = :type')
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getResult();
+    }
 }
