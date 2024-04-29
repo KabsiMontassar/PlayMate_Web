@@ -1,6 +1,6 @@
 {% extends 'BaseBack.html.twig' %}
 
-{% block title %}User index{% endblock %}
+{% block title %}Tournoi index{% endblock %}
 
 {% block body %}
 <header id="header" class="header fixed-top d-flex align-items-center">
@@ -98,57 +98,75 @@
 
 </aside>
 
+
 <main id="main" class="main">
 
+    {# Page title and breadcrumbs #}
     <div class="pagetitle">
-        <h1>Table Page</h1>
+        <h1>Gestion des Tournois</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
-                <li class="breadcrumb-item active">Table</li>
-
+                <li class="breadcrumb-item active">Tournois</li>
             </ol>
         </nav>
     </div>
-    <!-- End Page Title -->
 
+    {# Search and sorting form #}
+    <div class="row mb-4">
+        <div class="col">
+            <form method="get" action="{{ path('app_tournoi_index') }}">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Rechercher par nom" value="{{ app.request.query.get('search') }}">
+                    <select name="datedebut" class="form-select">
+                        <option value="">Trier par date</option>
+                        <option value="tri par date debut croissante"{{ 'tri par date debut croissante' == app.request.query.get('datedebut') ? ' selected' : '' }}>Date début croissante</option>
+                        <option value="tri par date debut décroissante"{{ 'tri par date debut décroissante' == app.request.query.get('datedebut') ? ' selected' : '' }}>Date début décroissante</option>
+                    </select>
+                    <button class="btn btn-primary" type="submit">Appliquer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Tournament table #}
     <section class="section">
-        <table class="table datatable">
+        <table class="table">
             <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nbmaxequipe</th>
-                <th>Nom</th>
-                <th>Affiche</th>
-                <th>Address</th>
-                <th>Datedebut</th>
-                <th>Datefin</th>
-                <th>Visite</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for tournoi in tournois %}
-            <tr>
-                <td>{{ tournoi.id }}</td>
-                <td>{{ tournoi.nbmaxequipe }}</td>
-                <td>{{ tournoi.nom }}</td>
-                <td>{{ tournoi.affiche }}</td>
-                <td>{{ tournoi.address }}</td>
-                <td>{{ tournoi.datedebut ? tournoi.datedebut|date('Y-m-d') : '' }}</td>
-                <td>{{ tournoi.datefin ? tournoi.datefin|date('Y-m-d') : '' }}</td>
-                <td>{{ tournoi.visite }}</td>
-                
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">Aucun tournoi trouvé  </td>
-            </tr>
-        {% endfor %}
-        </tbody>
+                <tr>
+                    <th>Id</th>
+                    <th>Nbmaxequipe</th>
+                    <th>Nom</th>
+                    <th>Affiche</th>
+                    <th>Address</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Visite</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tournoi in pagination %}
+                    <tr>
+                        <td>{{ tournoi.id }}</td>
+                        <td>{{ tournoi.nbmaxequipe }}</td>
+                        <td>{{ tournoi.nom }}</td>
+                        <td><img src="{{ asset(tournoi.affiche) }}" alt="Affiche" style="width: 50px; height: auto;"></td>
+                        <td>{{ tournoi.address }}</td>
+                        <td>{{ tournoi.datedebut ? tournoi.datedebut|date('Y-m-d') : '' }}</td>
+                        <td>{{ tournoi.datefin ? tournoi.datefin|date('Y-m-d') : '' }}</td>
+                        <td>{{ tournoi.visite }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8">Aucun tournoi trouvé</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
+
+        {# Pagination control #}
+        {{ knp_pagination_render(pagination) }}
     </section>
 
 </main>
-
 
 {% endblock %}
