@@ -10,6 +10,7 @@ use App\Form\UserType;
 
 use App\Form\Login;
 use App\Repository\UserRepository;
+use App\Repository\TerrainRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -135,24 +136,55 @@ class HomeController extends AbstractController
         return $this->render('Front/service.html.twig', []);
     }
     #[Route('/Terrains', name: 'app_Terrains', methods: ['GET', 'POST'])]
-    public function Terrains(EntityManagerInterface $entityManager, PaginatorInterface $paginator , Request $request): Response
-    {
-        $queryBuilder = $entityManager->getRepository(Terrain::class)->createQueryBuilder('t');
-        $query = $queryBuilder->getQuery();
+public function Terrains(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request, TerrainRepository $terrainRepository): Response
+{
+    // Get search query parameter
+    $searchQuery = $request->query->get('query');
 
-        // Paginate the results of the query
-        $pagination = $paginator->paginate(
-            $query, // query NOT result
-            $request->query->getInt('page', 1), // page number, 1 if not set
-            8 // limit per page
-        );
-        return $this->render('Front/terrains.html.twig', [
+    // Get order query parameter
+    $order = $request->query->get('order');
 
-            'pagination' => $pagination,
+    // Get filtered terrains
+    $queryBuilder = $terrainRepository->createQueryBuilder('t')
+        ->where('t.status = :status')
+        ->setParameter('status', true);
 
-
-        ]);
+    if ($searchQuery) {
+         $queryBuilder->andWhere('t.address LIKE :search')
+            ->orWhere('t.gouvernorat LIKE :search')
+            ->setParameter('search', '%' . $searchQuery . '%');
     }
+
+    if ($order === 'price_asc') {
+        $terrains = $terrainRepository->findAllOrderByPrice('ASC');
+        $queryBuilder = $terrains;
+    } elseif ($order === 'price_desc') {
+        $terrains = $terrainRepository->findAllOrderByPrice('DESC');
+        $queryBuilder = $terrains;
+    } elseif ($order === 'duration_asc') {
+        $terrains = $terrainRepository->findAllOrderByDuration('ASC');
+        $queryBuilder = $terrains;
+    } elseif ($order === 'duration_desc') {
+        $terrains = $terrainRepository->findAllOrderByDuration('DESC');
+        $queryBuilder = $terrains;
+    }  
+   
+
+    $query = $queryBuilder->getQuery();
+
+    // Paginate the results
+    $pagination = $paginator->paginate(
+        $query,
+        $request->query->getInt('page', 1),
+        2 // Items per page
+    );
+
+    return $this->render('Front/terrains.html.twig', [
+        'pagination' => $pagination,
+    ]);
+}
+
+    
     #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
     public function Historique(Security $security, HistoriqueRepository $historiqueRepository, EntityManagerInterface $entityManager): Response
     {

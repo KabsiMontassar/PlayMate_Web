@@ -22,31 +22,17 @@ use Symfony\Component\Security\Core\Security;
 class TerrainController extends AbstractController
 {
     #[Route('/', name: 'app_terrain_index', methods: ['GET'])]
-   public function index(Request $request, TerrainRepository $terrainRepository): Response
-{
-    // Récupérer les terrains avec le statut "disponible"
-    $terrainsDisponibles = $terrainRepository->findBy(['status' => true]);
-    $order = $request->query->get('order');
-    $query = $request->query->get('query');
+    public function index(EntityManagerInterface $entityManager): Response
+    {
+        $terrains = $entityManager
+            ->getRepository(Terrain::class)
+            ->findAll();
 
-    if ($query) {
-        $terrains = $terrainRepository->findByAddressOrGouvernorat($query);
-    } elseif ($order === 'price_asc') {
-        $terrains = $terrainRepository->findAllOrderByPrice('ASC');
-    } elseif ($order === 'price_desc') {
-        $terrains = $terrainRepository->findAllOrderByPrice('DESC');
-    } elseif ($order === 'duration_asc') {
-        $terrains = $terrainRepository->findAllOrderByDuration('ASC');
-    } elseif ($order === 'duration_desc') {
-        $terrains = $terrainRepository->findAllOrderByDuration('DESC');
-    } else {
-        $terrains = $terrainRepository->findAll();
+        return $this->render('Back/Terrains/terrain/index.html.twig', [
+            'terrains' => $terrains,
+        ]);
     }
 
-    return $this->render('Front/terrains.html.twig', [
-        'terrains' => $terrains,
-    ]);
-}
 
 
     //********************************************************************************************
