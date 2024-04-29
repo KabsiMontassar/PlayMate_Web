@@ -66,6 +66,8 @@ class ReservationRepository extends ServiceEntityRepository
             ->andWhere('r.idterrain = :id')
             ->setParameter('id', $idTerrain)
             ->andWhere('r.datereservation = :date')
+            ->andWhere('r.type NOT IN (:reservationTypes)')
+            ->setParameter('reservationTypes', ['Compte_desactive', 'Annulation'])
             ->setParameter('date', $date)
             ->getQuery();
 
@@ -106,12 +108,53 @@ class ReservationRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('r')
             ->where('r.datereservation > :currentDate')
-            ->andWhere('r.type != :type')
+            ->andWhere('r.type NOT IN (:reservationTypes)')
             ->setParameter('currentDate', $currentDate)
-            ->setParameter('type', 'Lancez_Vous')
+            ->setParameter('reservationTypes', ['Lancez_Vous', 'Compte_desactive', 'Annulation'])
             ->groupBy('r.datereservation, r.heurereservation, r.idterrain')
             ->having('COUNT(r) = 1')
             ->orderBy('r.datereservation', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function findFutureReservationsForMember(int $idmembre): array
+    {
+        return $this->createQueryBuilder('r')
+            ->join('App\Entity\Payment', 'p', 'WITH', 'p.idreservation = r.idreservation')
+            ->andWhere('p.idmembre = :idmembre')
+            ->andWhere('r.datereservation > :currentDate')
+            ->andWhere('r.type NOT IN (:reservationTypes)')
+            ->setParameter('idmembre', $idmembre)
+            ->setParameter('currentDate', new \DateTime())
+            ->setParameter('reservationTypes', ['Compte_desactive', 'Annulation'])
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Compte le nombre de réservations uniques par terrain, en considérant les critères spécifiés.
+     *
+     * @param int $idTerrain L'identifiant du terrain
+     * @return int Le nombre de réservations uniques pour ce terrain
+     */
+    public function countUniqueReservationsByTerrain(int $idTerrain): int
+    {
+        return $this->createQueryBuilder('r')
+            ->select('COUNT(DISTINCT r.idreservation)')
+            ->andWhere('r.idterrain = :idTerrain')
+            ->andWhere('r.type IN (:uniqueTypes)')
+            ->setParameter('idTerrain', $idTerrain)
+            ->setParameter('uniqueTypes', ['Postuler_Comme_Adversaire', 'Creer_Partie', 'Lancez_Vous'])
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    public function findByType(string $type): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.type = :type')
+            ->setParameter('type', $type)
             ->getQuery()
             ->getResult();
     }

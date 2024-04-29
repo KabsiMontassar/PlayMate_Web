@@ -14,6 +14,11 @@ use App\Controller\UserController;
 use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\Tournoi;
+use Symfony\Component\Notifier\TexterInterface;
+use Symfony\Component\Notifier\Message\SmsMessage;
+use Twilio\Rest\Client;
+
+
 
 
 #[Route('/participation')]
@@ -33,32 +38,32 @@ class ParticipationController extends AbstractController
     }
 
     #[Route('/new/{id}', name: 'app_participation_new', methods: ['GET', 'POST'])]
-    public function new(Security $security, Request $request, EntityManagerInterface $entityManager, $id): Response
-    {
-        $userIdentifier = $security->getUser()->getUserIdentifier();
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-        $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
-        
-        $participation = new Participation();
-        $form = $this->createForm(ParticipationType::class, $participation);
-        $form->handleRequest($request);
+public function new(Security $security, Request $request, EntityManagerInterface $entityManager,  $id): Response
+{
+    $userIdentifier = $security->getUser()->getUserIdentifier();
+    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+    $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
+    $participation = new Participation();
+    $form = $this->createForm(ParticipationType::class, $participation);
+    $form->handleRequest($request);
     
-        if ($form->isSubmitted() && $form->isValid()) {
-            $participation->setIdmembre($user);
-            $participation->setIdtournoi($tournoi);
-            $entityManager->persist($participation);
-            $entityManager->flush();
-           
-            return $this->redirectToRoute('app_Evenement', [], Response::HTTP_SEE_OTHER);
-        }
-        
-        return $this->render('Back/GestionEvenement/participation/new.html.twig', [
-            'form' => $form->createView(),
-            'tournoi' => $tournoi,
-            'user' => $user,
-        ]);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $participation->setIdmembre($user);
+        $participation->setIdtournoi($tournoi);
+        $entityManager->persist($participation);
+        $entityManager->flush();
+
+    
+        return $this->redirectToRoute('app_Evenement', [], Response::HTTP_SEE_OTHER);
     }
-    
+
+    return $this->render('Back/GestionEvenement/participation/new.html.twig', [
+        'form' => $form->createView(),
+        'tournoi' => $tournoi,
+        'user' => $user,
+    ]);
+}
 
     #[Route('/{id}/{iduser}', name: 'app_participation_show', methods: ['GET'])]
     public function show(Participation $participation,  int $iduser,EntityManagerInterface $entityManager): Response

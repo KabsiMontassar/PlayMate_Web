@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Repository;
-
+use App\Repository\ParticipationRepository;
 use App\Entity\Tournoi;
+use App\Entity\Participation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @extends ServiceEntityRepository<Tournoi>
@@ -45,6 +47,20 @@ class TournoiRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+
+public function countParticipationsForEachTournoi()
+{
+    // Créer un QueryBuilder avec l'alias 't' pour Tournoi et 'p' pour Participation
+    $qb = $this->getEntityManager()->createQueryBuilder();
+    $qb->select('t.id, t.nom, COUNT(p.id) as nombre_participations')
+        ->from(Tournoi::class, 't')
+        ->leftJoin(Participation::class, 'p', 'WITH', 't.id = p.idtournoi')
+        ->groupBy('t.id');
+
+    // Exécuter la requête et obtenir les résultats
+    return $qb->getQuery()->getResult();
+}
 
           
 }

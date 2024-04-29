@@ -25,6 +25,28 @@
 {% block stylesheets %}
         <!-- Ici, le contenu du block stylesheets de chaque page enfant sera injecté -->
     {% endblock %}
+
+   <style>
+.pagination {
+    margin-top: 20px;
+}
+
+.pagination ul {
+    list-style: none;
+    padding: 0;
+}
+
+.pagination ul li {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.notification-item:hover {
+    background-color: #FF004D; /* Change to whatever color you desire */
+    transition: background-color   ease 1s;
+    opacity: 0.4;
+}
+</style>
 </head>
     <body>
     

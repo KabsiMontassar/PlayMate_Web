@@ -15,11 +15,16 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            lazy: true
+            # lazy: true
             provider: app_user_provider
             custom_authenticator: App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
+            guard:
+                authenticators:
+                    - App\Security\GoogleAuthenticator
+            entry_point: App\Security\LoginFormAuthenticator
+
                 # target: app_user_index
 
             # remember_me:
