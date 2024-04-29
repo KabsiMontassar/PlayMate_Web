@@ -163,7 +163,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <div class="row pb-3">
-                   {% for tournoi in tournois %}
+                   {% for tournoi in pagination %}
 
                         <div class="col-md-6 mb-4 pb-2">
                             <div class="blog-item">
@@ -189,27 +189,11 @@
                         </div>
                         {% endfor %}
                      
-                        <div class="col-12">
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination pagination-lg justify-content-center bg-white mb-0" style="padding: 30px;">
-                                  <li class="page-item disabled">
-                                    <a class="page-link" href="#"  aria-label="Previous">
-                                      <span aria-hidden="true">&laquo;</span>
-                                      <span class="sr-only">Previous</span>
-                                    </a>
-                                  </li>
-                                  <li class="page-item active"><a class="page-link" href="#" >1</a></li>
-                                  <li class="page-item"><a class="page-link" href="#" >2</a></li>
-                                  <li class="page-item"><a class="page-link" href="#" >3</a></li>
-                                  <li class="page-item">
-                                    <a class="page-link" href="#"  aria-label="Next">
-                                      <span aria-hidden="true">&raquo;</span>
-                                      <span class="sr-only">Next</span>
-                                    </a>
-                                  </li>
-                                </ul>
-                              </nav>
-                        </div>
+                        <div class="col-12 d-flex" style="justify-content: center;">
+              
+                   {{ knp_pagination_render(pagination) }}
+               
+                  </div>
                     </div>
                 </div>
     
@@ -217,17 +201,7 @@
                     
     
                     <!-- Search Form -->
-                    <div class="mb-5">
-                        <div class="bg-white" style="padding: 30px;">
-                            <div class="input-group">
-                                <input type="text" class="form-control p-4" placeholder="Keyword">
-                                <div class="input-group-append">
-                                    <span class="input-group-text bg-primary border-primary text-white"><i
-                                            class="fa fa-search"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                   
 
                    
     
@@ -248,8 +222,7 @@
                     </div>
                 </div>
             </a>
-        {% endfor %}
-             <button id="open-calendar" class="btn btn-primary">Voir Calendrier</button>   
+        {% endfor %}  
          </div>
         
   <div class="modal-dialog">

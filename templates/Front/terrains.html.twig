@@ -60,61 +60,74 @@
         </div>
     </div>
     <!-- Header End -->
+ 
+ 
+<!-- Blog Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+    
+       <!-- Add a form for search -->
+<form action="{{ path('app_terrain_index') }}" method="GET">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="Rechercher par adresses/gouvernorats" name="query">
+        <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="submit">Rechercher</button>
+        </div>
+    </div>
+</form>
+
+    </div>
+    <div class="col-md-6 mb-4">
+        <!-- Add dropdown for sorting -->
+        <form action="{{ path('app_terrain_index') }}" method="GET">
+            <div class="input-group">
+                <select class="custom-select" name="order">
+                    <option value="price_asc" {% if app.request.query.get('order') == 'price_asc' %}selected{% endif %}>Prix croissant</option>
+                    <option value="price_desc" {% if app.request.query.get('order') == 'price_desc' %}selected{% endif %}>Prix décroissant</option>
+                    <option value="duration_asc" {% if app.request.query.get('order') == 'duration_asc' %}selected{% endif %}>Durée croissante</option>
+                    <option value="duration_desc" {% if app.request.query.get('order') == 'duration_desc' %}selected{% endif %}>Durée décroissante</option>
+                </select>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="submit">Trier</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 
-    <!-- Blog Start -->
-    <div class="container-fluid py-5">
-        
-        <div class="container py-5">
-            <div class="mb-5">
-                <div class="bg-white" style="padding: 30px;">
-                    <div class="input-group">
-                        <input type="text" class="form-control p-4" placeholder="Keyword">
-                        <div class="input-group-append">
-                            <span class="input-group-text bg-primary border-primary text-white"><i
-                                    class="fa fa-search"></i></span>
+        <div class="row">
+            {% for terrain in terrains %}
+            {% if terrain.isStatus() %}
+            <div class="col-md-6 mb-4 pb-2">
+                <div class="blog-item">
+                    <div class="position-relative">
+                        {% if terrain.image %}
+                        <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ terrain.image) }}" alt="">
+                        {% endif %}
+                        <div class="blog-date">
+                            <h6 class="font-weight-bold mb-n1">{{ terrain.getNomterrain() }}</h6>
+                            <small class="text-white text-uppercase">{{ terrain.getGouvernorat() }}</small>
                         </div>
+                    </div>
+                    <div class="bg-white p-4">
+                        <a class="h5 m-0 text-decoration-none" href="#"><i class="fas fa-map-marker-alt"></i> {{ terrain.getAddress() }}</a>
+                        <br>
+                        <a class="h5 m-0 text-decoration-none" href="#"><i class="fas fa-coins"></i> {{ terrain.getPrix() }} TND</a>
+                        <br>
+                        <a class="h5 m-0 text-decoration-none" href="#"><i class="fas fa-clock"></i> {{ terrain.getDuree() }}</a>
+                        <br>
+                        <a href="{{ path('app_terrain_detail', {'id': terrain.id}) }}" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
+                        <a href="{{ path('app_donner_avis', {'id': terrain.id}) }}" class="btn btn-primary">Donner un avis</a>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                  
-                    <div class="row pb-3">
-                       {% for terrain in terrains %}
-    {% if terrain.isStatus() %}
-<div class="col-md-6 mb-4 pb-2">
-    <div class="blog-item">
-        <div class="position-relative">
-        
-           {% if terrain.image %}
-    <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ terrain.image) }}" alt="">
-{% endif %}
-            <div class="blog-date">
-                <h6 class="font-weight-bold mb-n1">{{ terrain.getNomterrain() }}</h6>
-                <small class="text-white text-uppercase">{{ terrain.getGouvernorat}}</small>
-            </div>
-        </div>
-                                <div class="bg-white p-4">
-                                   
-                                    <a class="h5 m-0 text-decoration-none" href="#"> <i class="fas fa-map-marker-alt"></i>       
- {{ terrain.getAddress() }}</a> <br></br>
-                                   <br> <a class="h5 m-0 text-decoration-none" href="#"> <i class="fas fa-coins"></i>                  
- {{ terrain.getPrix() }} TND</a></br>
- <a class="h5 m-0 text-decoration-none" href="#"> <i class="fas fa-clock"></i>       
- {{ terrain.getDuree() }}</a> <br></br>
-<a href="{{ path('app_terrain_detail', {'id': terrain.id}) }}" class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
- <a href="{{ path('app_donner_avis', {'id': terrain.id}) }}" class="btn btn-primary">Donner un avis</a>
-                                </div>
-                            </div>
-                        </div>
-                       {% endif %}
-
-                            {% endfor %}
-                   
-                     
-                     
-                     
-                      
+            {% endif %}
+            {% endfor %}
+   
                         <div class="col-12">
                             <nav aria-label="Page navigation">
                                 <ul class="pagination pagination-lg justify-content-center bg-white mb-0" style="padding: 30px;">

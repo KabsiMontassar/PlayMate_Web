@@ -17,19 +17,50 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use App\Service\WeatherService;
 use Symfony\Component\Notifier\TexterInterface;
 use Twilio\Rest\Client;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\TournoiRepository;
 
 #[Route('/tournoi')]
 class TournoiController extends AbstractController
 {
     #[Route('/', name: 'app_tournoi_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
-    {
-        $tournois = $entityManager
-            ->getRepository(Tournoi::class)
-            ->findAll();
-
+    public function index(EntityManagerInterface $entityManager, PaginatorInterface $paginator, TournoiRepository $repo, Request $request): Response
+    { 
+        $queryBuilder = $repo->createQueryBuilder('t');
+        $dates = ['tri par date debut croissante', 'tri par date debut décroissante'];
+        $datefilter = $request->query->get('datedebut');
+        if ($datefilter && in_array($datefilter, $dates)) {
+            if ($datefilter === 'tri par date debut croissante') {
+                $queryBuilder->orderBy('t.datedebut', 'ASC');
+            } else if ($datefilter === 'tri par date debut décroissante') {
+                $queryBuilder->orderBy('t.datedebut', 'DESC');
+            }
+        }
+        // Apply search if search term provided in the request
+        $searchTerm = $request->query->get('search');
+        if ($searchTerm) {
+            $queryBuilder->andWhere('t.nom LIKE :searchTerm')
+                ->setParameter('searchTerm', '%' . $searchTerm . '%');
+        }
+    
+        // Get the query
+        $query = $queryBuilder->getQuery();
+    
+        // Count users for each role
+       
+    
+        // Paginate the query
+        $pagination = $paginator->paginate(
+            $query, // Query to paginate
+            $request->query->getInt('page', 1), // Current page number
+            6 // Items per page
+        );
+    
+    
+        // Define available roles
+      
         return $this->render('Back/GestionEvenement/tournoi/tournoi.html.twig', [
-            'tournois' => $tournois,
+            'pagination' => $pagination,
         ]);
     }
 
