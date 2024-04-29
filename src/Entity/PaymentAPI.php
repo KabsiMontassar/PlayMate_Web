@@ -77,7 +77,7 @@ class PaymentAPI
             'token' => 'TND',
             'amount' => $price,
             'description' => 'Payment for PlayMate',
-            'acceptedPaymentMethods' => ['wallet', 'bank_card'],
+            'acceptedPaymentMethods' => ['wallet', 'bank_card', 'e-DINAR'],
             'firstName' => $payment->getIdmembre()->getName(),
             'lastName' => "",
             'email' => $payment->getIdmembre()->getEmail(),

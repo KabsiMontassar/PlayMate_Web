@@ -38,38 +38,58 @@ class EquipeController extends AbstractController
         EquipeRepository $rep,
         Request $request
     ): Response {
-      $sort = $request->query->get('sort', 'nbrejoueur');
-
-        if( $request->query->get('tritype') == 'members-asc' ){
+        $sort = $request->query->get('sort', 'nbrejoueur');
+    
+        if ($request->query->get('tritype') == 'members-asc') {
             $order = $request->query->get('order', 'asc');
-        }else{
+        } else {
             $order = $request->query->get('order', 'desc');
         }
-
-
-
+    
         $queryBuilder = $rep->createQueryBuilder('e')
             ->orderBy('e.' . $sort, $order);
-
+    
         // Recherche par nomEquipe
         $searchTerm = $request->query->get('search');
         if ($searchTerm) {
             $queryBuilder->andWhere('e.nomequipe LIKE :search')
                 ->setParameter('search', '%' . $searchTerm . '%');
         }
-
+    
         $query = $queryBuilder->getQuery();
-
+    
         $equipes = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             3
         );
-
+    
+        // Fetch all teams and their number of players
+        $teams = $rep->findAll();
+    
+        // Calculate the average number of players per team
+        $totalNumberOfPlayers = 0;
+        foreach ($teams as $team) {
+            $totalNumberOfPlayers += $team->getNbrejoueur();
+        }
+        $averageNumberOfPlayers = count($teams) > 0 ? $totalNumberOfPlayers / count($teams) : 0;
+    
+        // Prepare data for Chart.js
+        $teamNames = [];
+        $numberOfPlayers = [];
+    
+        foreach ($teams as $team) {
+            $teamNames[] = $team->getNomequipe();
+            $numberOfPlayers[] = $team->getNbrejoueur();
+        }
+    
         return $this->render('Back/Gestionequipe/Equipe/Equipe.html.twig', [
             'equipes' => $equipes,
             'sort' => $sort,
             'order' => $order,
+            'teamNames' => json_encode($teamNames), // Convert to JSON format
+            'numberOfPlayers' => json_encode($numberOfPlayers), // Convert to JSON format
+            'averageNumberOfPlayers' => $averageNumberOfPlayers, // Pass the average to Twig
         ]);
     }
    

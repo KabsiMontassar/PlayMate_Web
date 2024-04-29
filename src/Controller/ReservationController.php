@@ -29,17 +29,51 @@ use App\Controller\BlacklistController;
 
 use App\Controller\PaymentController;
 use Symfony\Component\Security\Core\Security;
-
+use Knp\Component\Pager\PaginatorInterface;
 #[Route('/reservation')]
 class ReservationController extends AbstractController
 {
     #[Route('/', name: 'app_reservation_index', methods: ['GET'])]
-    public function index(ReservationRepository $reservationRepository): Response
-    {
-        return $this->render('Back/GestionReservation/reservation/Reservation.html.twig', [
-            'reservations' => $reservationRepository->findAll(),
-        ]);
+public function index(Request $request, ReservationRepository $reservationRepository, PaginatorInterface $paginator): Response
+{
+    // Get request parameters
+    $queryBuilder = $reservationRepository->createQueryBuilder('r');
+
+    // Filter by reservation type
+    $typeFilter = $request->query->get('type');
+    $filtertypes = ['Postuler_Comme_Adversaire', 'Creer_Partie', 'Lancer_Vous', 'Annulation'];
+    if ($typeFilter && in_array($typeFilter, $filtertypes)) {
+        $queryBuilder->andWhere('r.type = :type')
+            ->setParameter('type', $typeFilter);
     }
+
+    // Search by reservation type or other fields
+    $searchTerm = $request->query->get('search');
+    if ($searchTerm) {
+        $queryBuilder->andWhere($queryBuilder->expr()->orX(
+            $queryBuilder->expr()->like('r.type', ':search'),
+            // Add other fields you want to search here
+        ))
+        ->setParameter('search', '%' . $searchTerm . '%');
+    }
+
+    // Sort by date de reservation
+    $sortField = $request->query->get('sort', 'r.datereservation');
+    $sortDirection = $request->query->get('direction', 'asc');
+    $queryBuilder->orderBy($sortField, $sortDirection);
+
+    // Paginate the results
+    $pagination = $paginator->paginate(
+        $queryBuilder->getQuery(),
+        $request->query->getInt('page', 1),
+        5 // Items per page
+    );
+
+    return $this->render('Back/GestionReservation/reservation/Reservation.html.twig', [
+        'pagination' => $pagination,
+        'filtertypes' => $filtertypes,
+    ]);
+}
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -297,13 +331,14 @@ class ReservationController extends AbstractController
         $formattedReservations = [];
         foreach ($reservations as $reservation) {
             $formattedReservations[] = [
-                'id' => $reservation->getIdreservation(),
+                'idreservation' => $reservation->getIdreservation(),
                 'datereservation' => $reservation->getDatereservation()->format('Y-m-d'),
                 'heurereservation' => $reservation->getHeurereservation(),
                 'type' => $reservation->getType(),
             ];
         }
-        var_dump(ResponseHelper::toArray($formattedReservations[]));
+
+
         return new JsonResponse($formattedReservations);
     }
 }
