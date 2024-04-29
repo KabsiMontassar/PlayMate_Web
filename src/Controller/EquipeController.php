@@ -120,10 +120,10 @@ class EquipeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_equipe_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('Back/Gestionequipe/Equipe/edit.html.twig', [
+        return $this->renderForm('Front/ProfileElements/Forms/FormAddTeam.html.twig', [
             'equipe' => $equipe,
             'form' => $form,
         ]);

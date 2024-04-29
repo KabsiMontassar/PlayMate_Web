@@ -95,7 +95,7 @@ class MembreparequipeController extends AbstractController
         $teamName = $request->get('teamName');
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-       // get the equipid from the teamName 
+       // obtenir l id de l'equipe par nom de l'equipe 
        $equipe = $entityManager
        ->getRepository(Equipe::class)
        ->findOneBy(['nomequipe' => $teamName]);
