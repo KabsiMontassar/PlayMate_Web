@@ -162,7 +162,7 @@ class MembreparequipeController extends AbstractController
         $membreparequipe->setIdequipe($equipe);
         $entityManager->persist($membreparequipe);
         $entityManager->flush();
-        $flashy->success('Added Succefully!');
+        
         return new Response('Success', Response::HTTP_OK);
     }
     

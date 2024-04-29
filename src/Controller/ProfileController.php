@@ -63,7 +63,7 @@ class ProfileController extends AbstractController
         $teams=null;
         $teamsWithMembers = null;	
         $nonce = bin2hex(random_bytes(16));
-
+        $avisCounts = [];
 
         if($user->getRole()== 'Membre'){
             $teams = $entityManager->getRepository(Equipe::class)->findByUser($user);
@@ -79,11 +79,11 @@ class ProfileController extends AbstractController
         if($user->getRole() == 'Proprietaire de Terrain'){
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
             $avis = $entityManager->getRepository(Avis::class)->findAll();
+            foreach ($terrains as $terrain) {
+                $avisCounts[$terrain->getId()] = count($terrain->getAvis());
         }
-        $avisCounts = [];
-        foreach ($terrains as $terrain) {
-            $avisCounts[$terrain->getId()] = count($terrain->getAvis());
-        }
+       
+    }
         
 
         if($user->getRole() == 'Organisateur'){
