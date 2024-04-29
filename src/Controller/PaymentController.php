@@ -33,6 +33,7 @@ use App\Repository\ReservationRepository;
 
 use App\Entity\Terrain;
 
+use Knp\Component\Pager\PaginatorInterface;
 
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -105,19 +106,11 @@ class PaymentController extends AbstractController
         return $this->json($response);
     }
 */
-    /**
-     * 
-     * 
-     * *
-     * **
-     * **
-     * *
-     * *
-     */
+
     #[Route('/payment-success', name: 'payment_success')]
     public function paymentSuccess(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
-        /* a ajouter colonne base de donnee ref  */
+
         $paymentRef = $request->query->get('payment_ref');
         $payment = $entityManager->createQueryBuilder()
             ->select('p')
@@ -128,6 +121,7 @@ class PaymentController extends AbstractController
             ->getOneOrNullResult();
         if ($payment) {
             $payment->setPaymentRef($paymentRef);
+            $payment->setPayed(true);
             $entityManager->persist($payment);
             $entityManager->flush();
             $this->sendEmail($mailer, $payment);
@@ -199,7 +193,8 @@ class PaymentController extends AbstractController
         $paiement->setIdreservation($reservation);
         $paiement->setDatepayment($dateCourante2);
         $paiement->setHorairepayment($heureEnString);
-        //$paiement->setRef($idRef); // Remplacer par la valeur de votre champ
+        $paiement->setPayed(false);
+
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($paiement);
         $entityManager->flush();
@@ -209,10 +204,19 @@ class PaymentController extends AbstractController
 
 
     #[Route('/', name: 'app_payment_index', methods: ['GET'])]
-    public function index(PaymentRepository $paymentRepository): Response
+    public function index(Request $request, PaymentRepository $paymentRepository, PaginatorInterface $paginator): Response
     {
+        $queryBuilder = $paymentRepository->createQueryBuilder('p');
+
+        $paiment = $paymentRepository->findAll();
+        $paiment = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            5
+        );
+
         return $this->render('Back/GestionReservation/payment/payment.html.twig', [
-            'payments' => $paymentRepository->findAll(),
+            'payments' => $paiment,
         ]);
     }
 

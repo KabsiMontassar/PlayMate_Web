@@ -35,6 +35,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManager;
+use Knp\Component\Pager\PaginatorInterface;
 
 class HomeController extends AbstractController
 {
@@ -86,25 +87,38 @@ class HomeController extends AbstractController
         return $this->render('Front/contact.html.twig', []);
     }
     #[Route('/Evenement', name: 'app_Evenement', methods: ['GET', 'POST'])]
-    public function Evenement(EntityManagerInterface $entityManager): Response
+    public function Evenement(EntityManagerInterface $entityManager,  PaginatorInterface $paginator , Request $request): Response
     {
-        $tournois = $entityManager
+        $queryBuilder = $entityManager->getRepository(Tournoi::class)->createQueryBuilder('t');
+
+        // Optionally add some filters to the query builder if needed
+        // For example, if you want to filter by some criteria
+        // $queryBuilder->where('t.someField = :value')->setParameter('value', $value);
+
+        // Get the query from the query builder
+        $query = $queryBuilder->getQuery();
+
+        // Paginate the results of the query
+        $pagination = $paginator->paginate(
+            $query, // query NOT result
+            $request->query->getInt('page', 1), // page number, 1 if not set
+            8 // limit per page
+        );
+
+
+$tournois = $entityManager
             ->getRepository(Tournoi::class)
             ->findAll();
-
-        $recentTournois =  $entityManager
-            ->getRepository(Tournoi::class)
-            ->findBy([], ['id' => 'DESC'], 2);
-
+        // Get the most recent 2 tournois separately if needed
+        $recentTournois = $entityManager->getRepository(Tournoi::class)->findBy([], ['id' => 'DESC'], 2);
 
         return $this->render('Front/evenements.html.twig', [
-
+            'pagination' => $pagination,
+            'tournoirecent' => $recentTournois,
             'tournois' => $tournois,
-            'tournoirecent'  => $recentTournois,
-
-
         ]);
     }
+    
 
 
 

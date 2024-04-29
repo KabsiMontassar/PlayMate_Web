@@ -12,12 +12,8 @@
 
 <link rel="stylesheet" href="{{ asset('Front/css/userprofile.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
 
-<style>
-
-
-
-</style>
 
 </head>
 <body>
@@ -41,6 +37,19 @@
 <div class="bg"></div>
 <div class="bg bg2"></div>
 <div class="bg bg3"></div>
+ <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
+ <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Load Flashy default JavaScript -->
+    <div class="flashy" data-flashy-position="bottom" data-flashy-duration="5000"></div>
+
+   
+    <!-- Include Flashy default partial -->
+    
+     {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+     </div>
+     
+   
+   
 <script>
   var Membreelemnts = ` 
 <div class="container" id="overview"  style="display:block;">
@@ -281,6 +290,7 @@ function shareOnFacebook(url) {
     });
   });
 </script>
+
 
 </body>
 </html>
