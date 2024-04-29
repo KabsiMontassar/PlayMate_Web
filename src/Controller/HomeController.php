@@ -35,7 +35,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManager;
-use Knp\Component\Pager\PaginatorInterface;
 
 class HomeController extends AbstractController
 {
