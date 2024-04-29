@@ -337,7 +337,8 @@ public function index(Request $request, ReservationRepository $reservationReposi
                 'type' => $reservation->getType(),
             ];
         }
-        var_dump(ResponseHelper::toArray($formattedReservations[]));
+
+
         return new JsonResponse($formattedReservations);
     }
 }
