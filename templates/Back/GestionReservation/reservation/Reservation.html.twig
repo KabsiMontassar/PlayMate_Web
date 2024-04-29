@@ -136,27 +136,14 @@
             <option id="lancer_Vous" value="Lancer_Vous">lancer_Vous</option>
         </select>
         <input type="button" value="chercher" onclick="recherche()">
+        <input type="button" value="afficher tout" onclick="affichertout()">
 
     </div>
 
     <!-- End Page Title -->
-    <section class="sectiontrie" id="sectiontrie">
-        <table class="table datatable">
-            <thead>
-                <tr>
-                    <th>Idreservation</th>
-                    <th>Isconfirm</th>
-                    <th>Datereservation</th>
-                    <th>Heurereservation</th>
-                    <th>Type</th>
-                    <th>actions</th>
-                </tr>
-            </thead>
-            <tbody class="tbod2" id="tbod2">
 
-            </tbody>
-    </section>
-    <section class="section" id="section">
+    <div id="aziz"></div>
+    <section class="section" id="sectionoriginale">
         <table class="table datatable">
             <thead>
                 <tr>
@@ -194,10 +181,145 @@
     </section>
 
 
+
 </main>
+<style>
+    .reservation {
+        margin-bottom: 10px;
+        /* Espacement entre les réservations */
+    }
+
+    .reservation>span {
+        display: block;
+        font-size: 16px;
+        /* Taille de la police */
+        margin-bottom: 5px;
+        /* Espacement entre les éléments */
+    }
+</style>
 <script>
-    // Définissez la fonction recherche à l'extérieur du gestionnaire d'événement
+    function affichertout() {
+        var section = document.getElementById('sectionoriginale');
+        if (section.style.display === 'none') {
+            section.style.display = 'block';
+        }
+    }
     function recherche() {
+        var section = document.getElementById('sectionoriginale');
+
+        section.style.display = 'none';
+
+        var type = document.getElementById('monChoix').value;
+
+        // Appel de fetchReservationsByType pour récupérer les réservations
+        fetchReservationsByType(type)
+            .then(reservations => {
+                // Affichage des réservations retournées
+                displayReservations(reservations);
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des réservations:', error);
+                // Affichage d'un message d'erreur dans le cas où il y a une erreur
+                var aziz = document.getElementById('aziz');
+                aziz.innerHTML = '<tr><td colspan="6">Erreur lors du chargement des données.</td></tr>';
+            });
+    }
+
+
+
+
+    function fetchReservationsByType(type) {
+        return fetch('/reservation/trie/' + type)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération des réservations');
+                }
+                return response.json();
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des réservations:', error);
+                return [];
+            });
+    }
+    function displayReservations(reservations) {
+        var aziz = document.getElementById('aziz');
+        if (!aziz) {
+            console.error('Element with ID "aziz" not found.');
+            return;
+        }
+
+        aziz.innerHTML = '';
+        if (reservations.length === 0) {
+            var noReservationMessage = document.createElement('div');
+            noReservationMessage.textContent = 'Aucune réservation trouvée.';
+            aziz.appendChild(noReservationMessage);
+        } else {
+            aziz.innerHTML = `
+            <div class="row reservation-header">
+                <div class="col">Idreservation</div>
+                <div class="col">Isconfirm</div>
+                <div class="col">Datereservation</div>
+                <div class="col">Heurereservation</div>
+                <div class="col">Type</div>
+                <div class="col">Actions</div>
+            </div>`;
+            reservations.forEach(reservation => {
+                var row = `
+                <div class="row reservation">
+                    <div class="col">${reservation.idreservation}</div>
+                    <div class="col">${reservation.isconfirm ? 'Oui' : 'Non'}</div>
+                    <div class="col">${reservation.datereservation}</div>
+                    <div class="col">${reservation.heurereservation}</div>
+                    <div class="col">${reservation.type}</div>
+                    <div class="col">
+                        <a href="/reservation/show/${reservation.idreservation}">show</a>
+                        <a href="/reservation/edit/${reservation.idreservation}">edit</a>
+                    </div>
+                </div>`;
+                aziz.innerHTML += row;
+                /* var reservationDiv = document.createElement('div');
+                 reservationDiv.classList.add('reservation');// Ajoutez des classes CSS si nécessaire
+ 
+                 var idSpan = document.createElement('span');
+                 idSpan.textContent = 'Idreservation: ' + reservation.idreservation;
+                 reservationDiv.appendChild(idSpan);
+ 
+                 var isConfirmSpan = document.createElement('span');
+                 isConfirmSpan.textContent = 'Isconfirm: ' + (reservation.isconfirm ? 'Oui' : 'Non');
+                 reservationDiv.appendChild(isConfirmSpan);
+ 
+                 var dateSpan = document.createElement('span');
+                 dateSpan.textContent = 'Datereservation: ' + reservation.datereservation;
+                 reservationDiv.appendChild(dateSpan);
+ 
+                 var heureSpan = document.createElement('span');
+                 heureSpan.textContent = 'Heurereservation: ' + reservation.heurereservation;
+                 reservationDiv.appendChild(heureSpan);
+ 
+                 var typeSpan = document.createElement('span');
+                 typeSpan.textContent = 'Type: ' + reservation.type;
+                 reservationDiv.appendChild(typeSpan);
+ 
+                 var actionsSpan = document.createElement('span');
+                 var showLink = document.createElement('a');
+                 showLink.href = "/reservation/show/" + reservation.idreservation;
+                 showLink.textContent = "show";
+                 var editLink = document.createElement('a');
+                 editLink.href = "/reservation/edit/" + reservation.idreservation;
+                 editLink.textContent = "edit";
+                 actionsSpan.appendChild(showLink);
+                 actionsSpan.appendChild(editLink);
+                 reservationDiv.appendChild(actionsSpan);
+ 
+                 aziz.appendChild(reservationDiv);
+                 */
+            });
+        }
+    }
+
+
+    // Définissez la fonction recherche à l'extérieur du gestionnaire d'événement
+    /*function recherche() {
         var type = document.getElementById('monChoix').value;
         var section = document.getElementById('section');
         var sectiontrie = document.getElementById('sectiontrie');
@@ -243,7 +365,7 @@
     document.addEventListener('DOMContentLoaded', function () {
 
         // Placez d'autres scripts ici si nécessaire
-    });
+    });*/
 </script>
 
 {% endblock %}

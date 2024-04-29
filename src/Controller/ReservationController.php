@@ -297,7 +297,7 @@ class ReservationController extends AbstractController
         $formattedReservations = [];
         foreach ($reservations as $reservation) {
             $formattedReservations[] = [
-                'id' => $reservation->getIdreservation(),
+                'idreservation' => $reservation->getIdreservation(),
                 'datereservation' => $reservation->getDatereservation()->format('Y-m-d'),
                 'heurereservation' => $reservation->getHeurereservation(),
                 'type' => $reservation->getType(),
