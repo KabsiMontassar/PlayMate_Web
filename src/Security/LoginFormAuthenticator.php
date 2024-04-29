@@ -16,7 +16,10 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use App\Repository\UserRepository;
-
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 
 
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
@@ -26,16 +29,27 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     private UrlGeneratorInterface $urlGenerator;	
 
     public const LOGIN_ROUTE = 'app_login';
-    public function __construct(UrlGeneratorInterface $urlGenerator )
+    private $entityManager;
+    public function __construct(UrlGeneratorInterface $urlGenerator , EntityManagerInterface $entityManager)
     {
     
         $this->urlGenerator = $urlGenerator;
+        $this->entityManager = $entityManager;
+
       
     }
 
-    public function authenticate(Request $request): Passport
+    public function authenticate(Request $request ): Passport
     {
         $email = $request->request->get('email', '');
+
+        if($request->request->get('g-recaptcha-response') == null)
+        {
+            throw new CustomUserMessageAuthenticationException('Please check the captcha');
+        }
+        
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+
      
        
         $request->getSession()->set(Security::LAST_USERNAME, $email);

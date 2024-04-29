@@ -1,8 +1,12 @@
 <?php
 
+
+
 namespace App\Controller;
 
+
 use App\Entity\Historique;
+use App\Entity\PdfService;
 use App\Form\HistoriqueType;
 use App\Repository\HistoriqueRepository;
 use App\Repository\ReservationRepository;
@@ -12,6 +16,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 #[Route('/historique')]
 class HistoriqueController extends AbstractController
@@ -97,4 +105,88 @@ class HistoriqueController extends AbstractController
 
         return $this->redirectToRoute('app_historique_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    #[Route('/pdf/{date}/{horaire}/{nomterrain}/{adresse}/{prix}', name: 'personne.pdf')]
+    public function generatePdfPersonne($date, $horaire, $nomterrain, $adresse, $prix, PdfService $pdf) //: Response
+    { // Render the PDF with all necessary data
+
+        $data = [
+            'date' => $date,
+            'horaire' => $horaire,
+            'nomterrain' => $nomterrain,
+            'adresse' => $adresse,
+            'prix' => $prix
+        ];
+
+        $html = $this->renderView('Front/detailPdf.html.twig', $data);
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('defaultFont', 'Arial');
+
+        // Instantiate Dompdf with the configured options
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        // Generate PDF file name
+        $pdfFileName = 'reservation.pdf';
+
+        // Build the path for PDF storage
+        $pdfPath = $this->getParameter('kernel.project_dir') . '/public/pdf/' . $pdfFileName;
+
+        // Ensure the directory exists
+        $pdfDir = dirname($pdfPath);
+        if (!file_exists($pdfDir)) {
+            mkdir($pdfDir, 0777, true);
+        }
+
+        // Save the generated PDF
+        file_put_contents($pdfPath, $dompdf->output());
+
+        // Output the generated PDF to the browser (inline download)
+        return new BinaryFileResponse($pdfPath);
+    }
+
+    /*
+    #[Route('/pdf/{date}/{horaire}/{nomterrain}/{adresse}/{prix}', name: 'personne.pdf')]
+    public function generatePdfPersonne($date, $horaire, $nomterrain, $adresse, $prix, PdfService $pdf) //: Response
+    {
+        $data = [
+            'date' => $date,
+            'horaire' => $horaire,
+            'nomterrain' => $nomterrain,
+            'adresse' => $adresse,
+            'prix' => $prix
+        ];
+
+        // Rendre la vue Twig et récupérer le contenu HTML
+        $htmlContent = $this->renderView('Front/detailPdf.html.twig', $data);
+
+        // Rendre la vue Twig pour le bloc title et récupérer son contenu
+        $titleBlock = $this->renderView('Front/detailPdf.html.twig', $data, ['block_name' => 'title']);
+
+        // Ajouter le contenu du bloc title au contenu HTML
+        $htmlContent .= $titleBlock;
+
+        // Générer le PDF avec Dompdf
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($htmlContent);
+        $dompdf->render();
+
+        // Récupérer le contenu du PDF généré
+        $pdfOutput = $dompdf->output();
+
+        // Retourner une réponse avec le contenu PDF
+        return new Response(
+            $pdfOutput,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/pdf']
+        );
+
+        //$html = $this->render('Front/detailPdf.html.twig', ['date' => $date, 'horaire' => $horaire, 'nomterrain' => $nomterrain, 'adresse' => $adresse, 'prix' => $prix]);
+        //$pdf->showPdfFile($html);
+    }*/
 }

@@ -1,0 +1,167 @@
+{% extends 'BaseFront.html.twig' %}
+
+{% block title %}Login{% endblock %}
+{% block body %}
+
+<body>
+
+    <style>
+        .article {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .article:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-header {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .article-body {
+            padding: 15px;
+        }
+
+        .article-body p {
+            margin-bottom: 10px;
+        }
+
+        .article-footer {
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+    </style>
+    {% if app.user %}
+    {% set user = app.user %}
+    {% endif %}
+    <!-- Navbar Start -->
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+            <nav class="navbar navbar-expand-xl bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
+                <a href="{{ path('app_Home' ) }}" class="navbar-brand">
+                    <h1 class="m-0 text-primary"><span class="text-dark">Play</span>Mate</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
+                    <div class="navbar-nav ml-auto py-0">
+                        <a href="{{ path('app_Home' ) }}" class="nav-item nav-link">Accueil</a>
+                        <a href="{{ path('app_Apropos' ) }}" class="nav-item nav-link">À propos</a>
+                        <a href="{{ path('app_Service' ) }}" class="nav-item nav-link ">Services</a>
+                        <a href="{{ path('app_Reservation' ) }}" class="nav-item nav-link active">Réservée</a>
+                        <a href="{{ path('app_Boutique' ) }}" class="nav-item nav-link">Boutique</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">Pages</a>
+                            <div class="dropdown-menu border-0 rounded-0 m-0">
+                                <a href="{{ path('app_Terrains' ) }}" class="dropdown-item">Nos
+                                    Terrains</a>
+                                <a href="{{ path('app_Evenement' ) }}" class="dropdown-item">Nos
+                                    Événement</a>
+                                <a href="{{ path('app_Historique' ) }}" class="dropdown-item">Votre Historique</a>
+                                <a href="{{ path('app_reservation_future' ) }}" class="dropdown-item">Vos
+                                    Reservations</a>
+                            </div>
+                        </div>
+                        <a href="{{ path('app_Contact' ) }}" class="nav-item nav-link">Contact</a>
+                    </div>
+                    <div class="navbar-nav ml-auto d-lg-none">
+                        {% if app.user %}
+                        <a href="{{ path('app_user_profile') }}" class="nav-item nav-link">Voir profile</a>
+                        <a href="{{ path('app_logout') }}" class="nav-item nav-link">Se déconnecter</a>
+                        {% else %}
+                        <a href="{{ path('app_login') }}" class="nav-item nav-link">Se connecter</a>
+                        <a href="{{ path('app_register') }}" class="nav-item nav-link">S'inscrire</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+    <!--image centre-->
+    <div class="container-fluid ">
+        <div class="container">
+            <img class="img-fluid" id="im1" src="{{ asset('Front/css/ReservationCss/m.jpg') }}" alt="">
+            <div class="text-overlay">
+                <h3 class="display-4 text-uppercase">Reservation</h3>
+                <div class="d-inline-flex text-primary">
+                    <p class="m-0 text-uppercase text-primary"><a class="text-white text-primary"
+                            href="{{ path('app_Home' ) }}">Home</a>
+                    </p>
+                    <i class="fa fa-angle-double-right pt-1 px-3"></i>
+                    <p class="m-0 text-uppercase text-primary">Reserver</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end image centre-->
+
+    <section class="section">
+        {% if reservation is not empty %}
+        {% for reservation in reservation %}
+        <article class="article">
+            <div class="article-body">
+                <p>Reservation ID: <span id="idreservation">{{ reservation.idreservation }}</span></p>
+                <p>Date Reservation: <span id="dateres">{{ reservation.datereservation|date('Y-m-d')}}</span> </p>
+                <p>Heure Reservation: <span id="heureres">{{ reservation.heurereservation }}</span></p>
+                <p>nom terrain: <span id="nomterrain">{{ reservation.idTerrain.nomTerrain }}</span></p>
+                <p>addresse terrain: <span id="addresseTerrain">{{ reservation.idTerrain.address }}</span></p>
+                <p>prix terrain:<span id="prixterrain">{{ reservation.idTerrain.prix }}</span> </p>
+            </div>
+            <button class="btn btn-primary" type="submit" style="height: 47px; margin-top: -2px;"
+                onclick="imprimerPdf()">Imprimer
+                Pdf</button>
+            <button class="btn btn-danger" type="submit" style="height: 47px; margin-top: -2px;"
+                onclick="annulerReservation()">Annuler</button>
+        </article>
+
+        {% endfor %}
+        {% else %}
+        <div class="card">
+            <div class="card-body">
+                <p>No records found</p>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+</body>
+
+
+<script>
+
+    function annulerReservation() {
+        event.preventDefault();
+        var idreservation = document.getElementById("idreservation").innerText;
+
+        $.post("/reservation/annulerReservation/" + idreservation, function (data) {
+            alert('annuler!')
+        });
+
+    }
+
+    function imprimerPdf() {
+        event.preventDefault();
+        var date = document.getElementById("dateres").innerText;
+        var horaire = document.getElementById("heureres").innerText;
+        var nomterrain = document.getElementById("nomterrain").innerText;
+        var adresse = document.getElementById("addresseTerrain").innerText;
+
+        var prix = document.getElementById("prixterrain").innerText;
+        alert(date + " \n" + horaire + "\n" + nomterrain + "\n");
+        $.post("/historique/pdf/" + date + "/" + horaire + "/" + nomterrain + "/" + adresse + "/" + prix, function (data) {
+            alert('imprimer!')
+        });
+    }
+</script>
+{% endblock %}

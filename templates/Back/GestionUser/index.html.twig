@@ -2,6 +2,10 @@
 
 {% block title %}User index{% endblock %}
 
+
+
+
+
 {% block body %}
 <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -131,48 +135,75 @@
   <!-- End Page Title -->
 
   <section class="section">
-    <table class="table datatable">
-      <thead>
-        <tr>
+ 
+  
+   
+   
 
-          <th>Email</th>
-          <th>Password</th>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Phone</th>
+   <div class="row mt-4" style="margin-bottom:20px;">
+    <div class="col-md-6">
+        <form action="{{ path('app_user_index') }}" method="GET" class="form-inline">
+             <label for="search" class="sr-only">Search</label>
 
-          <th>Role</th>
+            <div class="form-group mb-2 d-flex">
+                <input type="text" class="form-control" id="search" name="search" placeholder="Search...">
+                <button type="submit" class="btn btn-primary"  style="margin-left:10px;">Search</button>
 
+            </div>
 
+        </form>
+    </div>
+    <div class="col-md-6">
+        <form action="{{ path('app_user_index') }}" method="GET" class="form-inline float-right">
+          <label for="role" class="mr-2">Filter by Role:</label>
+            <div class="form-group mb-2  d-flex">
+                
+                <select class="form-control" id="role" name="role">
+                    <option value="">All Roles</option>
+                    {% for role in available_roles %}
+                    <option value="{{ role }}">{{ role }}</option>
+                    {% endfor %}
+                </select>
+               <button type="submit" class="btn btn-primary" style="margin-left:10px;">Filter</button>
 
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-        <tr>
-
-          <td>{{ user.Email }}</td>
-          <td>{{ user.Password }}</td>
-          <td>{{ user.Name }}</td>
-          <td>{{ user.Age }}</td>
-          <td>{{ user.Phone }}</td>
-
-          <td>{{ user.Role }}</td>
-
-
-
-
-        </tr>
-        {% else %}
-        <tr>
-          <td colspan="13">no records found</td>
-        </tr>
-        {% endfor %}
-      </tbody>
+            </div>
+        </form>
+    </div>
+</div>
+      <table class="table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Phone</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in pagination %}
+            <tr>
+                <td>{{ user.Email }}</td>
+                <td>{{ user.Password }}</td>
+                <td>{{ user.Name }}</td>
+                <td>{{ user.Age }}</td>
+                <td>{{ user.Phone }}</td>
+                <td>{{ user.Role }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">No records found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-  </section>
+
+    {# Render pagination links #}
+   <div class="pagination" style="justify-content: center;padding-right:50px;">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</section>
 
 </main>
-
-
 {% endblock %}

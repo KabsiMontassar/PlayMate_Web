@@ -30,6 +30,8 @@
                                 Terrains</a>
                             <a href="{{ path('app_Evenement' ) }}" class="dropdown-item">Nos
                                 Événement</a>
+                            <a href="{{ path('app_Historique' ) }}" class="dropdown-item">Votre Historique</a>
+                            <a href="{{ path('app_reservation_future' ) }}" class="dropdown-item">Vos Reservations</a>
                         </div>
                     </div>
                     <a href="{{ path('app_Contact' ) }}" class="nav-item nav-link">Contact</a>
@@ -81,10 +83,12 @@
         <img class="img-fluid" id="im1" src="{{ asset('Front/css/ReservationCss/m.jpg') }}" alt="">
         <div class="text-overlay">
             <h3 class="display-4 text-uppercase">Reservation</h3>
-            <div class="d-inline-flex">
-                <p class="m-0 text-uppercase"><a class="text-white" href="{{ path('app_Home' ) }}">Home</a></p>
+            <div class="d-inline-flex text-primary">
+                <p class="m-0 text-uppercase text-primary"><a class="text-white text-primary"
+                        href="{{ path('app_Home' ) }}">Home</a>
+                </p>
                 <i class="fa fa-angle-double-right pt-1 px-3"></i>
-                <p class="m-0 text-uppercase">Reserver</p>
+                <p class="m-0 text-uppercase text-primary">Reserver</p>
             </div>
         </div>
     </div>
@@ -100,7 +104,7 @@
     </div>
 
     <!--div pour afficher reservation-->
-    <div class="container-lg position-relative p-0 px-lg-3" id="reservation-container" class="row"></div>
+    <div class="container-lg position-relative p-0 px-lg-3" id="reservation-container-byDate" class="row"></div>
 
     <!-- choix du une des trois types-->
     <div class="container-fluid py-5">
@@ -334,8 +338,8 @@
             fetch('/reservations')
                 .then(response => response.json())
                 .then(reservations => {
-                    var reservationContainer = document.getElementById('reservation-container');
-                    reservationContainer.innerHTML = ''; // Clear existing content
+                    var reservationContainer = document.getElementById('reservation-container-byDate');
+                    reservationContainer.innerHTML = '';
                     reservations.forEach(reservation => {
                         var reservationDiv = document.createElement('div');
                         reservationDiv.classList.add('col-md-12', 'mb-4', 'pb-2');
@@ -411,12 +415,12 @@
         }
 
 
-        // Convertir la date saisie en objet Date
+        // forage de type daate
         var dateSaisie = new Date(dateInput);
-        // Obtenir la date actuelle
+        // lw9t
         var dateActuelle = new Date();
 
-        // Vérifier si la date saisie est dans le futur
+        //future
         if (dateSaisie > dateActuelle) {
             return true; // La date est dans le futur
         } else {
@@ -435,12 +439,12 @@
         var horaire = horaireInput.value;
 
 
-        // Extraire les heures et les minutes de l'heure saisie
+        // nekhdo b d9i9a w se3a
         var heuresMinutes = horaire.split(":");
         var heures = parseInt(heuresMinutes[0]);
         var minutes = parseInt(heuresMinutes[1]);
 
-        // Vérifier si l'heure est entre 07:59 et 00:00
+        // heure est entre 07:59 et 00:00
         if ((heures > 7 || (heures === 7 && minutes >= 59)) && (heures < 24 || (heures === 0 && minutes === 0))) {
             return true; // L'heure est valide
         } else {
@@ -457,7 +461,7 @@
         typeReservation = 'Postuler_Comme_Adversaire';
         alert(date + " \n" + horaire + "\n" + terrain + "\n" + typeReservation);
         $.post("/reservation/getTerrain/" + typeReservation + "/" + terrain + "/" + date + "/" + horaire, function (data) {
-            // Traitez la réponse ici
+
             if (data === 'Terrain disponible') {
                 alert('ok')
             } else {
@@ -471,9 +475,9 @@
 
         if (typeReservation != '') {
             alert(terrain + "\n" + typeReservation);
-            event.preventDefault(); // Empêcher la soumission par défaut du formulaire
+            event.preventDefault(); // ajax bloque ly mhjtkch bih
 
-            // Obtenez les valeurs des champs du formulaire
+            // nekho attribut id lhme
             if (typeReservation == 'Creer_Partie') {
                 var equipe = document.getElementById("EquipeReservationId").value;
                 var date = document.getElementById("dateReservationId").value;
@@ -488,7 +492,7 @@
                 var date = document.getElementById("dateReservationId2").value;
                 var horaire = document.getElementById("horaireReservationId2").value;
             }
-            // Vérifiez la date et l'heure
+            // nchofo lw9t w date
             if (!verifierHoraire()) {
                 return;
             }
@@ -497,13 +501,18 @@
             }
 
             alert(terrain + "\n" + typeReservation + "\n" + date + "\n" + horaire + "\n");
-            // Effectuez la requête AJAX avec les bons paramètres
+            // AJAX 
             $.post("/reservation/getTerrain/" + typeReservation + "/" + terrain + "/" + date + "/" + horaire, function (data) {
-                // Traitez la réponse ici
-                if (data === 'Terrain disponible') {
-                    alert('ok')
+                // rj3 el hhtp ly fel controller
+                if (data === 'Terrain non disponible') {
+                    alert('non disponible');
+
+                } else if (data === "erreur") {
+                    alert("erreur");
                 } else {
+
                     alert(data);
+                    window.open(data, '_blank');
                 }
             });
         }

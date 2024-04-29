@@ -2,7 +2,30 @@
 
 {% block title %}Evenements{% endblock %}
 {% block stylesheets %}
+
         <style>
+         #calendar {
+      height: 100%; /* Ajustez la hauteur pour que le calendrier remplisse le modal */
+  }
+
+        .modal-dialog {
+    max-width: 100%;
+    margin: 0;
+    height: 100vh;
+}
+
+.modal-content {
+    height: calc(100vh - 1rem);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-body {
+    overflow-y: auto; /* Si nécessaire */
+    flex: 1 1 auto; /* Permet au corps du modal de s'étendre */
+    
+}
+
       .blog-date {
     position: absolute;
     top: 10px; /* Adjust as needed */
@@ -17,6 +40,61 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+    /* Fond sombre semi-transparent pour le modal */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    display: none; /* caché par défaut */
+}
+
+/* Popup du calendrier */
+.calendar-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw; /* Largeur accrue */
+    height: auto;
+    max-width: 95%; /* Utilisez une largeur maximale pour éviter de toucher les bords de l'écran */
+    max-height: 105vh; /* Hauteur maximale accrue pour prendre plus de place verticalement */
+    overflow: auto; /* Permettre le défilement si nécessaire */
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1050;
+    padding: 20px; /* Gardez un padding pour éviter que le contenu touche les bords */
+    display: flex;
+    align-items: center; /* Centre verticalement le contenu */
+    justify-content: center;
+     padding: 30px; /* Centre horizontalement le contenu */
+}
+
+/* Ajustements pour les mobiles et tablettes */
+@media (max-width: 768px) {
+    .calendar-popup {
+        width: 95vw; /* Agrandir le pop-up pour les petits appareils */
+        max-height: 95vh; /* Agrandir le pop-up en hauteur pour les petits appareils */
+    }
+}
+
+
+
+/* Bouton de fermeture */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #000;
+}
+
+
         </style>
     {% endblock %}
 {% block body %}
@@ -105,7 +183,7 @@
                                         <span class="text-primary px-2">|</span>
                                         <a class="text-primary text-uppercase text-decoration-none" href="#" >{{ tournoi.getNom() }}</a>
                                     </div>
-                                     <a href="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}"   class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
+                                    <a href="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}" class="btn btn-primary btn-sm float-right" onclick="incrementVisits('{{ tournoi.id }}')">Voir les détails <i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -171,16 +249,70 @@
                 </div>
             </a>
         {% endfor %}
-                
-                    </div>
-                 
-                </div>
-            </div>
+             <button id="open-calendar" class="btn btn-primary">Voir Calendrier</button>   
+         </div>
+        
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Calendrier</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
+        <div class="modal-body">
+            <div id="calendar"></div>
+        </div>
+        <!-- Ajoutez .modal-footer si nécessaire -->
+    </div>
+</div>
+                
+      </div>
+     </div>
+     </div>
         
     </div>
     <!-- Events End -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisation de FullCalendar
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: [
+            // Bouclez sur vos événements pour les ajouter ici
+            {% for tournoi in tournois %}
+            {
+                id: '{{ tournoi.getId() }}',
+                title: '{{ tournoi.getNom() }}',
+                start: '{{ tournoi.getDatedebut()|date('Y-m-d') }}',
+                url: '{{ path('app_tournoi_detail', {'id': tournoi.getId()}) }}'
+            },
+            {% endfor %}
+        ],
+        eventClick: function(info) {
+            info.jsEvent.preventDefault(); // Empêche l'action par défaut
+            if (info.event.url) {
+                window.location.href = info.event.url; // Redirige vers l'URL de l'événement
+            }
+        }
+    });
+    calendar.render();
 
+    // Gestionnaire d'événements pour ouvrir le modal de Bootstrap
+    document.getElementById('open-calendar').addEventListener('click', function() {
+        $('#calendarModal').modal('show'); // Montre le modal avec l'ID 'calendarModal'
+    });
+
+    // La logique pour fermer le modal et le fond sombre n'est pas nécessaire si vous utilisez le modal de Bootstrap.
+});
+</script>
+
+   <!-- function incrementUniqueVisits(tournoiId) {
+    fetch('/increment-unique-visit/' + tournoiId, {
+        method: 'POST'
+    });
+}-->
+   {% endblock %}
 
    
-   {% endblock %}

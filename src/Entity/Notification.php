@@ -30,6 +30,12 @@ class Notification
      * })
      */
     private $iduser;
+       /**
+     * @var string
+     *
+     * @ORM\Column(name="content", type="string", length=255, nullable=true)
+     */
+    private $content;
 
     public function getId(): ?int
     {
@@ -44,6 +50,18 @@ class Notification
     public function setIduser(?User $iduser): static
     {
         $this->iduser = $iduser;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(?string $content): static
+    {
+        $this->content = $content;
 
         return $this;
     }

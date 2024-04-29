@@ -3,6 +3,8 @@
 namespace App\Controller;
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
+use App\Entity\Avis;
+
 use App\Entity\User;
 use App\Form\UserType;
 
@@ -12,6 +14,8 @@ use App\Repository\UserRepository;
 use App\Form\forgetpassword;
 use App\Repository\TerrainRepository;
 use App\Repository\TournoiRepository;
+use App\Repository\AvisRepository;
+
     
 use App\Entity\Equipe;
 use App\Entity\Membreparequipe;
@@ -26,11 +30,16 @@ use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
 use Symfony\Component\Runtime\Runner\Symfony\ResponseRunner;
 use Symfony\Component\Security\Core\Security;
+use Knp\Component\Pager\PaginatorInterface;
+
+
+
+
 #[Route('/profile')]
 class ProfileController extends AbstractController
 {
     #[Route('/', name: 'First', methods: ['GET', 'POST'])] 
-    public function index(Security $security, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, Request $request): Response
+    public function index(Security $security, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, Request $request, TournoiRepository $tournoiRepository): Response
     {
         $user = $security->getUser();
         if($user == null){
@@ -38,25 +47,59 @@ class ProfileController extends AbstractController
         }
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-        $teams = $entityManager->getRepository(Equipe::class)->findByUser($user);
+        $terrains = null;
+        $tournois = null;
+        $participationsById = null;
+        $avis = null;
+        $teams=null;
+        $teamsWithMembers = null;	
+        $nonce = bin2hex(random_bytes(16));
 
-        $teamsWithMembers = [];
-        foreach ($teams as $team) {
-            $members = $entityManager->getRepository(Membreparequipe::class)->findBy(['idequipe' => $team]);
-            $teamsWithMembers[$team->getNomequipe()] = $members;
+
+        if($user->getRole()== 'Membre'){
+            $teams = $entityManager->getRepository(Equipe::class)->findByUser($user);
+            $teamsWithMembers = [];
+            foreach ($teams as $team) {
+                $members = $entityManager->getRepository(Membreparequipe::class)->findBy(['idequipe' => $team]);
+                $teamsWithMembers[$team->getNomequipe()] = $members;
+            }
         }
-
+        
+      
+      
+        if($user->getRole() == 'Proprietaire de Terrain'){
+            $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+            $avis = $entityManager->getRepository(Avis::class)->findAll();
+        }
        
 
+        if($user->getRole() == 'Organisateur'){
+            $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
+            $participations = $tournoiRepository->countParticipationsForEachTournoi();
+            $participationsById = [];
+            foreach ($participations as $participation) {
+                $participationsById[$participation['id']] = $participation['nombre_participations'];
+            }
     
+        }
+      
 
+
+
+
+        if($user->getRole() == 'Proprietaire de Terrain'){
+            $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+        }
             return $this->render('userBase.html.twig',[
-              
+                'terrains' => $terrains,
+                'tournois' => $tournois,
+                'avis' => $avis,
                 'user' => $user,
                 'teams' => $teams,
-                'teamsWithMembers' => $teamsWithMembers
-
-
+                'teamsWithMembers' => $teamsWithMembers,
+                'nonce' => $nonce,
+                'participationsById' => $participationsById,
+           
             ]);
         
       
@@ -103,6 +146,9 @@ class ProfileController extends AbstractController
            
 
             $this->addFlash('success', 'Profile updated successfully');
+            
+            return $this->redirectToRoute('First');
+
 
         }
       
@@ -140,16 +186,19 @@ class ProfileController extends AbstractController
                    $this->addFlash('danger', 'New password and confirm password do not match');
                   
               }
+              return $this->redirectToRoute('First');
         }
         else{
         }
     }
     
+   
       
         return $this->render('Front/ProfileElements/Forms/FormEdit.html.twig', [
             'form1' => $form1->createView(),
             'form2' => $form2->createView(),
-            'user' => $user
+            'user' => $user,
+           
            
         ]);
     }
