@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
   <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -211,10 +214,39 @@ function shareOnFacebook(url) {
     }, function(response){});
 }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    
+ <!-- Charger la bibliothèque xlsx -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script> function convertToExcel() {
+    // Données à exporter en Excel
+    const data = [];
+    {% for terrain in terrains %}
+        data.push({ Nom: "{{ terrain.nomterrain }}", Adresse: "{{ terrain.address }}" });
+    {% endfor %}
+
+    // Créer un nouveau classeur Excel
+    const wb = XLSX.utils.book_new();
+    // Ajouter une feuille de calcul au classeur
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    // Personnalisation du style de la feuille de calcul
+    ws["A1"].s = { bold: true, alignment: { horizontal: "center" }, font: { color: { rgb: "FFADD8E6" } } }; // Style pour la colonne Nom
+    ws["B1"].s = { bold: true, alignment: { horizontal: "center" }, font: { color: { rgb: "FF000080" } } }; // Style pour la colonne Adresse
+
+    // Générer un nom de fichier unique
+    const fileName = 'terrains_' + new Date().getTime() + '.xlsx';
+
+    // Ajouter la feuille de calcul au classeur
+    XLSX.utils.book_append_sheet(wb, ws, 'Terrains');
+
+    // Générer le fichier Excel et le télécharger
+    XLSX.writeFile(wb, fileName);
+}
+
+
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
 <script>
   // Attendre que le contenu du DOM soit chargé avant d'exécuter le script
   document.addEventListener('DOMContentLoaded', function() {
