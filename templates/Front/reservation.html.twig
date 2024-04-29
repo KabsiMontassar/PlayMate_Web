@@ -104,7 +104,7 @@
     </div>
 
     <!--div pour afficher reservation-->
-    <div class="container-lg position-relative p-0 px-lg-3" id="reservation-container" class="row"></div>
+    <div class="container-lg position-relative p-0 px-lg-3" id="reservation-container-byDate" class="row"></div>
 
     <!-- choix du une des trois types-->
     <div class="container-fluid py-5">
@@ -338,7 +338,7 @@
             fetch('/reservations')
                 .then(response => response.json())
                 .then(reservations => {
-                    var reservationContainer = document.getElementById('reservation-container');
+                    var reservationContainer = document.getElementById('reservation-container-byDate');
                     reservationContainer.innerHTML = '';
                     reservations.forEach(reservation => {
                         var reservationDiv = document.createElement('div');

@@ -12,3 +12,8 @@ game_js:
     controller: Symfony\Component\HttpKernel\Controller\BinaryFileController::index
     defaults:
         path: '%kernel.project_dir%/public/game.js'
+trie_reservations_by_type:
+    path: '/reservation/trie/{type}'
+    controller: 'App\Controller\ReservationController::trieReservationsByType'
+    methods: ['GET']
+
