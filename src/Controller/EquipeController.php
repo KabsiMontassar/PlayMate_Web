@@ -67,6 +67,13 @@ class EquipeController extends AbstractController
         // Fetch all teams and their number of players
         $teams = $rep->findAll();
     
+        // Calculate the average number of players per team
+        $totalNumberOfPlayers = 0;
+        foreach ($teams as $team) {
+            $totalNumberOfPlayers += $team->getNbrejoueur();
+        }
+        $averageNumberOfPlayers = count($teams) > 0 ? $totalNumberOfPlayers / count($teams) : 0;
+    
         // Prepare data for Chart.js
         $teamNames = [];
         $numberOfPlayers = [];
@@ -82,6 +89,7 @@ class EquipeController extends AbstractController
             'order' => $order,
             'teamNames' => json_encode($teamNames), // Convert to JSON format
             'numberOfPlayers' => json_encode($numberOfPlayers), // Convert to JSON format
+            'averageNumberOfPlayers' => $averageNumberOfPlayers, // Pass the average to Twig
         ]);
     }
    
