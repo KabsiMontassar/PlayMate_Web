@@ -64,8 +64,6 @@ class ProfileController extends AbstractController
     
         }
       
-
-
         $nonce = bin2hex(random_bytes(16));
 $terrains=NULL;
         if($user->getRole() == 'Proprietaire de Terrain'){
