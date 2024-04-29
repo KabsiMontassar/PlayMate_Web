@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
 
 <link rel="stylesheet" href="{{ asset('Front/css/userprofile.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <style>
 
 
@@ -85,6 +87,10 @@ var Proprietaire = `<div class="container" id="overview" >
 <div class="container" id="terrain" style="display:none;">
     {{include('Front/ProfileElements/userTerrain.html.twig')}}
 </div>
+
+<div class="container" id="avis" style="display:none;">
+    {{include('Front/ProfileElements/userAvis.html.twig')}}
+</div>
 `
 
 var Fournisseur = `
@@ -116,6 +122,8 @@ var MembreListelements = `
   <li><a href="#overview" onclick="out('overview')" class="active">Profile</a></li>
             <li><a href="#reservation" onclick="out('reservation')">Reservation</a></li>
             <li><a href="#terrain" onclick="out('terrain')">Terrain</a></li>
+            <li><a href="#avis" onclick="out('avis')">Avis</a></li>
+
   `
   var FournisseurListelements = `
   <li><a href="#overview" onclick="out('overview')" class="active">Profile</a></li>

@@ -3,6 +3,8 @@
 namespace App\Controller;
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
+use App\Entity\Avis;
+
 use App\Entity\User;
 use App\Form\UserType;
 
@@ -12,6 +14,8 @@ use App\Repository\UserRepository;
 use App\Form\forgetpassword;
 use App\Repository\TerrainRepository;
 use App\Repository\TournoiRepository;
+use App\Repository\AvisRepository;
+
     
 use App\Entity\Equipe;
 use App\Entity\Membreparequipe;
@@ -47,11 +51,13 @@ class ProfileController extends AbstractController
         $tournois = null;
         $participationsById = null;
         
-     
+      
+        $avis = null;
         if($user->getRole() == 'Proprietaire de Terrain'){
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+            $avis = $entityManager->getRepository(Avis::class)->findAll();
         }
-
+       
 
         if($user->getRole() == 'Organisateur'){
             $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
@@ -73,6 +79,8 @@ $terrains=NULL;
         }
             return $this->render('userBase.html.twig',[
                 'terrains' => $terrains,
+                'tournois' => $tournois,
+                'avis' => $avis,
                 'user' => $user,
                 'tournois' => $tournois,
                 'nonce' => $nonce,

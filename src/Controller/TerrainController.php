@@ -9,25 +9,44 @@ use App\Form\TerrainType;
 use App\Form\AvisType;
 use App\Repository\TerrainRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use blackknight467\StarRatingBundle\StarRatingBundle;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+ 
 //********************************************************************************************
 
 #[Route('/terrain')]
 class TerrainController extends AbstractController
 {
     #[Route('/', name: 'app_terrain_index', methods: ['GET'])]
-    public function index(TerrainRepository $terrainRepository): Response
-    {
-        // Récupérer les terrains avec le statut "disponible"
-        $terrainsDisponibles = $terrainRepository->findBy(['status' => true]);
-        return $this->render('Back/Terrains/terrain/index.html.twig', [
-            'terrains' => $terrainRepository->findAll(),]);
+   public function index(Request $request, TerrainRepository $terrainRepository): Response
+{
+    // Récupérer les terrains avec le statut "disponible"
+    $terrainsDisponibles = $terrainRepository->findBy(['status' => true]);
+    $order = $request->query->get('order');
+    $query = $request->query->get('query');
+
+    if ($query) {
+        $terrains = $terrainRepository->findByAddressOrGouvernorat($query);
+    } elseif ($order === 'price_asc') {
+        $terrains = $terrainRepository->findAllOrderByPrice('ASC');
+    } elseif ($order === 'price_desc') {
+        $terrains = $terrainRepository->findAllOrderByPrice('DESC');
+    } elseif ($order === 'duration_asc') {
+        $terrains = $terrainRepository->findAllOrderByDuration('ASC');
+    } elseif ($order === 'duration_desc') {
+        $terrains = $terrainRepository->findAllOrderByDuration('DESC');
+    } else {
+        $terrains = $terrainRepository->findAll();
     }
+
+    return $this->render('Front/terrains.html.twig', [
+        'terrains' => $terrains,
+    ]);
+}
+
 
     //********************************************************************************************
 
@@ -115,7 +134,7 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
             $entityManager->persist($terrain);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_user_terrain', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->render('Back/Terrains/terrain/new.html.twig', [
@@ -159,7 +178,7 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
                 $terrain->setVideo($newFilename);
             }
                 $entityManager->flush();
-        return $this->redirectToRoute('app_user_terrain', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
         }
         return $this->render('Back/Terrains/terrain/edit.html.twig', [
             'terrain' => $terrain,
@@ -180,7 +199,7 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
             $entityManager->remove($terrain);
             $entityManager->flush();
         } 
-        return $this->redirectToRoute('app_user_terrain', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
     }
 
     //********************************************************************************************
@@ -240,6 +259,27 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
 } 
 
  
+ /**
+     * @Route("/terrain/{id}/detail2", name="app_terrain_detail2")
+     */
+    public function detail2($id)
+    {
+        // Récupérer les détails du terrain en fonction de $id (par ex. depuis la base de données)
+        $terrain = $this->getDoctrine()->getRepository(Terrain::class)->find($id);
+
+        // Vérifier si le terrain existe
+        if (!$terrain) {
+            throw $this->createNotFoundException('Terrain non trouvé');}
+
+        // Vérifier si le terrain existe et s'il est disponible
+         if (!$terrain || !$terrain->isStatus()) {
+             throw $this->createNotFoundException('Le terrain n\'existe pas ou n\'est pas disponible.');
+}
+        // Passer les détails du terrain au template
+        return $this->render('Front/detailt2.html.twig', [
+            'terrain' => $terrain // Passer le terrain récupéré au template
+        ]);
+    }
 
 //********************************************************************************************
 
@@ -248,4 +288,7 @@ public function show(Terrain $terrain): Response
 {
     return $this->render('Back/Terrains/terrain/show.html.twig', [
         'terrain' => $terrain,
-    ]);}}
+    ]);}
+ 
+    
+}
