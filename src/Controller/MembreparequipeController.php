@@ -141,6 +141,14 @@ class MembreparequipeController extends AbstractController
         if($user->getId() == $usertoadd->getId()){
             return new Response('Failed', Response::HTTP_OK);
         }
+
+        if($usertoadd == null || $equipe == null || $usertoadd->getRole() == 'Membre'){
+            return new Response('Failed', Response::HTTP_OK);
+        }
+
+
+
+
         $numberofparticipant = $entityManager->getRepository(Membreparequipe::class)->findBy(['idequipe' => $equipe]);
         $number = count($numberofparticipant);
         if($equipe->getNbrejoueur() == $number ){
@@ -152,6 +160,7 @@ class MembreparequipeController extends AbstractController
         $membreparequipe->setIdequipe($equipe);
         $entityManager->persist($membreparequipe);
         $entityManager->flush();
+        
     
         return new Response('Success', Response::HTTP_OK);
     }
