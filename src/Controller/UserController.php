@@ -256,6 +256,7 @@ public function index(
             // ->to($user->getEmail())
             // ->subject('Verification Code')
             // ->text('Your verification code is: ' . $verificationCode);
+            // $this->mailer->send($email);
             $htmlTemplate = $this->renderView('registration/Verification_Code.html.twig', [
                 'verification_code' => $verificationCode,
             ]);
