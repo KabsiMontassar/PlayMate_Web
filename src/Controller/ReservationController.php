@@ -133,43 +133,46 @@ class ReservationController extends AbstractController
 
             $userIdentifier = $security->getUser()->getUserIdentifier();
             $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-
-
-            $date = new \DateTime($date);
-            $terrain = $entityManager->getRepository(Terrain::class)->find($idTerrain);
-
-            if (!$terrain) {
-                return new Response('Terrain non trouvé', Response::HTTP_NOT_FOUND);
-            }
-
-            $terrainDisponible = $entityManager->getRepository(Reservation::class)->findByDisponibility($terrain, $horaire, $date, $entityManager);
-
-            // Retourner  JSON 
-            if ($terrainDisponible) {
-
-
-
-                $reservation = new Reservation();
-                $reservation->setIsconfirm(false);
-                $reservation->setDatereservation($date);
-                $reservation->setHeurereservation($horaire);
-                $reservation->setType($choix);
-                $reservation->setIdterrain($terrain);
-
-                $entityManager->persist($reservation);
-                $entityManager->flush();
-                // $this->sendEmail($mailer);
-
-
-                // RECUPERE DERNIER RESERVATION
-
-                $reservation2  = $entityManager->getRepository(Reservation::class)->findOneBy([], ['idreservation' => 'DESC']);
-                if ($reservation2) {
-                    $url = $paymentController->appelPaymentAPI($entityManager, $reservation2->getIdterrain()->getPrix(), $user->getId(), $reservation2);
-                    return new Response($url, Response::HTTP_OK);
-                }
+            if (!$user->isStatus()) {
+                return $this->redirectToRoute('app_login');
             } else {
-                return new Response('Terrain non disponible', 202);
+
+                $date = new \DateTime($date);
+                $terrain = $entityManager->getRepository(Terrain::class)->find($idTerrain);
+
+                if (!$terrain) {
+                    return new Response('Terrain non trouvé', Response::HTTP_NOT_FOUND);
+                }
+
+                $terrainDisponible = $entityManager->getRepository(Reservation::class)->findByDisponibility($terrain, $horaire, $date, $entityManager);
+
+                // Retourner  JSON 
+                if ($terrainDisponible) {
+
+
+
+                    $reservation = new Reservation();
+                    $reservation->setIsconfirm(false);
+                    $reservation->setDatereservation($date);
+                    $reservation->setHeurereservation($horaire);
+                    $reservation->setType($choix);
+                    $reservation->setIdterrain($terrain);
+
+                    $entityManager->persist($reservation);
+                    $entityManager->flush();
+                    // $this->sendEmail($mailer);
+
+
+                    // RECUPERE DERNIER RESERVATION
+
+                    $reservation2  = $entityManager->getRepository(Reservation::class)->findOneBy([], ['idreservation' => 'DESC']);
+                    if ($reservation2) {
+                        $url = $paymentController->appelPaymentAPI($entityManager, $reservation2->getIdterrain()->getPrix(), $user->getId(), $reservation2);
+                        return new Response($url, Response::HTTP_OK);
+                    }
+                } else {
+                    return new Response('Terrain non disponible', 202);
+                }
             }
         }
     }
@@ -276,5 +279,31 @@ class ReservationController extends AbstractController
 
 
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+    #[Route('/reservation/trie/{type}', name: 'trie_reservations_by_type', methods: ['GET'])]
+    public function trieReservationsByType(string $type, ReservationRepository $reservationRepository): JsonResponse
+    {
+        $validTypes = ['Postuler_Comme_Adversaire', 'Creer_Partie', 'Lancer_Vous', 'Annulation'];
+        if (!in_array($type, $validTypes)) {
+            return new JsonResponse(['error' => 'Type de réservation non valide.'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        // Récupérer les réservations par type
+        $reservations = $reservationRepository->findByType($type);
+
+        // Formatter les réservations pour la réponse JSON
+        $formattedReservations = [];
+        foreach ($reservations as $reservation) {
+            $formattedReservations[] = [
+                'id' => $reservation->getIdreservation(),
+                'datereservation' => $reservation->getDatereservation()->format('Y-m-d'),
+                'heurereservation' => $reservation->getHeurereservation(),
+                'type' => $reservation->getType(),
+            ];
+        }
+        var_dump(ResponseHelper::toArray($formattedReservations[]));
+        return new JsonResponse($formattedReservations);
     }
 }
