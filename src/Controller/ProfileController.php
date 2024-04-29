@@ -80,7 +80,11 @@ class ProfileController extends AbstractController
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
             $avis = $entityManager->getRepository(Avis::class)->findAll();
         }
-       
+        $avisCounts = [];
+        foreach ($terrains as $terrain) {
+            $avisCounts[$terrain->getId()] = count($terrain->getAvis());
+        }
+        
 
         if($user->getRole() == 'Organisateur'){
             $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
@@ -108,6 +112,7 @@ class ProfileController extends AbstractController
                 'teamsWithMembers' => $teamsWithMembers,
                 'nonce' => $nonce,
                 'participationsById' => $participationsById,
+                'avisCounts' => $avisCounts,
            
             ]);
         
