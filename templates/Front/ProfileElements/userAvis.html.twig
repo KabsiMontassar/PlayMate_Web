@@ -1,0 +1,36 @@
+<div class="box-container">
+    {% for avi in avis %}
+    <div class="box-item">
+        <div class="flip-box-front text-center" style="background-color: white;">
+            <div class="inner color-black">
+                <h3 class="flip-box-header">{{ avi.getTerrain().getnomterrain() }}</h3>
+                <p>{{ avi.getCommentaire() }}</p>
+                  <div class="rating">
+                    {% for i in 1..5 %}
+                        {% if i <= avi.getNote() %}
+                            <span>&#x2605;</span>
+                        {% else %}
+                            <span>&#x2606;</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="flip-box-back text-center" style="background-color: white;">
+            <div class="inner color-black">
+                <h3 class="flip-box-header">{{ avi.getTerrain().getnomterrain() }}</h3>
+                <p>{{ avi.getCommentaire() }}</p>
+                  <div class="rating">
+                    {% for i in 1..5 %}
+                        {% if i <= avi.getNote() %}
+                            <span>&#x2605;</span>
+                        {% else %}
+                            <span>&#x2606;</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+             </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

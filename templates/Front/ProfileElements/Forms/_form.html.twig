@@ -1,0 +1,51 @@
+
+ {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+       
+                
+
+                <div class="mb-3">
+                    {{ form_label(form.nomequipe, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {% set errorClass = form.nomequipe.vars.errors is not empty ? 'is-invalid' : '' %}
+                    {{ form_widget(form.nomequipe, {'attr': {'class': 'form-control ' ~ errorClass }}) }}
+                    {% if form.nomequipe.vars.errors %}
+                            <div class="invalid-feedback">
+                                {{ form_errors(form.nomequipe) }}
+                            </div>
+                        {% endif %}
+                </div>
+
+           
+
+             <div class="mb-3">
+    {{ form_label(form.nbrejoueur, null, {'label_attr': {'class': 'form-label'}}) }}
+
+    {% set errorClass = form.nbrejoueur.vars.errors is not empty ? 'is-invalid' : '' %}
+    <div class="input-group">
+        {{ form_widget(form.nbrejoueur, {'attr': {'class': 'form-control ' ~ errorClass, 'oninput': 'updateValue(this)' }}) }}
+        <span class="input-group-text" id="rangeValue">7</span>
+    </div>
+
+    {% if form.nbrejoueur.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.nbrejoueur) }}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    function updateValue(input) {
+        var valueSpan = document.getElementById('rangeValue');
+        valueSpan.textContent = input.value;
+    }
+</script>
+
+                <div class="text-center">
+                    <button class="btn btn-primary" type="submit">{{ button_label|default('Create') }}</button>
+                </div>
+
+{{ form_end(form) }}
+
+    
+
+
+       

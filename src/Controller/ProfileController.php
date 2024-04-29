@@ -3,6 +3,8 @@
 namespace App\Controller;
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
+use App\Entity\Avis;
+
 use App\Entity\User;
 use App\Form\UserType;
 
@@ -12,6 +14,8 @@ use App\Repository\UserRepository;
 use App\Form\forgetpassword;
 use App\Repository\TerrainRepository;
 use App\Repository\TournoiRepository;
+use App\Repository\AvisRepository;
+
     
 use App\Entity\Equipe;
 use App\Entity\Membreparequipe;
@@ -46,33 +50,53 @@ class ProfileController extends AbstractController
         $terrains = null;
         $tournois = null;
         $participationsById = null;
+        $avis = null;
+        $teams=null;
+        $teamsWithMembers = null;	
+        $nonce = bin2hex(random_bytes(16));
+
+
+        if($user->getRole()== 'Membre'){
+            $teams = $entityManager->getRepository(Equipe::class)->findByUser($user);
+            $teamsWithMembers = [];
+            foreach ($teams as $team) {
+                $members = $entityManager->getRepository(Membreparequipe::class)->findBy(['idequipe' => $team]);
+                $teamsWithMembers[$team->getNomequipe()] = $members;
+            }
+        }
         
-     
+      
+      
         if($user->getRole() == 'Proprietaire de Terrain'){
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+            $avis = $entityManager->getRepository(Avis::class)->findAll();
         }
-
+       
 
         if($user->getRole() == 'Organisateur'){
             $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
             $participations = $tournoiRepository->countParticipationsForEachTournoi();
-    
             $participationsById = [];
-        foreach ($participations as $participation) {
-            $participationsById[$participation['id']] = $participation['nombre_participations'];
-        }
+            foreach ($participations as $participation) {
+                $participationsById[$participation['id']] = $participation['nombre_participations'];
+            }
     
         }
       
-        $nonce = bin2hex(random_bytes(16));
-$terrains=NULL;
+
+
+
+
         if($user->getRole() == 'Proprietaire de Terrain'){
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
         }
             return $this->render('userBase.html.twig',[
                 'terrains' => $terrains,
-                'user' => $user,
                 'tournois' => $tournois,
+                'avis' => $avis,
+                'user' => $user,
+                'teams' => $teams,
+                'teamsWithMembers' => $teamsWithMembers,
                 'nonce' => $nonce,
                 'participationsById' => $participationsById,
            
