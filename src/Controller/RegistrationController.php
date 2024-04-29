@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Notification;
 use App\Form\RegistrationFormType;
 use App\Form\UserType;
 use App\Security\EmailVerifier;
@@ -53,6 +54,12 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
+            $notification = new Notification();
+            $notification->setIduser($user);
+            $notification->setContent('user with email '.$user->getEmail().' has been created');
+            $entityManager->persist($notification);
+            $entityManager->flush();
+            
 
        
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,

@@ -7,7 +7,6 @@
         "php": ">=7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "blackknight467/star-rating-bundle": "*",
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
@@ -20,6 +19,7 @@
         "league/oauth2-facebook": "^2.2",
         "league/oauth2-github": "^3.1",
         "league/oauth2-google": "^4.0",
+        "mercuryseries/flashy-bundle": "^5.1",
         "nategood/httpful": "^0.3.2",
         "nyholm/psr7": "^1.8",
         "phpdocumentor/reflection-docblock": "^5.3",
@@ -85,6 +85,8 @@
             "App\\Tests\\": "tests/"
         }
     },
+    
+    
     "replace": {
         "symfony/polyfill-ctype": "*",
         "symfony/polyfill-iconv": "*",

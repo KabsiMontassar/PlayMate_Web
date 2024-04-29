@@ -19,9 +19,9 @@
 
                 <div class="mb-3">
                     {{ form_label(form.address, null, {'label_attr': {'class': 'form-label'}}) }}
-                    {% set errorClass = form.nom.vars.errors is not empty ? 'is-invalid' : '' %}
+                    {% set errorClass = form.address.vars.errors is not empty ? 'is-invalid' : '' %}
                     {{ form_widget(form.address, {'attr': {'class': 'form-control ' ~ errorClass }}) }}
-                   {% if form.nom.vars.errors %}
+                   {% if form.address.vars.errors %}
                             <div class="invalid-feedback">
                                 {{ form_errors(form.address) }}
                             </div>
@@ -30,9 +30,9 @@
 
                 <div class="mb-3">
                     {{ form_label(form.datedebut, null, {'label_attr': {'class': 'form-label'}}) }}
-                    {% set errorClass = form.nom.vars.errors is not empty ? 'is-invalid' : '' %}
+                    {% set errorClass = form.datedebut.vars.errors is not empty ? 'is-invalid' : '' %}
                     {{ form_widget(form.datedebut, {'attr': {'class': 'form-control ' ~ errorClass }}) }}
-                   {% if form.nom.vars.errors %}
+                   {% if form.datedebut.vars.errors %}
                             <div class="invalid-feedback">
                                 {{ form_errors(form.datedebut) }}
                             </div>
@@ -41,9 +41,9 @@
 
                 <div class="mb-3">
                     {{ form_label(form.datefin, null, {'label_attr': {'class': 'form-label'}}) }}
-                    {% set errorClass = form.nom.vars.errors is not empty ? 'is-invalid' : '' %}
+                    {% set errorClass = form.datefin.vars.errors is not empty ? 'is-invalid' : '' %}
                     {{ form_widget(form.datefin, {'attr': {'class': 'form-control ' ~ errorClass }}) }}
-                {% if form.nom.vars.errors %}
+                {% if form.datefin.vars.errors %}
                             <div class="invalid-feedback">
                                 {{ form_errors(form.datefin) }}
                             </div>
