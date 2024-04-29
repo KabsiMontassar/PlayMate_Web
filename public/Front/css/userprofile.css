@@ -627,8 +627,5 @@ html {
   .btn-more:hover {
     background-color: #555;
   }
-  .btn-danger:hover .fa-trash-alt {
-    color: red;
-}
-
-  /********************************************/
+ 
+ 

@@ -28,3 +28,5 @@ services:
     App\Service\WeatherService:
         arguments:
             $apiKey: '%weather_api_key%'
+
+    

@@ -3,6 +3,8 @@
 namespace App\Controller;
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
+use App\Entity\Avis;
+
 use App\Entity\User;
 use App\Form\UserType;
 
@@ -12,7 +14,8 @@ use App\Repository\UserRepository;
 use App\Form\forgetpassword;
 use App\Repository\TerrainRepository;
 use App\Repository\TournoiRepository;
-    
+use App\Repository\AvisRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,17 +43,21 @@ class ProfileController extends AbstractController
 
         $terrains = null;
         $tournois = null;
+        $avis = null;
         if($user->getRole() == 'Proprietaire de Terrain'){
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+            $avis = $entityManager->getRepository(Avis::class)->findAll();
         }
         if($user->getRole() == 'Organisateur'){
             $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
         }
+         
             return $this->render('userBase.html.twig',[
               
                 'user' => $user,
                 'terrains' => $terrains,
-                'tournois' => $tournois
+                'tournois' => $tournois,
+                'avis' => $avis
             ]);
         
       
