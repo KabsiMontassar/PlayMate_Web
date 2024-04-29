@@ -127,37 +127,56 @@
         </nav>
     </div>
     <!-- End Page Title -->
+  <section class="section">
+        <form action="{{ path('app_equipe_index') }}" method="GET">
+            <div class="field is-grouped">
+                <p class="control">
+                    <input class="form-control" type="text" name="search" placeholder="Search by Nomequipe" value="{{ app.request.query.get('search') }}">
+                </p>
+                <p class="control">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </p>
+            </div>
+        </form>
 
-    <section class="section">
-      <table class="table data-table">
-        <thead>
-            <tr>
-                <th>Idequipe</th>
-                <th>Nomequipe</th>
-                <th>Nbrejoueur</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for equipe in equipes %}
-            <tr>
-                <td>{{ equipe.idequipe }}</td>
-                <td>{{ equipe.nomequipe }}</td>
-                <td>{{ equipe.nbrejoueur }}</td>
-                <td>
-                    <a href="{{ path('app_equipe_show', {'idequipe': equipe.idequipe}) }}">show</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <table class="table">
+            <thead>
+                 <tr>
+                <th><a>Nomequipe</a></th>
+                     <th>
+                        {% if order == 'desc' %}
+                         <a href="{{ path('app_equipe_index', {'tritype': 'members-asc'}) }}">Nbrejoueur &#x25B2;</a>
+                       {% else %}
+                           <a href="{{ path('app_equipe_index', {'tritype': 'members-desc'}) }}">Nbrejoueur &#x25BC;</a>
+                       {% endif %}
+                    </th>
+                          </tr>
+                            </thead>
+            <tbody>
+                {% for equipe in equipes %}
+                    <tr>
+                        <td>{{ equipe.nomequipe }}</td>
+                        <td>{{ equipe.nbrejoueur }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">No records found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
+        {% if equipes.getTotalItemCount() > 0 %}
+          <div  style="display:flex;justify-content:center;margin-right:80px;">
+            <nav class="pagination" role="navigation" aria-label="pagination">
+          
+             {{ knp_pagination_render(equipes) }}
+           
+               
+            </nav>
+             </div>
+        {% endif %}
     </section>
-
 </main>
 
 

@@ -50,9 +50,23 @@ class ProfileController extends AbstractController
         $terrains = null;
         $tournois = null;
         $participationsById = null;
+        $avis = null;
+        $teams=null;
+        $teamsWithMembers = null;	
+        $nonce = bin2hex(random_bytes(16));
+
+
+        if($user->getRole()== 'Membre'){
+            $teams = $entityManager->getRepository(Equipe::class)->findByUser($user);
+            $teamsWithMembers = [];
+            foreach ($teams as $team) {
+                $members = $entityManager->getRepository(Membreparequipe::class)->findBy(['idequipe' => $team]);
+                $teamsWithMembers[$team->getNomequipe()] = $members;
+            }
+        }
         
       
-        $avis = null;
+      
         if($user->getRole() == 'Proprietaire de Terrain'){
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
             $avis = $entityManager->getRepository(Avis::class)->findAll();
@@ -62,18 +76,17 @@ class ProfileController extends AbstractController
         if($user->getRole() == 'Organisateur'){
             $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
             $participations = $tournoiRepository->countParticipationsForEachTournoi();
-    
             $participationsById = [];
-        foreach ($participations as $participation) {
-            $participationsById[$participation['id']] = $participation['nombre_participations'];
-        }
+            foreach ($participations as $participation) {
+                $participationsById[$participation['id']] = $participation['nombre_participations'];
+            }
     
         }
       
 
 
-        $nonce = bin2hex(random_bytes(16));
-$terrains=NULL;
+
+
         if($user->getRole() == 'Proprietaire de Terrain'){
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
         }
@@ -82,7 +95,8 @@ $terrains=NULL;
                 'tournois' => $tournois,
                 'avis' => $avis,
                 'user' => $user,
-                'tournois' => $tournois,
+                'teams' => $teams,
+                'teamsWithMembers' => $teamsWithMembers,
                 'nonce' => $nonce,
                 'participationsById' => $participationsById,
            

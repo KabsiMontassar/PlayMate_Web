@@ -26,14 +26,14 @@ class Equipe
     /**
      * @var string
      *
-     * @ORM\Column(name="nomEquipe", type="string", length=255, nullable=false)
+     * @ORM\Column(name="nomEquipe", type="string", length=255, nullable=false, unique=true)
      * @Assert\NotBlank(
      *  message = "The name cannot be blank.",
      * )
      * @Assert\Length(
-     * min = 3,
+     * min = 6,
      * minMessage = "The name must be at least {{ limit }} characters long",
-     * max = 25,
+     * max = 8,
      * maxMessage = "The name cannot be longer than {{ limit }} characters"
      * )
      * @Assert\Regex(
