@@ -15,9 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
  
-
 //********************************************************************************************
-
 #[Route('/terrain')]
 class TerrainController extends AbstractController
 {
@@ -32,11 +30,7 @@ class TerrainController extends AbstractController
             'terrains' => $terrains,
         ]);
     }
-
-
-
     //********************************************************************************************
-
     #[Route('/profile', name: 'app_user_terrain')]
 public function userTerrain(Security $security, EntityManagerInterface $entityManager): Response
 {
@@ -50,7 +44,6 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
         'terrains' => $terrains,
     ]);
 }
-
  //********************************************************************************************
 
  #[Route('/new', name: 'app_terrain_new', methods: ['GET', 'POST'])]
@@ -76,8 +69,7 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
                  'terrain' => $terrain,
                  'form' => $form->createView(),
                  'error_message' => 'Le nom et le gouvernorat doivent contenir uniquement des lettres.'
-             ]);
-         }
+             ]);  }
  
          // Vérifier si le prix est un entier
          if (!is_numeric($prix)) {
@@ -87,8 +79,7 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
                  'terrain' => $terrain,
                  'form' => $form->createView(),
                  'error_message' => 'Le prix doit être un entier.'
-             ]);
-         }
+             ]);}
  
          // Continuer le traitement si tout est valide
          $terrain->setNomterrain($nomTerrain);
@@ -104,8 +95,7 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
                  $this->getParameter('terrain_images_directory'),
                  $newFilename
              );
-             $terrain->setImage($newFilename);
-         }
+             $terrain->setImage($newFilename);}
  
          // Gérer l'upload de la vidéo
          $videoFile = $form['video']->getData();
@@ -115,22 +105,17 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
                  $this->getParameter('terrain_videos_directory'),
                  $newFilename
              );
-             $terrain->setVideo($newFilename);
-         }
+             $terrain->setVideo($newFilename); }
  
          $entityManager->persist($terrain);
          $entityManager->flush();
  
-         return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
-     }
+         return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER); }
  
      return $this->render('Back/Terrains/terrain/new.html.twig', [
          'terrain' => $terrain,
          'form' => $form->createView(),
-     ]);
- }
- 
-    
+     ]);}
 //********************************************************************************************
 
     #[Route('/{id}/edit', name: 'app_terrain_edit', methods: ['GET', 'POST'])]
@@ -170,9 +155,7 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
         return $this->render('Back/Terrains/terrain/edit.html.twig', [
             'terrain' => $terrain,
             'form' => $form->createView(),
-        ]);
-    }
-    
+        ]);}
 //********************************************************************************************
 
     #[Route('/{id}', name: 'app_terrain_delete', methods: ['POST'])]
@@ -186,11 +169,8 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
             $entityManager->remove($terrain);
             $entityManager->flush();
         } 
-        return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
-    }
-
+        return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER); }
     //********************************************************************************************
-
  /**
      * @Route("/terrain/{id}", name="app_terrain_detail")
      */
@@ -212,40 +192,40 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
             'terrain' => $terrain // Passer le terrain récupéré au template
         ]);
     }
-
         //********************************************************************************************
-
 /**
-     * @Route("/terrain/{id}/donner-avis", name="app_donner_avis")
-     */
-    public function donnerAvis($id, Request $request)
+ * @Route("/terrain/{id}/donner-avis", name="app_donner_avis")
+ */
+public function donnerAvis($id, Request $request)
 {
     $entityManager = $this->getDoctrine()->getManager();
     $terrain = $entityManager->getRepository(Terrain::class)->find($id);
     
     if (!$terrain) {
-      throw $this->createNotFoundException('Terrain non trouvé');
+        throw $this->createNotFoundException('Terrain non trouvé');
     }
     $avis = new Avis();
     $form = $this->createForm(AvisType::class, $avis);
     $form->handleRequest($request);
     
     if ($form->isSubmitted() && $form->isValid()) {
-      $avis = $form->getData();
-      $avis->setTerrain($terrain);
-      $entityManager->persist($avis);
-      $entityManager->flush();
+        $avis = $form->getData();
+        $avis->setTerrain($terrain);
+        $entityManager->persist($avis);
+        $entityManager->flush();
+
+        // Ajouter un message flash
+        $this->addFlash('success', 'Votre avis a été enregistré avec succès.');
     
-      // Redirection after successful submission
-      return $this->redirectToRoute('app_terrain_detail', ['id' => $id]);
+        // Redirection après soumission réussie
+        return $this->redirectToRoute('app_terrain_detail', ['id' => $id]);
     }
+    
     return $this->render('Front/donner_avis.html.twig', [
         'form' => $form->createView(),
         'terrain' => $terrain,
-    ]);
-} 
-
- 
+    ]);}
+        //********************************************************************************************
  /**
      * @Route("/terrain/{id}/detail2", name="app_terrain_detail2")
      */
@@ -265,17 +245,11 @@ public function userTerrain(Security $security, EntityManagerInterface $entityMa
         // Passer les détails du terrain au template
         return $this->render('Front/detailt2.html.twig', [
             'terrain' => $terrain // Passer le terrain récupéré au template
-        ]);
-    }
-
+        ]); }
 //********************************************************************************************
-
 #[Route('/{id}', name: 'app_terrain_show', methods: ['GET'])]
 public function show(Terrain $terrain): Response
 {
     return $this->render('Back/Terrains/terrain/show.html.twig', [
         'terrain' => $terrain,
-    ]);}
- 
-    
-}
+    ]);}}

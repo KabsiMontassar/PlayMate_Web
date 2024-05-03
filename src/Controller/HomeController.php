@@ -148,12 +148,12 @@ $tournois = $entityManager
 
         return $this->render('Front/service.html.twig', []);
     }
+    /***************************************************************************** */
     #[Route('/Terrains', name: 'app_Terrains', methods: ['GET', 'POST'])]
 public function Terrains(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request, TerrainRepository $terrainRepository): Response
 {
     // Get search query parameter
     $searchQuery = $request->query->get('query');
-
     // Get order query parameter
     $order = $request->query->get('order');
 
@@ -167,7 +167,6 @@ public function Terrains(EntityManagerInterface $entityManager, PaginatorInterfa
             ->orWhere('t.gouvernorat LIKE :search')
             ->setParameter('search', '%' . $searchQuery . '%');
     }
-
     if ($order === 'price_asc') {
         $terrains = $terrainRepository->findAllOrderByPrice('ASC');
         $queryBuilder = $terrains;
@@ -181,8 +180,6 @@ public function Terrains(EntityManagerInterface $entityManager, PaginatorInterfa
         $terrains = $terrainRepository->findAllOrderByDuration('DESC');
         $queryBuilder = $terrains;
     }  
-   
-
     $query = $queryBuilder->getQuery();
 
     // Paginate the results
@@ -196,6 +193,7 @@ public function Terrains(EntityManagerInterface $entityManager, PaginatorInterfa
         'pagination' => $pagination,
     ]);
 }
+    /***************************************************************************** */
 
     
     #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
