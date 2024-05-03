@@ -13,6 +13,8 @@ use App\Entity\Equipe;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Security;
 
+use MercurySeries\FlashyBundle\FlashyNotifier;
+
 #[Route('/membreparequipe')]
 class MembreparequipeController extends AbstractController
 {
@@ -95,7 +97,7 @@ class MembreparequipeController extends AbstractController
         $teamName = $request->get('teamName');
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-       // get the equipid from the teamName 
+       // obtenir l id de l'equipe par nom de l'equipe 
        $equipe = $entityManager
        ->getRepository(Equipe::class)
        ->findOneBy(['nomequipe' => $teamName]);
@@ -130,7 +132,7 @@ class MembreparequipeController extends AbstractController
 
    
     #[Route('/add/{teamName}/{emailtoadd}', name: 'app_add_team_member', methods: ['GET','POST'])]
-    public function addmembre(Request $request, EntityManagerInterface $entityManager , Security $security, string $teamName, string $emailtoadd): Response
+    public function addmembre(FlashyNotifier $flashy, Request $request, EntityManagerInterface $entityManager , Security $security, string $teamName, string $emailtoadd): Response
     {
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
@@ -160,8 +162,7 @@ class MembreparequipeController extends AbstractController
         $membreparequipe->setIdequipe($equipe);
         $entityManager->persist($membreparequipe);
         $entityManager->flush();
-        
-    
+        $flashy->success('Added Succefully!');
         return new Response('Success', Response::HTTP_OK);
     }
     

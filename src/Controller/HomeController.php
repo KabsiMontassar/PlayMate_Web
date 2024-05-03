@@ -101,7 +101,7 @@ class HomeController extends AbstractController
         $pagination = $paginator->paginate(
             $query, // query NOT result
             $request->query->getInt('page', 1), // page number, 1 if not set
-            8 // limit per page
+            5 // limit per page
         );
 
 
@@ -242,17 +242,21 @@ public function Terrains(EntityManagerInterface $entityManager, PaginatorInterfa
     }
 
 
-
-
-
     #[Route('/increment-visits/{id}', name: 'app_increment_visits', methods: ['POST'])]
     public function incrementVisits(Tournoi $tournoi, EntityManagerInterface $entityManager): Response
     {
-        $tournoi->setVisite($tournoi->getVisite() + 1);
-        $entityManager->flush();
+        $user = $this->security->getUser();
 
-        return new JsonResponse(['success' => true]);
+        if ($user && $user->getRole() == 'Membre') {
+            $tournoi->setVisite($tournoi->getVisite() + 1);
+            $entityManager->flush();
+
+            return new JsonResponse(['success' => true]);
+        }
+
+        return new JsonResponse(['success' => false, 'message' => 'User is not a member']);
     }
+    
 
     /*
 #[Route('/increment-unique-visit/{id}', name: 'app_increment_unique_visit', methods: ['POST'])]

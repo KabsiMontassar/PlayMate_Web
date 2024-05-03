@@ -39,6 +39,28 @@
             border-top: 1px solid #ddd;
             border-radius: 0 0 5px 5px;
         }
+
+        .bold {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        #im1 {
+            object-fit: cover;
+            object-position: center;
+            height: 400px;
+            width: 100%;
+            opacity: 0.7;
+            /* Rendre l'image légèrement transparente */
+        }
+
+        .blue-text {
+            color: #033E6A;
+        }
+
+        .green-text {
+            color: #4CAF50;
+        }
     </style>
     {% if app.user %}
     {% set user = app.user %}
@@ -91,16 +113,10 @@
     <!--image centre-->
     <div class="container-fluid ">
         <div class="container">
-            <img class="img-fluid" id="im1" src="{{ asset('Front/css/ReservationCss/m.jpg') }}" alt="">
+            <img class="img-fluid" id="im1" src="{{ asset('Front/img/troisballons.jpg') }}" alt="">
             <div class="text-overlay">
-                <h3 class="display-4 text-uppercase">Reservation</h3>
-                <div class="d-inline-flex text-primary">
-                    <p class="m-0 text-uppercase text-primary"><a class="text-white text-primary"
-                            href="{{ path('app_Home' ) }}">Home</a>
-                    </p>
-                    <i class="fa fa-angle-double-right pt-1 px-3"></i>
-                    <p class="m-0 text-uppercase text-primary">Reserver</p>
-                </div>
+                <h3 class="display-4 text-uppercase d-flex justify-content-center align-items-center blue-text">
+                    Historique</h3>
             </div>
         </div>
     </div>
@@ -109,21 +125,32 @@
     <section class="section">
         {% if historiques is not empty %}
         {% for historique in historiques %}
-        <article class="article">
-            <div class="article-header">
+        <article class="article d-flex justify-content-center align-items-center">
+            <div class="article-header" style="display: none;">
                 Historique ID: {{ historique.idhistorique }}
             </div>
-            <div class="article-body">
-                <p>Reservation ID: {{ historique.reservation.idreservation }}</p>
-                <p>Date Reservation: <span id="dateres">{{ historique.reservation.datereservation|date('Y-m-d')
-                        }}</span> </p>
-                <p>Heure Reservation: <span id="heureres">{{ historique.reservation.heurereservation }}</span></p>
-                <p>nom terrain: <span id="nomterrain">{{ historique.reservation.idTerrain.nomTerrain }}</span></p>
-                <p>addresse terrain: <span id="addresseTerrain">{{ historique.reservation.idTerrain.address }}</span>
-                </p>
-                <p>prix terrain:<span id="prixterrain">{{ historique.reservation.idTerrain.prix }}</span> </p>
+            <div class="article-header">
+                <p class="blue-text">nom terrain: <span id="nomterrain" class="green-text bold">{{
+                        historique.reservation.idTerrain.nomTerrain
+                        }}</span></p>
             </div>
-            <button class="btn btn-primary" type="submit" style="height: 47px; margin-top: -2px;"
+            <div class="article-body">
+                <p style="display: none;">Reservation ID: {{ historique.reservation.idreservation }}</p>
+                <p class="green-text">Date Reservation: <span id="dateres" class="blue-text bold">{{
+                        historique.reservation.datereservation|date('Y-m-d')}}</span>
+                </p>
+                <p class="green-text">Heure Reservation: <span id="heureres" class="blue-text bold">{{
+                        historique.reservation.heurereservation
+                        }}</span></p>
+
+                <p class="green-text">addresse terrain: <span id="addresseTerrain" class="blue-text bold">{{
+                        historique.reservation.idTerrain.address }}</span>
+                </p class="green-text">
+                <p class="green-text">prix terrain:<span id="prixterrain" class="blue-text bold">{{
+                        historique.reservation.idTerrain.prix
+                        }}</span> </p>
+            </div>
+            <button class="btn btn-primary blue-text bold" type="submit" style="height: 47px; margin-top: -2px;"
                 onclick="imprimerPdf()">Imprimer
                 Pdf</button>
         </article>
