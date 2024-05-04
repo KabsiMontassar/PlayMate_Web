@@ -47,22 +47,40 @@
                                 </ul>    
                                    
                        
-                         <button class="btn btn-primary add-member-btn" data-team="{{ teamName }}" onclick="(function(button) {
-    const teamName = button.getAttribute('data-team');
-    console.log(teamName);
-    const email = prompt('Enter the email of the member to add:');
-    console.log(email);
-    if (email) {
-        $.post('/membreparequipe/add/' + teamName + '/' + email, function(data) {
-            if (data === 'Success') {
-                location.reload();
-            } else {
-                alert(data.message);
-            }
-        });
-    }
-})(this);">Add Member</button>
-                                      
+                      <!-- Buttons container -->
+<!-- Container pour les boutons centrés -->
+<div class="team-actions d-flex justify-content-center align-items-center mb-3">
+    <!-- Add Member Button -->
+    <button class="btn btn-primary add-member-btn mr-2" data-team="{{ teamName }}" onclick="(function(button) {
+        const teamName = button.getAttribute('data-team');
+        console.log(teamName);
+        const email = prompt('Enter the email of the member to add:');
+        console.log(email);
+        if (email) {
+            $.post('/membreparequipe/add/' + teamName + '/' + email, function(data) {
+                if (data === 'Success') {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+    })(this);">Add Member</button>
+
+    <!-- Determine the teamId for the Edit button -->
+    {% set teamId = null %}
+    {% for team in teams %}
+        {% if team.nomequipe == teamName %}
+            {% set teamId = team.idequipe %}
+        {% endif %}
+    {% endfor %}
+
+    <!-- Edit Button for the team, using the located teamId -->
+    {% if teamId %}
+        <a href="{{ path('app_equipe_edit', {'idequipe': teamId}) }}" class="btn btn-primary ml-2">Edit</a>
+    {% endif %}
+</div>
+
 
                                 
                             </div>

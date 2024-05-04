@@ -9,6 +9,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
   <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
 <link rel="stylesheet" href="{{ asset('Front/css/userprofile.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -169,7 +170,11 @@ var MembreListelements = `
  
         });
 
-
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
 
 
   function out(id){
@@ -207,7 +212,10 @@ function shareOnFacebook(url) {
     }, function(response){});
 }
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    
+</script>
 <script>
   // Attendre que le contenu du DOM soit chargé avant d'exécuter le script
   document.addEventListener('DOMContentLoaded', function() {
@@ -238,6 +246,49 @@ function shareOnFacebook(url) {
         }
       });
     {% endfor %}
+    var ctx1 = document.getElementById('myChart').getContext('2d');
+    var myChart1 = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: [
+                {% for terrain in terrains %}
+                    "{{ terrain.nomterrain }}",
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Nombre d\'avis par terrain',
+                data: [
+                    {% for terrain in terrains %}
+                        {{ avisCounts[terrain.id] ?? 0 }},
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
   });
 </script>
 

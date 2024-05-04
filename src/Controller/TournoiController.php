@@ -165,8 +165,8 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
      */
     public function detail(WeatherService $weatherService, Security $security, Request $request, $id, EntityManagerInterface $entityManager,  TexterInterface $texter)
     {
-
-        $city = $request->query->get('city');
+        $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
+        $city = $request->query->get('city', $tournoi->getAddress());
     $forecast = null;
     $errorMsg = null;
 
