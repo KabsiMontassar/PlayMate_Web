@@ -57,6 +57,7 @@ class CategorieController extends AbstractController
             'form' => $form,
         ]);
     }
+   
 
     #[Route('/{id}', name: 'app_categorie_show', methods: ['GET'])]
     public function show(Categorie $categorie): Response
