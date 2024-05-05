@@ -12,6 +12,8 @@ use App\Form\UserType;
 
 use App\Form\Login;
 use App\Repository\UserRepository;
+use App\Repository\TerrainRepository;
+
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,12 +32,16 @@ use App\Entity\Historique;
 
 use App\Controller\Payment;
 
+
 use App\Repository\HistoriqueRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 
 
 use App\Repository\ReservationRepository;
+use BaconQrCode\Encoder\QrCode;
 use Doctrine\ORM\EntityManager;
+
+
 
 class HomeController extends AbstractController
 {
@@ -53,18 +59,17 @@ class HomeController extends AbstractController
 
     private $liveScoreService;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security)
-    {
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-    }
-
-    public function __construct2(EntityManagerInterface $entityManager, Security $security, SerializerInterface $serializer)
+    public function __construct(EntityManagerInterface $entityManager, Security $security , SerializerInterface $serializer)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
         $this->serializer = $serializer;
+     
+
+
     }
+
+ 
 
     #[Route('/Apropos', name: 'app_Apropos', methods: ['GET', 'POST'])]
     public function Apropos(EntityManagerInterface $em): Response
@@ -73,7 +78,7 @@ class HomeController extends AbstractController
         return $this->render('Front/apropos.html.twig', []);
     }
     #[Route('/Boutique', name: 'app_Boutique', methods: ['GET', 'POST'])]
-    public function Boutique( EntityManagerInterface $em): Response
+    public function Boutique( EntityManagerInterface $em, $qrcodeService ): Response
     {
 
         $productRepository = $em->getRepository(Product::class);
