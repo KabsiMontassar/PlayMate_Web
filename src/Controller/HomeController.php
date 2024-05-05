@@ -10,7 +10,7 @@ use App\Form\UserType;
 
 use App\Form\Login;
 use App\Repository\UserRepository;
-use App\Service\QrCodeService;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -42,7 +42,7 @@ class HomeController extends AbstractController
         ]);
     }
     #[Route('/Boutique', name: 'app_Boutique', methods: ['GET', 'POST'])]
-    public function Boutique( EntityManagerInterface $em, QrCodeService $qrcodeService): Response
+    public function Boutique( EntityManagerInterface $em): Response
     {
      
 
@@ -50,13 +50,13 @@ class HomeController extends AbstractController
         $categorieRepository = $em->getRepository(Categorie::class);
         $products = $productRepository->findAll();
         $categories = $categorieRepository->findAll();
-        $string = implode(' ', $products);
-        $qrCode = $qrcodeService->qrcode($string);
+
         return $this->render('Front/boutique.html.twig', [
           
             'products' => $products,
             'categories' => $categories,
-            'qrCode' => $qrCode,
+            
+       
         ]);
           
     }

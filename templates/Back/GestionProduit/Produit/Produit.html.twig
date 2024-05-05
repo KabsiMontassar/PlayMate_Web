@@ -49,33 +49,7 @@
     </nav>
   </div>
   <!-- End Page Title -->
-<div class="row mt-4" style="margin-bottom:20px;">
-    <div class="col-md-6">
-        <form action="{{ path('app_product_index') }}" method="GET" class="form-inline">
-             <label for="search" class="sr-only">Search</label>
 
-            <div class="form-group mb-2 d-flex">
-                <input type="text" class="form-control" id="search" name="search" placeholder="Search...">
-                <button type="submit" class="btn btn-primary"  style="margin-left:10px;">Search</button>
-
-            </div>
-
-        </form>
-    </div>
-   <div class="row mb-4">
-        <div class="col">
-            <form method="get" action="{{ path('app_product_index') }}">
-                <div class="input-group">
-                    <select name="datedebut" class="form-select">
-                        <option value="">Trier </option>
-                        <option value="tri par nom"{{ 'tri par nom' == app.request.query.get('datedebut') ? ' selected' : '' }}>nom</option>
-                        <option value="tri par prix"{{ 'tri par prix' == app.request.query.get('datedebut') ? ' selected' : '' }}>prix</option>
-                    </select>
-                    <button class="btn btn-primary" type="submit">Trier</button>
-                </div>
-            </form>
-        </div>
-    </div>
   <section class="section">
    
      <table class="table data-table">
@@ -89,7 +63,7 @@
             </tr>
         </thead>
         <tbody>
-       {% for product in pagination %}
+        {% for product in products %}
             <tr>
                 <td>{{ product.id }}</td>
                 <td>{{ product.nom }}</td>
@@ -100,9 +74,7 @@
         {% endfor %}
         </tbody>
     </table>
-  <div class="pagination">
-  {{ knp_pagination_render(pagination) }}
-</div>
+
   </section>
 </main>
 {% endblock %}

@@ -3,9 +3,7 @@
 namespace App\Controller;
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
-use App\Entity\Commande;
 use App\Entity\User;
-use App\Entity\Product;
 use App\Form\UserType;
 
 use App\Form\Login;
@@ -14,7 +12,7 @@ use App\Repository\UserRepository;
 use App\Form\forgetpassword;
 use App\Repository\TerrainRepository;
 use App\Repository\TournoiRepository;
-use App\Repository\ProductRepository;
+    
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -42,20 +40,12 @@ class ProfileController extends AbstractController
 
         $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
         $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
-        //$commandefournisseur = $entityManager->getRepository(Product::class)->findByidfournisseur(['idfournisseur' => $user]);
-        $products = $entityManager->getRepository(Product::class)->findBy(['idfournisseur' => $user]);
-        $commandes = [];
-        foreach ($products as $product) {
-            $commandes[$product->getId()] = $entityManager->getRepository(Commande::class)->findBy(['idproduit' => $product->getId()]);
-        }
-        return $this->render('userBase.html.twig',[
+
+            return $this->render('userBase.html.twig',[
               
                 'user' => $user,
                 'terrains' => $terrains,
-                'tournois' => $tournois,
-                'products' =>$products, 
-                'commandes' => $commandes,
-              
+                'tournois' => $tournois
             ]);
         
       

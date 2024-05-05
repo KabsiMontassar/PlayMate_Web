@@ -3,57 +3,39 @@
 namespace App\Controller;
 use App\Entity\user;
 use App\Entity\Product;
-use App\Entity\Commande;
 use App\Form\ProductType;
-use App\Form\TestType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Knp\Component\Pager\PaginatorInterface;
-
 
 #[Route('/product')]
 class ProductController extends AbstractController
 {
-    
-    
     #[Route('/', name: 'app_product_index', methods: ['GET'])]
-    public function index(Request $request, PaginatorInterface $paginator,EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
-    
-        $query = $entityManager->getRepository(Product::class)->createQueryBuilder('p');
-
-        $filter = ['tri par nom', 'tri par prix'];
-        $filterfilter = $request->query->get('datedebut');
-        if ($filterfilter && in_array($filterfilter, $filter)) {
-            if ($filterfilter === 'tri par nom') {
-                $query->orderBy('p.nom', 'ASC');
-            } else if ($filterfilter === 'tri par prix') {
-                $query->orderBy('p.prix', 'ASC');
-            }
-        }
-        
-        // Apply search if search term provided in the request
-        $searchTerm = $request->query->get('search');
-        if ($searchTerm) {
-            $query->andWhere('p.nom LIKE :searchTerm')
-                ->setParameter('searchTerm', '%' . $searchTerm . '%');
-        }
-
-
-        $pagination = $paginator->paginate(
-            $query, // Requête à paginer
-            $request->query->getInt('page', 1), // Numéro de page par défaut
-            3// Nombre d'éléments par page
-        );
+        $products = $entityManager
+            ->getRepository(Product::class)
+            ->findAll();
 
         return $this->render('Back/GestionProduit/Produit/Produit.html.twig', [
-            'pagination' => $pagination,
+            'products' => $products,
+        ]);
+    }
+    #[Route('/profile', name: 'app_user_product')]
+    public function userProduct(Security $security, EntityManagerInterface $entityManager): Response
+    {
+        $userIdentifier = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+    
+        $products = $entityManager->getRepository(Product::class)->findBy(['idfournisseur' => $user]);
+        
+        // Render the template with the tournaments
+        return $this->render('Back/GestionProduit/Produit/profileproduct.html.twig', [
+            'products' => $products,
         ]);
     }
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
@@ -104,7 +86,7 @@ class ProductController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_product', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('Back/GestionProduit/Produit/new.html.twig', [
@@ -144,7 +126,7 @@ class ProductController extends AbstractController
                     }
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_product', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('Back/GestionProduit/Produit/edit.html.twig', [
@@ -165,53 +147,6 @@ class ProductController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_product', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/commander/{idproduct}', name: 'app_commander', methods: ['GET','POST'])]
-public function commander(Security $security, Request $request, EntityManagerInterface $entityManager): Response
-{
-
-        $idproduct = $request->attributes->get('idproduct');
-        $product = $entityManager->getRepository(Product::class)->findOneBy(['id' =>$idproduct]); 
-       
-
-        $userIdentifier = $security->getUser()->getUserIdentifier();
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-       
-        $commande = new Commande();
-        $commande->setIdproduit($product);
-        $commande->setIdmembre($user);
-
-        // Obtenez la date courante
-        $dateCourante = new \DateTime();
-
-        $dateCouranteString = $dateCourante->format('Y-m-d H:i:s');
-        $commande->setDatecommande($dateCouranteString);
-        
-
-        // Enregistrez la commande dans la base de données
-        $entityManager->persist($commande);
-        $entityManager->flush();
-
-        return new Response('success', Response::HTTP_OK);
- 
-}
-#[Route('/generate_qr_code/{productname}', name: 'product_generate_qr_code')]
-public function generateQrCode(Request $request, QrCodeService $qrcodeService,EntityManagerInterface $entityManager): JsonResponse
-{
-    $productName = $request->attributes->get('productname');
-
-    // Générer le QR code pour le produit spécifique
-    $qrCode = $qrcodeService->qrcode($productName);
-
-     // Écrire le fichier dans le dossier spécifié
-     $qrCode->writeFile($directory . $productName . '.png');
-
-     // Retourner une réponse JSON avec le chemin du fichier
-     return new JsonResponse(['qrCodePath' => $directory . $productName . '.png']);
-}
-
-
-
-
 }
