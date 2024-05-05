@@ -45,21 +45,108 @@
     </div>
     <!-- Navbar End -->
   <div class="container mt-5">
-        <h1 class="text-center mb-4">Donner un avis sur {{ terrain.getNomterrain() }}</h1>
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
-    <div class="form-group">
-        {{ form_row(form.commentaire, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    <div class="form-group">
-        {{ form_row(form.note) }}
-    </div>
-    <div class="text-center mb-3">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-    {{ form_end(form) }}
-</div>
+    <h1 class="text-center mb-4">Donner un avis sur {{ terrain.getNomterrain() }}</h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+            
+            <div class="form-group commentaire">
+                {{ form_row(form.commentaire, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            
+            <div class="form-group note">
+                {{ form_row(form.note) }}
+            </div>
+            
+            <div class="text-center mb-3">
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </div>
+            {% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ type }}">{{ message }}</div>
+    {% endfor %}
+{% endfor %}
+
+            {{ form_end(form) }}
         </div>
     </div>
+</div>
+
+<style>
+    /* Style pour le commentaire */
+    .form-group.commentaire {
+        margin-bottom: 20px;
+    }
+    
+    .form-group.commentaire label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-group.commentaire textarea {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        resize: vertical;
+        font-size: 16px;
+    }
+
+    /* Style pour la note */
+    .form-group.note {
+        margin-bottom: 20px;
+        margin-top: 50px; /* Ajout de marge en haut */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-group.note label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-group.note input[type="number"] {
+        width: 80px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+
+    .form-group.note input[type="number"]:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+
+    .form-group.note .star-rating {
+        display: inline-block;
+        unicode-bidi: bidi-override;
+        direction: rtl;
+    }
+
+    .form-group.note .star-rating input {
+        display: none;
+    }
+
+    .form-group.note .star-rating label {
+        font-size: 30px;
+        color: #ccc;
+        cursor: pointer;
+    }
+
+    .form-group.note .star-rating label:before {
+        content: '★';
+        padding-right: 5px;
+    }
+
+    .form-group.note .star-rating input:checked ~ label {
+        color: #f8d204;
+    }
+</style>
+
+
+
 {% endblock %}

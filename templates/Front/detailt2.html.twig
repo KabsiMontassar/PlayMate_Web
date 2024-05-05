@@ -1,0 +1,124 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Terrain</title>
+    <link href="{{ asset('Back/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('Front/css/userprofile.css') }}">
+    <style>
+        body {
+            background-color: #ededed;
+            color: #033e6a;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        /* Autres styles CSS ici */
+
+        /* Styles pour le formulaire */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 4px;
+            margin-bottom: 10px;
+        }
+
+        button.btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button.btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="bg bg2"></div>
+<div class="bg bg3"></div>
+<div class="quarter-circle">
+    <a href="{{ path('First') }}" style="text-decoration:none;font-size:50px;color:#4CAF30">&larr;</a>
+</div>
+<main id="main" class="main">
+ 
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {% if terrain.video %}
+                    <!-- Afficher la vidéo en haut au centre -->
+                    <video id="terrain-video" controls class="w-50">
+                        <source src="{{ asset('uploads/videos/' ~ terrain.video) }}" type="video/mp4">
+                        Votre navigateur ne supporte pas la lecture de vidéos.
+                    </video>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6 offset-md-3">
+                <!-- Afficher les autres détails du terrain -->
+                <h1 class="text-center">{{ terrain.getNomterrain() }}</h1>
+                 <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Gouvernorat</h5>
+                        <p class="card-text">{{ terrain.getGouvernorat() }}</p>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Adresse</h5>
+                        <p class="card-text">{{ terrain.getAddress() }}</p>
+                    </div>
+                </div>
+    <div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Gradin</h5>
+        <p class="card-text">{{ terrain.isGradin() ? 'Existe' : 'N`existe pas' }}</p>
+    </div>
+</div>
+
+                 <div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Vestiaire</h5>
+        <p class="card-text">{{ terrain.isVestiaire() ? 'Existe' : 'N`existe pas' }}</p>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var video = document.getElementById('terrain-video');
+            if (video) {
+                video.play();
+            }
+        });
+    </script>
+    </div>
+</main>
+</body>
+</html>

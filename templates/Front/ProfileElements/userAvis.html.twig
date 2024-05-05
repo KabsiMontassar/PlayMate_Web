@@ -1,0 +1,27 @@
+<div class="box-container">
+    {% for avi in avis %}
+    {% if loop.index0 % 3 == 0 %}
+    <div class="row">
+    {% endif %}
+        <div class="box-item col-4 mb-4">
+            <div class="card bg-white" style="opacity: 0.9;">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><strong>{{ avi.getTerrain().getnomterrain() }}</strong></h5>
+                    <div class="card-text border p-2">{{ avi.getCommentaire() }}</div>
+                </div>
+                <div class="card-footer text-muted">
+                    {% for i in 1..5 %}
+                        {% if i <= avi.getNote() %}
+                            <span>&#x2605;</span>
+                        {% else %}
+                            <span>&#x2606;</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% if loop.last or loop.index % 3 == 3 %}
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>

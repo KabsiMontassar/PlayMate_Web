@@ -1,3 +1,4 @@
+
 <div class="event-cards-container">
   {% for tournoi in tournois %}
     <div class="event-card" style="padding:14px; background-color:white; border-radius:20px;">
@@ -15,10 +16,49 @@
             'September': 'Septembre', 'October': 'Octobre', 'November': 'Novembre', 
             'December': 'Décembre'
           }) }}</p>
-          <p class="event-description">{{ tournoi.getAddress() }}</p>
-          <a href="#" class="btn-more">En savoir plus</a>
+          <p class="event-date">Date de fin : {{ tournoi.getDatefin()|date('d F')|replace({
+            'January': 'Janvier', 'February': 'Février', 'March': 'Mars', 'April': 'Avril', 
+            'May': 'Mai', 'June': 'Juin', 'July': 'Juillet', 'August': 'Août', 
+            'September': 'Septembre', 'October': 'Octobre', 'November': 'Novembre', 
+            'December': 'Décembre'
+          }) }}</p>
+          <p class="event-description">Adresse : {{ tournoi.getAddress() }}</p>
+          <p class="event-description">Nombre maximum d'équipes : {{ tournoi.getNbmaxequipe() }}</p>
+          {{ include('Back/GestionEvenement/tournoi/_delete_form.html.twig') }}
+          <div class="card-actions">
+    <a href="{{ path('app_tournoi_edit', {'id': tournoi.id}) }}" class="btn btn-primary">
+        <i class="fas fa-edit"></i>
+    </a>
+    <a href="javascript:void(0);" onclick="shareOnFacebook('{{ url('app_tournoi_detail', {'id': tournoi.id}) }}');" class="btn btn-primary">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+</div>
         </div> <!-- Fermeture de event-card-back -->
+
+      </div>
+       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#statsModal-{{ tournoi.id }}">
+      Voir les statistiques
+    </button>
+    </div>
+    
+  <div class="modal" id="statsModal-{{ tournoi.id }}" tabindex="-1" role="dialog" aria-labelledby="statsModalLabel-{{ tournoi.id }}" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="statsModalLabel-{{ tournoi.id }}">Statistiques pour {{ tournoi.nom }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+       <div class="modal-body">
+  <canvas id="chart-tournoi-{{ tournoi.id }}" width="800" height="600"></canvas>
+</div>
+        </div>
       </div>
     </div>
+    <!-- Fin du modal pour les statistiques -->
   {% endfor %}
 </div>
+
+<a href="{{ path('app_tournoi_new') }}" class="btn btn-more">Créer un nouveau tournoi</a>
+

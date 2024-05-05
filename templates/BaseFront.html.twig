@@ -41,8 +41,9 @@
            {% set imagepath = app.user.image ? 'uploads/images/' ~ app.user.image : 'uploads/images/default.jpg' %}
     
              <img src="{{ asset(imagepath) }}" class="mx-auto d-block" style="width: 50px; height: auto;">
-            <a href="{{ path('First') }}" class="dropdown-item">Voir profile</a>
-            {# <a href="#" class="dropdown-item" data-toggle="modal" data-target="#profileModal">View Profile</a> #}
+       {# {% if app.user.isverified %}
+            {% endif %} #}
+                        <a href="{{ path('First') }}" class="dropdown-item">Voir profile</a>
 
             <a href="{{ path('app_logout') }}" class="dropdown-item">Se déconnecter</a>
             {% else %}
@@ -85,57 +86,6 @@
         </div>
     </div>
 
-    {# <!-- Modal -->
-<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="profileModalLabel">User Profile</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-            {% if app.user %}
-               <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Name</div>
-                  <div class="col-lg-9 col-md-8">{{ app.user.Name }}</div>
-                </div>
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Email</div>
-                  <div class="col-lg-9 col-md-8">{{  app.user.Email }}</div>
-                </div>
-
-                <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Age</div>
-                  <div class="col-lg-9 col-md-8">{{  app.user.Age }}</div>
-                </div>
-                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Phone</div>
-                  <div class="col-lg-9 col-md-8">{{  app.user.Phone }}</div>
-                </div>
-                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Address</div>
-                  <div class="col-lg-9 col-md-8">{{  app.user.Address }}</div>
-                </div>
-                  <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Membre since</div>
-                  <div class="col-lg-9 col-md-8">{{  app.user.datedecreation }}</div>
-                </div>
-               
-                {% endif %}
-                
-
-</div>
-           
-            </div>
-        </div>
-    </div> #}
-
-
-
-    <!-- Topbar End -->
-
      {% block body %}
        
        {% endblock %}
@@ -174,7 +124,7 @@
 
 
     <!-- Back to Top -->
-    <a href="{{ asset('Front/#') }}" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    
 
 
     <!-- JavaScript Libraries -->

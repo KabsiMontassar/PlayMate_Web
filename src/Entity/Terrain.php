@@ -2,7 +2,8 @@
 
 namespace App\Entity;
 
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -120,11 +121,23 @@ private $gouvernorat;
      * })
      */
     private $idprop;
-    /**
- * @ORM\OneToMany(targetEntity="Avis", mappedBy="terrain", cascade={"remove"})
+  /**
+ * @ORM\OneToMany(targetEntity="Avis", mappedBy="terrain")
  */
 private $avis;
 
+public function __construct()
+{
+    $this->avis = new ArrayCollection();
+}
+
+/**
+ * @return Collection|Avis[]
+ */
+public function getAvis(): Collection
+{
+    return $this->avis;
+}
 
     public function getId(): ?int
     {
@@ -268,5 +281,5 @@ private $avis;
         return $this->nomterrain;
     }
 
-
+    
 }

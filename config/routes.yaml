@@ -1,7 +1,3 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
-
 index:
     path: /
     controller: App\Controller\HomeController::index
@@ -9,5 +5,15 @@ index:
 get_reservations:
     path: '/reservations'
     controller: 'App\Controller\ReservationController::getReservations'
+    methods: ['GET']
+
+game_js:
+    path: /game.js
+    controller: Symfony\Component\HttpKernel\Controller\BinaryFileController::index
+    defaults:
+        path: '%kernel.project_dir%/public/game.js'
+trie_reservations_by_type:
+    path: '/reservation/trie/{type}'
+    controller: 'App\Controller\ReservationController::trieReservationsByType'
     methods: ['GET']
 

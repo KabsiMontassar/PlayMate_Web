@@ -95,9 +95,9 @@
                 <span>Participation</span>
             </a>
         </li>
-            <li class="nav-heading">Gestion Equipe</li>
-         
-          <li class="nav-item">
+        <li class="nav-heading">Gestion Equipe</li>
+
+        <li class="nav-item">
             <a class="nav-link collapsed" href="{{ path('app_equipe_index') }}"> <!-- user pROFILE PAGE -->
                 <i class="bi bi-grid"></i>
                 <span>Equipe</span>
@@ -114,59 +114,74 @@
 
 </aside>
 
-
 <main id="main" class="main">
-
     <div class="pagetitle">
-        <h1>Table Page</h1>
+        <h1>Table de reservation</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item">Pages</li> <!-- user pROFILE PAGE -->
+                <li class="breadcrumb-item">Pages</li>
                 <li class="breadcrumb-item active">Table</li>
-
             </ol>
         </nav>
     </div>
-    <!-- End Page Title -->
 
-    <section class="section">
-        <table class="table datatable">
-            <thead>
-                <tr>
-                    <th>Idreservation</th>
-                    <th>Isconfirm</th>
-                    <th>Datereservation</th>
-                    <th>Heurereservation</th>
-                    <th>Type</th>
-                    <th>actions</th>
-                </tr>
-            </thead>
+    <section class="section" id="section">
+        <div>
+        <div >
+            <!-- Filter by reservation type -->
+            <form action="{{ path('app_reservation_index') }}" method="get" class="form-inline float-right d-flex">
+                <label for="type">Filter by Type:</label>
+                <select style="margin:0 30px;;width:300px;" name="type" id="type" class="form-control">
+                    <option value="">All Types</option>
+                    {% for type in filtertypes %}
+                        <option value="{{ type }}" {% if type == app.request.query.get('type') %} selected {% endif %}>{{ type }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+
+            <!-- Search by reservation type or other fields -->
+            <form action="{{ path('app_reservation_index') }}" method="get"style="margin:10px 0;"   class="d-flex form-inline">
+                <label for="search" class="sr-only">Search:</label>
+                <input type="text" style="margin:0 30px;;width:300px;" name="search" id="search" class="form-control" value="{{ app.request.query.get('search') }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            </div>
+            <!-- Sort by date de reservation -->
+            <a class="badge badge-primary" style="color:#0E46A3" href="{{ path('app_reservation_index', {'sort': 'r.datereservation', 'direction': 'asc'}) }}">Sort by Date Asc</a>
+            <a class="badge badge-primary" style="color:#0E46A3"  href="{{ path('app_reservation_index', {'sort': 'r.datereservation', 'direction': 'desc'}) }}">
+          
+            Sort by Date Desc
+          
+            </a>
+        </div>
+
+        <table class="table">
+            <!-- Table headers remain the same -->
             <tbody>
-                {% for reservation in reservations %}
-                <tr>
-                    <td>{{ reservation.idreservation }}</td>
-                    <td>{{ reservation.isconfirm ? 'Yes' : 'No' }}</td>
-                    <td>{{ reservation.datereservation ? reservation.datereservation.format('Y-m-d') : '' }}</td>
-                    <td>{{ reservation.heurereservation }}</td>
-                    <td>{{ reservation.type }}</td>
-                    <td>
-                        <a
-                            href="{{ path('app_reservation_show', {'idreservation': reservation.idreservation}) }}">show</a>
-                        <a
-                            href="{{ path('app_reservation_edit', {'idreservation': reservation.idreservation}) }}">edit</a>
-                    </td>
-                </tr>
+                {% for reservation in pagination %}
+                    <tr>
+                        <td>{{ reservation.idreservation }}</td>
+                        <td>{{ reservation.isconfirm ? 'Yes' : 'No' }}</td>
+                        <td>{{ reservation.datereservation ? reservation.datereservation|date('Y-m-d') : '' }}</td>
+                        <td>{{ reservation.heurereservation }}</td>
+                        <td>{{ reservation.type }}</td>
+                        <td>
+                            <a href="{{ path('app_reservation_show', {'idreservation': reservation.idreservation}) }}">show</a>
+                            <a href="{{ path('app_reservation_edit', {'idreservation': reservation.idreservation}) }}">edit</a>
+                        </td>
+                    </tr>
                 {% else %}
-                <tr>
-                    <td colspan="8">no records found</td>
-                </tr>
+                    <tr>
+                        <td colspan="8">no records found</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path('app_reservation_new') }}">Create new</a>
-    </section>
-
+      <div class="pagination" style="justify-content: center;padding-right:50px;">
+        {{ knp_pagination_render(pagination) }} {# Render pagination links #}
+    </div>
+            </section>
 </main>
-
 
 {% endblock %}

@@ -3,6 +3,8 @@
 namespace App\Controller;
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
+use App\Entity\Avis;
+
 use App\Entity\User;
 use App\Form\UserType;
 
@@ -12,7 +14,11 @@ use App\Repository\UserRepository;
 use App\Form\forgetpassword;
 use App\Repository\TerrainRepository;
 use App\Repository\TournoiRepository;
+use App\Repository\AvisRepository;
+
     
+use App\Entity\Equipe;
+use App\Entity\Membreparequipe;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,11 +30,25 @@ use App\Form\UserUpdateType;
 use App\Form\UserPasswordType;
 use Symfony\Component\Runtime\Runner\Symfony\ResponseRunner;
 use Symfony\Component\Security\Core\Security;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+ 
+use MercurySeries\FlashyBundle\FlashyNotifier;
+//not found 
+
+
+
+
+
+
+
 #[Route('/profile')]
 class ProfileController extends AbstractController
 {
+   
     #[Route('/', name: 'First', methods: ['GET', 'POST'])] 
-    public function index(Security $security, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, Request $request): Response
+    public function index(Security $security, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, Request $request, TournoiRepository $tournoiRepository): Response
     {
         $user = $security->getUser();
         if($user == null){
@@ -36,23 +56,71 @@ class ProfileController extends AbstractController
         }
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-  
+        $terrains = null;
+        $tournois = null;
+        $participationsById = null;
+        $avis = null;
+        $teams=null;
+        $teamsWithMembers = null;	
+        $nonce = bin2hex(random_bytes(16));
 
-        $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
-        $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
 
+        if($user->getRole()== 'Membre'){
+            $teams = $entityManager->getRepository(Equipe::class)->findByUser($user);
+            $teamsWithMembers = [];
+            foreach ($teams as $team) {
+                $members = $entityManager->getRepository(Membreparequipe::class)->findBy(['idequipe' => $team]);
+                $teamsWithMembers[$team->getNomequipe()] = $members;
+            }
+        }
+        
+      
+      
+        if($user->getRole() == 'Proprietaire de Terrain'){
+            $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+            $avis = $entityManager->getRepository(Avis::class)->findAll();
+        }
+        $avisCounts = [];
+        foreach ($terrains as $terrain) {
+            $avisCounts[$terrain->getId()] = count($terrain->getAvis());
+        }
+        
+
+        if($user->getRole() == 'Organisateur'){
+            $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
+            $participations = $tournoiRepository->countParticipationsForEachTournoi();
+            $participationsById = [];
+            foreach ($participations as $participation) {
+                $participationsById[$participation['id']] = $participation['nombre_participations'];
+            }
+    
+        }
+      
+
+
+
+
+        if($user->getRole() == 'Proprietaire de Terrain'){
+            $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+        }
             return $this->render('userBase.html.twig',[
-              
-                'user' => $user,
                 'terrains' => $terrains,
-                'tournois' => $tournois
+                'tournois' => $tournois,
+                'avis' => $avis,
+                'user' => $user,
+                'teams' => $teams,
+                'teamsWithMembers' => $teamsWithMembers,
+                'nonce' => $nonce,
+                'participationsById' => $participationsById,
+                'avisCounts' => $avisCounts,
+           
             ]);
         
       
     }
 
     #[Route('/update', name: 'update', methods: ['GET', 'POST'])]
-    public function update(Security $security, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, Request $request): Response
+    public function update(FlashyNotifier $flashy,Security $security, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, Request $request): Response
     {
         $userIdentifier = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
@@ -91,7 +159,10 @@ class ProfileController extends AbstractController
             $entityManager->flush();
            
 
-            $this->addFlash('success', 'Profile updated successfully');
+            $flashy->success('Updated Succefully!');
+            
+            return $this->redirectToRoute('First');
+
 
         }
       
@@ -104,14 +175,16 @@ class ProfileController extends AbstractController
                     $user->setPassword($encoder->encodePassword($user, $form2->get('NewPassword')->getData()));
                     $entityManager->persist($user);
                     $entityManager->flush();
-                    $this->addFlash('success', 'Password updated successfully');
+
+                    $flashy->success('Password updated successfully');
+                   
                 } else {
-                    $this->addFlash('danger', 'Current password is incorrect');
+                    $flashy->error('Current password is incorrect');
                 }
 
             
             } else {
-                $this->addFlash('danger', 'New password and confirm password do not match');
+                $flashy->error('New password and confirm password do not match');
 
             }
            
@@ -126,11 +199,13 @@ class ProfileController extends AbstractController
                 $entityManager->flush();
                           
               }else{
-                   $this->addFlash('danger', 'New password and confirm password do not match');
+                $flashy->error('New password and confirm password do not match');
                   
               }
+              return $this->redirectToRoute('First');
         }
         else{
+            $flashy->error('Current password is incorrect');
         }
     }
     

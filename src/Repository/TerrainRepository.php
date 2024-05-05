@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+use App\Entity\Avis;
 
 use App\Entity\Terrain;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -19,30 +20,43 @@ class TerrainRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Terrain::class);
+    } 
+
+
+    
+    public function findByAddress($address)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.address LIKE :address')
+            ->setParameter('address', '%'.$address.'%');
+             
+    }
+    public function findByGouvernorat($gouvernorat)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.gouvernorat LIKE :gouvernorat')
+            ->setParameter('gouvernorat', '%'.$gouvernorat.'%');
+            
+    }
+    public function findAllOrderByPrice($order = 'ASC')
+    {
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.prix', $order);
+          
     }
 
-//    /**
-//     * @return Terrain[] Returns an array of Terrain objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findAllOrderByDuration($order = 'ASC')
+    {
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.duree', $order);
+            
+    }
+    public function findByAddressOrGouvernorat($query)
+{
+    return $this->createQueryBuilder('t')
+        ->andWhere('t.address LIKE :query OR t.gouvernorat LIKE :query')
+        ->setParameter('query', '%'.$query.'%');
+  
+}
 
-//    public function findOneBySomeField($value): ?Terrain
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

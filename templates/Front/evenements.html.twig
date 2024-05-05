@@ -2,7 +2,30 @@
 
 {% block title %}Evenements{% endblock %}
 {% block stylesheets %}
+
         <style>
+         #calendar {
+      height: 100%; /* Ajustez la hauteur pour que le calendrier remplisse le modal */
+  }
+
+        .modal-dialog {
+    max-width: 100%;
+    margin: 0;
+    height: 100vh;
+}
+
+.modal-content {
+    height: calc(100vh - 1rem);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-body {
+    overflow-y: auto; /* Si nécessaire */
+    flex: 1 1 auto; /* Permet au corps du modal de s'étendre */
+    
+}
+
       .blog-date {
     position: absolute;
     top: 10px; /* Adjust as needed */
@@ -35,10 +58,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80vw; /* Largeur accrue */
+    width: 90vw; /* Largeur accrue */
     height: auto;
     max-width: 95%; /* Utilisez une largeur maximale pour éviter de toucher les bords de l'écran */
-    max-height: 95vh; /* Hauteur maximale accrue pour prendre plus de place verticalement */
+    max-height: 105vh; /* Hauteur maximale accrue pour prendre plus de place verticalement */
     overflow: auto; /* Permettre le défilement si nécessaire */
     background: white;
     border: 1px solid #ccc;
@@ -47,7 +70,8 @@
     padding: 20px; /* Gardez un padding pour éviter que le contenu touche les bords */
     display: flex;
     align-items: center; /* Centre verticalement le contenu */
-    justify-content: center; /* Centre horizontalement le contenu */
+    justify-content: center;
+     padding: 30px; /* Centre horizontalement le contenu */
 }
 
 /* Ajustements pour les mobiles et tablettes */
@@ -139,7 +163,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <div class="row pb-3">
-                   {% for tournoi in tournois %}
+                   {% for tournoi in pagination %}
 
                         <div class="col-md-6 mb-4 pb-2">
                             <div class="blog-item">
@@ -159,33 +183,17 @@
                                         <span class="text-primary px-2">|</span>
                                         <a class="text-primary text-uppercase text-decoration-none" href="#" >{{ tournoi.getNom() }}</a>
                                     </div>
-                                     <a href="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}"   class="btn btn-primary btn-sm float-right">Voir les détails <i class="bi bi-eye"></i></a>
+                                    <a href="{{ path('app_tournoi_detail', {'id': tournoi.id}) }}" class="btn btn-primary btn-sm float-right" onclick="incrementVisits('{{ tournoi.id }}')">Voir les détails <i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
                      
-                        <div class="col-12">
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination pagination-lg justify-content-center bg-white mb-0" style="padding: 30px;">
-                                  <li class="page-item disabled">
-                                    <a class="page-link" href="#"  aria-label="Previous">
-                                      <span aria-hidden="true">&laquo;</span>
-                                      <span class="sr-only">Previous</span>
-                                    </a>
-                                  </li>
-                                  <li class="page-item active"><a class="page-link" href="#" >1</a></li>
-                                  <li class="page-item"><a class="page-link" href="#" >2</a></li>
-                                  <li class="page-item"><a class="page-link" href="#" >3</a></li>
-                                  <li class="page-item">
-                                    <a class="page-link" href="#"  aria-label="Next">
-                                      <span aria-hidden="true">&raquo;</span>
-                                      <span class="sr-only">Next</span>
-                                    </a>
-                                  </li>
-                                </ul>
-                              </nav>
-                        </div>
+                        <div class="col-12 d-flex" style="justify-content: center;">
+              
+                   {{ knp_pagination_render(pagination) }}
+               
+                  </div>
                     </div>
                 </div>
     
@@ -193,17 +201,7 @@
                     
     
                     <!-- Search Form -->
-                    <div class="mb-5">
-                        <div class="bg-white" style="padding: 30px;">
-                            <div class="input-group">
-                                <input type="text" class="form-control p-4" placeholder="Keyword">
-                                <div class="input-group-append">
-                                    <span class="input-group-text bg-primary border-primary text-white"><i
-                                            class="fa fa-search"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                   
 
                    
     
@@ -224,18 +222,19 @@
                     </div>
                 </div>
             </a>
-        {% endfor %}
-                
+        {% endfor %}  
          </div>
         
-  <div class="modal-backdrop" id="modal-backdrop" style="display:none;"></div>
-
-<div class="container">
-    <button id="open-calendar" class="btn btn-primary">Voir Calendrier</button>
-    <div id="calendar-popup" class="calendar-popup" style="display:none; height:400px ">
-        <!-- Bouton de fermeture -->
-        <div class="close-btn" id="close-calendar">&times;</div>
-        <div id="calendar"></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Calendrier</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="calendar"></div>
+        </div>
+        <!-- Ajoutez .modal-footer si nécessaire -->
     </div>
 </div>
                 
@@ -248,58 +247,53 @@
     
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    // ...
-    var modalBackdrop = document.getElementById('modal-backdrop');
-
-    document.getElementById('open-calendar').addEventListener('click', function() {
-        document.getElementById('calendar-popup').style.display = 'block';
-        modalBackdrop.style.display = 'block'; // Afficher le fond
-    });
-
-    document.getElementById('close-calendar').addEventListener('click', function() {
-        document.getElementById('calendar-popup').style.display = 'none';
-        modalBackdrop.style.display = 'none'; // Cacher le fond
-    });
-
-    // Fermer la popup en cliquant sur le fond
-    modalBackdrop.addEventListener('click', function() {
-        document.getElementById('calendar-popup').style.display = 'none';
-        modalBackdrop.style.display = 'none';
-    });
-
-var calendarEl = document.getElementById('calendar');
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisation de FullCalendar
+    var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         events: [
             // Bouclez sur vos événements pour les ajouter ici
             {% for tournoi in tournois %}
             {
-                 id: '{{ tournoi.getId() }}',
+                id: '{{ tournoi.getId() }}',
                 title: '{{ tournoi.getNom() }}',
                 start: '{{ tournoi.getDatedebut()|date('Y-m-d') }}',
                 url: '{{ path('app_tournoi_detail', {'id': tournoi.getId()}) }}'
             },
             {% endfor %}
         ],
-         eventClick: function(info) {
-        info.jsEvent.preventDefault(); // Empêche l'action par défaut
-        if (info.event.url) {
-            window.location.href = info.event.url; // Redirige vers l'URL de l'événement
+        eventClick: function(info) {
+            info.jsEvent.preventDefault(); // Empêche l'action par défaut
+            if (info.event.url) {
+                window.location.href = info.event.url; // Redirige vers l'URL de l'événement
+            }
         }
-    }
     });
     calendar.render();
 
-    // Gestion de la popup
+    // Gestionnaire d'événements pour ouvrir le modal de Bootstrap
     document.getElementById('open-calendar').addEventListener('click', function() {
-        document.getElementById('calendar-popup').style.display = 'block';
+        $('#calendarModal').modal('show'); // Montre le modal avec l'ID 'calendarModal'
     });
-    // ...
+
+    // La logique pour fermer le modal et le fond sombre n'est pas nécessaire si vous utilisez le modal de Bootstrap.
 });
-    </script>
-   
-   
+</script>
+
+
+<script>
+   function incrementVisits(tournoiId) {
+    fetch('/increment-visits/' + tournoiId, {
+        method: 'POST'
+    });
+}
+</script>
+   <!-- function incrementUniqueVisits(tournoiId) {
+    fetch('/increment-unique-visit/' + tournoiId, {
+        method: 'POST'
+    });
+}-->
    {% endblock %}
 
    

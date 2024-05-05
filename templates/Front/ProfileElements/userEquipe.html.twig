@@ -1,1 +1,100 @@
-   <h1 class="text-center">Equipes</h1>
+{% set user = app.user %}
+
+<div style="margin-top: 50px;">
+ 
+
+    <section>
+        <div class="row">
+            <div class="col-md-12">
+                {% if user.Role == 'Membre' %}
+                    {% for teamName, members in teamsWithMembers %}
+                        <div class="card profile-card mb-3">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Team: {{ teamName }}</h5>
+                          
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            {% for member in members %}
+                                                <div class="col-md-4">
+                                                    <div class="card member-card mb-3">
+                                                        <div class="card-body">
+                                                    
+                                                            {% if member.idmembre.image == null %}
+                                      {% set imagePath = 'uploads/images/default.jpg' %}
+                                            {% else %}
+                                                {% set imagePath = 'uploads/images/' ~ member.idmembre.image %}
+                                            {% endif %}
+                                                            <div class="card-body text-center">
+                                                            <h6 class="card-subtitle mb-2 text-muted">{{ member.idmembre.Name }}</h6>
+                                                           <img src="{{ asset(imagePath) }}" class="img-fluid rounded-circle mb-3 profile-image" >
+</div>
+                                                            <a href="{{
+                                                                path('app_delete_team_member', {
+                                                                    'teamName': teamName,
+                                                                    'memberId': member.idmembre.id
+                                                                })
+                                                                }}" class="btn btn-danger btn-sm">Delete</a>
+                                                       
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                          
+                                                
+                                        </div>
+                                    </li>
+                                </ul>    
+                                   
+                       
+                      <!-- Buttons container -->
+<!-- Container pour les boutons centrés -->
+<div class="team-actions d-flex justify-content-center align-items-center mb-3">
+    <!-- Add Member Button -->
+    <button class="btn btn-primary add-member-btn mr-2" data-team="{{ teamName }}" onclick="(function(button) {
+        const teamName = button.getAttribute('data-team');
+        console.log(teamName);
+        const email = prompt('Enter the email of the member to add:');
+        console.log(email);
+        if (email) {
+            $.post('/membreparequipe/add/' + teamName + '/' + email, function(data) {
+                if (data === 'Success') {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+    })(this);">Add Member</button>
+
+    <!-- Determine the teamId for the Edit button -->
+    {% set teamId = null %}
+    {% for team in teams %}
+        {% if team.nomequipe == teamName %}
+            {% set teamId = team.idequipe %}
+        {% endif %}
+    {% endfor %}
+
+    <!-- Edit Button for the team, using the located teamId -->
+    {% if teamId %}
+        <a href="{{ path('app_equipe_edit', {'idequipe': teamId}) }}" class="btn btn-primary ml-2">Edit</a>
+    {% endif %}
+</div>
+
+
+                                
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% if teams|length < 5 %}
+                       
+                            <div class="card-body text-center">
+                                <a class="btn" style="background-color:white;" href='{{ path('app_equipe_new') }}'>Add Team</a>
+                            </div>
+                     
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>

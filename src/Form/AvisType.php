@@ -1,29 +1,28 @@
 <?php
 
 namespace App\Form;
+use App\Entity\Avis;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
-use App\Entity\Avis;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+ 
 class AvisType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
+      $builder
         ->add('commentaire', TextareaType::class)
         ->add('note', ChoiceType::class, [
-            'choices' => [
-                '1' => 1,
-                '2' => 2,
-                '3' => 3,
-                '4' => 4,
-                '5' => 5,
-            ],
+            'choices' => array_combine(range(1, 5), range(1, 5)),
+            'choice_label' => function ($choice, $key) {
+                return str_repeat('⭐', $choice);
+            },
         ]);
+        
+        
     }
 
     public function configureOptions(OptionsResolver $resolver): void
