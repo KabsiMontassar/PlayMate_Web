@@ -42,6 +42,60 @@
     <p>Commande content</p>
 </div>
 
+  
+      <li class="nav-heading" style="color:#033E6A">Pages</li>
+  
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('app_user_profile') }}"> <!-- user pROFILE PAGE -->
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+        {% if user.Role == 'Proprietaire de Terrain' %}
+      
+        <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_user_terrain') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Terrain</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_avis_index') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Avis</span>
+      </a>
+    </li>
+    {% endif %}
+    {% if user.Role == 'Organisateur' %}
+        <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_user_tournoi') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Tournoi</span>
+      </a>
+    </li>
+    {% endif %}
+      </li>
+        {% if user.Role == 'Membre' %}
+        <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_equipe_profile') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Equipes</span>
+      </a>
+    </li>
+    {% endif %}
+      </li>
+
+    {% if user.Role == 'Fournisseur' %}
+        <li class="nav-item">
+      <a class="nav-link collapsed" href="{{ path('app_user_product') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Produits</span>
+      </a>
+    </li>
+    {% endif %}
+      
+    </ul>
+  
+  </aside>
 <div class="container" id="Produit" style="display:none;">
     <h1>Produit</h1>
     <p>Produit content</p>

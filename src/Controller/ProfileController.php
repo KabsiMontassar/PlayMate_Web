@@ -5,7 +5,9 @@ use App\Entity\Tournoi;
 use App\Entity\Terrain;
 use App\Entity\Avis;
 
+use App\Entity\Commande;
 use App\Entity\User;
+use App\Entity\Product;
 use App\Form\UserType;
 
 use App\Form\Login;
@@ -19,6 +21,7 @@ use App\Repository\AvisRepository;
     
 use App\Entity\Equipe;
 use App\Entity\Membreparequipe;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -95,8 +98,17 @@ class ProfileController extends AbstractController
             }
     
         }
-      
 
+        if($user->getRole() == 'Fournisseur'){
+           
+            $products = $entityManager->getRepository(Product::class)->findBy(['idfournisseur' => $user]);
+
+            $commandes = [];
+            foreach ($products as $product) {
+                $commandes[$product->getId()] = $entityManager->getRepository(Commande::class)->findBy(['idproduit' => $product->getId()]);
+            }
+        }
+       
 
 
 
@@ -113,7 +125,8 @@ class ProfileController extends AbstractController
                 'nonce' => $nonce,
                 'participationsById' => $participationsById,
                 'avisCounts' => $avisCounts,
-           
+                'products' =>$products, 
+                'commandes' => $commandes,
             ]);
         
       

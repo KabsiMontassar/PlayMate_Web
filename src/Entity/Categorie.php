@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Categorie
@@ -26,15 +27,21 @@ class Categorie
      * @var string|null
      *
      * @ORM\Column(name="nom", type="string", length=255, nullable=true, options={"default"="NULL"})
+       * @Assert\NotBlank(message="Le nom est obligatoire.")
      */
-    private $nom = 'NULL';
+    private $nom ;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="description", type="text", length=65535, nullable=true, options={"default"="NULL"})
+    * @Assert\NotBlank(message="La description est obligatoire.")
+    *@Assert\Length(
+     *      max = 10,
+     *      maxMessage = "La description ne peut pas dépasser {{ limit }} caractères."
+     * )
      */
-    private $description = 'NULL';
+    private $description ;
 
     public function getId(): ?int
     {
@@ -69,4 +76,5 @@ class Categorie
     {
         return $this->description;
     }
+    
 }
