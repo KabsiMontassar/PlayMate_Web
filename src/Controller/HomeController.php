@@ -12,7 +12,6 @@ use App\Form\UserType;
 
 use App\Form\Login;
 use App\Repository\UserRepository;
-use App\Repository\TerrainRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -74,20 +73,20 @@ class HomeController extends AbstractController
         return $this->render('Front/apropos.html.twig', []);
     }
     #[Route('/Boutique', name: 'app_Boutique', methods: ['GET', 'POST'])]
-    public function Boutique(EntityManagerInterface $em): Response
+    public function Boutique( EntityManagerInterface $em): Response
     {
 
         $productRepository = $em->getRepository(Product::class);
         $categorieRepository = $em->getRepository(Categorie::class);
         $products = $productRepository->findAll();
         $categories = $categorieRepository->findAll();
-
+        $string = implode(' ', $products);
+        $qrCode = $qrcodeService->qrcode($string);
         return $this->render('Front/boutique.html.twig', [
           
             'products' => $products,
             'categories' => $categories,
-            
-       
+            'qrCode' => $qrCode,
         ]);
           
     }

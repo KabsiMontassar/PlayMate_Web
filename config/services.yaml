@@ -35,3 +35,4 @@ services:
     App\Service\ActiveSessionTracker:
         arguments:
             $session: '@session'
+    
