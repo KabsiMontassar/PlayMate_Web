@@ -30,50 +30,50 @@ use App\Controller\BlacklistController;
 use App\Controller\PaymentController;
 use Symfony\Component\Security\Core\Security;
 use Knp\Component\Pager\PaginatorInterface;
+
 #[Route('/reservation')]
 class ReservationController extends AbstractController
 {
     #[Route('/', name: 'app_reservation_index', methods: ['GET'])]
-public function index(Request $request, ReservationRepository $reservationRepository, PaginatorInterface $paginator): Response
-{
-    // Get request parameters
-    $queryBuilder = $reservationRepository->createQueryBuilder('r');
+    public function index(Request $request, ReservationRepository $reservationRepository, PaginatorInterface $paginator): Response
+    {
 
-    // Filter by reservation type
-    $typeFilter = $request->query->get('type');
-    $filtertypes = ['Postuler_Comme_Adversaire', 'Creer_Partie', 'Lancer_Vous', 'Annulation'];
-    if ($typeFilter && in_array($typeFilter, $filtertypes)) {
-        $queryBuilder->andWhere('r.type = :type')
-            ->setParameter('type', $typeFilter);
+        $queryBuilder = $reservationRepository->createQueryBuilder('r');
+
+        $typeFilter = $request->query->get('type');
+        $filtertypes = ['Postuler_Comme_Adversaire', 'Creer_Partie', 'Lancer_Vous', 'Annulation'];
+        if ($typeFilter && in_array($typeFilter, $filtertypes)) {
+            $queryBuilder->andWhere('r.type = :type')
+                ->setParameter('type', $typeFilter);
+        }
+
+
+        $searchTerm = $request->query->get('search');
+        if ($searchTerm) {
+            $queryBuilder->andWhere($queryBuilder->expr()->orX(
+                $queryBuilder->expr()->like('r.type', ':search'),
+
+            ))
+                ->setParameter('search', '%' . $searchTerm . '%');
+        }
+
+        // Sort by date de reservation
+        $sortField = $request->query->get('sort', 'r.datereservation');
+        $sortDirection = $request->query->get('direction', 'asc');
+        $queryBuilder->orderBy($sortField, $sortDirection);
+
+        // Paginate the results
+        $pagination = $paginator->paginate(
+            $queryBuilder->getQuery(),
+            $request->query->getInt('page', 1),
+            5 // Items per page
+        );
+
+        return $this->render('Back/GestionReservation/reservation/Reservation.html.twig', [
+            'pagination' => $pagination,
+            'filtertypes' => $filtertypes,
+        ]);
     }
-
-    // Search by reservation type or other fields
-    $searchTerm = $request->query->get('search');
-    if ($searchTerm) {
-        $queryBuilder->andWhere($queryBuilder->expr()->orX(
-            $queryBuilder->expr()->like('r.type', ':search'),
-            // Add other fields you want to search here
-        ))
-        ->setParameter('search', '%' . $searchTerm . '%');
-    }
-
-    // Sort by date de reservation
-    $sortField = $request->query->get('sort', 'r.datereservation');
-    $sortDirection = $request->query->get('direction', 'asc');
-    $queryBuilder->orderBy($sortField, $sortDirection);
-
-    // Paginate the results
-    $pagination = $paginator->paginate(
-        $queryBuilder->getQuery(),
-        $request->query->getInt('page', 1),
-        5 // Items per page
-    );
-
-    return $this->render('Back/GestionReservation/reservation/Reservation.html.twig', [
-        'pagination' => $pagination,
-        'filtertypes' => $filtertypes,
-    ]);
-}
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -194,10 +194,6 @@ public function index(Request $request, ReservationRepository $reservationReposi
 
                     $entityManager->persist($reservation);
                     $entityManager->flush();
-                    // $this->sendEmail($mailer);
-
-
-                    // RECUPERE DERNIER RESERVATION
 
                     $reservation2  = $entityManager->getRepository(Reservation::class)->findOneBy([], ['idreservation' => 'DESC']);
                     if ($reservation2) {
@@ -216,35 +212,83 @@ public function index(Request $request, ReservationRepository $reservationReposi
 
 
 
-
+    /*
 
     #[Route('/reservations', name: 'get_reservations', methods: ['GET'])]
-    public function getReservations(Security $security, ReservationRepository $reservationRepository): JsonResponse
+    public function getReservations(EntityManagerInterface $entityManager, Security $security, ReservationRepository $reservationRepository): JsonResponse
     {
         $user = $security->getUser();
         if ($user == null) {
             return $this->redirectToRoute('app_login');
         } else {
-            $reservations = $reservationRepository->findFutureAndUniqueReservations();
+            $userIdentifier = $security->getUser()->getUserIdentifier();
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+            if (!$user->isStatus()) {
+                return $this->redirectToRoute('app_login');
+            } else {
+
+                $reservations = $reservationRepository->findFutureAndUniqueReservations();
 
 
-            $formattedReservations = [];
-            foreach ($reservations as $reservation) {
-                $formattedReservations[] = [
-                    'id' => $reservation->getIdreservation(),
-                    'datereservation' => $reservation->getDatereservation()->format('Y-m-d'),
-                    'heurereservation' => $reservation->getHeurereservation(),
-                    'idterrain' => [
-                        'id' => $reservation->getIdterrain()->getId(),
-                        'nom' => $reservation->getIdterrain()->getNomterrain(),
-                        'adresse' => $reservation->getIdterrain()->getAddress(),
-                        'prix' => $reservation->getIdterrain()->getPrix(),
-                        'duree' => $reservation->getIdterrain()->getDuree()
-                    ],
-                ];
+                $formattedReservations = [];
+                foreach ($reservations as $reservation) {
+                    $formattedReservations[] = [
+                        'id' => $reservation->getIdreservation(),
+                        'datereservation' => $reservation->getDatereservation()->format('Y-m-d'),
+                        'heurereservation' => $reservation->getHeurereservation(),
+                        'idterrain' => [
+                            'id' => $reservation->getIdterrain()->getId(),
+                            'nom' => $reservation->getIdterrain()->getNomterrain(),
+                            'adresse' => $reservation->getIdterrain()->getAddress(),
+                            'prix' => $reservation->getIdterrain()->getPrix(),
+                            'duree' => $reservation->getIdterrain()->getDuree()
+                        ],
+                    ];
+                }
+                // Format JSON
+                return new JsonResponse($formattedReservations);
             }
-            // Format JSON
-            return new JsonResponse($formattedReservations);
+        }
+    }
+*/
+
+
+    #[Route('/reservations', name: 'get_reservations', methods: ['GET'])]
+    public function getReservations(EntityManagerInterface $entityManager, Security $security, ReservationRepository $reservationRepository): JsonResponse
+    {
+        $user = $security->getUser();
+        if ($user == null) {
+            // Rediriger vers la page de connexion
+            return new JsonResponse(['error' => 'Unauthorized'], 401);
+        } else {
+            $userIdentifier = $security->getUser()->getUserIdentifier();
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+            if (!$user->isStatus()) {
+                // Rediriger vers la page de connexion
+                return new JsonResponse(['error' => 'Unauthorized'], 401);
+            } else {
+                // Récupérer les réservations
+                $reservations = $reservationRepository->findFutureAndUniqueReservations();
+
+                // Formatter les réservations
+                $formattedReservations = [];
+                foreach ($reservations as $reservation) {
+                    $formattedReservations[] = [
+                        'id' => $reservation->getIdreservation(),
+                        'datereservation' => $reservation->getDatereservation()->format('Y-m-d'),
+                        'heurereservation' => $reservation->getHeurereservation(),
+                        'idterrain' => [
+                            'id' => $reservation->getIdterrain()->getId(),
+                            'nom' => $reservation->getIdterrain()->getNomterrain(),
+                            'adresse' => $reservation->getIdterrain()->getAddress(),
+                            'prix' => $reservation->getIdterrain()->getPrix(),
+                            'duree' => $reservation->getIdterrain()->getDuree()
+                        ],
+                    ];
+                }
+                // Retourner les réservations sous forme de réponse JSON
+                return new JsonResponse($formattedReservations);
+            }
         }
     }
 
@@ -303,12 +347,13 @@ public function index(Request $request, ReservationRepository $reservationReposi
             $entityManager->flush();
 
             $blacklistController->addToBlacklist($reservation, $entityManager);
-        }
+        } else {
 
-        $reservation->setHeurereservation('03:00');
-        $reservation->setType('Annulation');
-        $entityManager->persist($reservation);
-        $entityManager->flush();
+            $reservation->setHeurereservation('03:00');
+            $reservation->setType('Annulation');
+            $entityManager->persist($reservation);
+            $entityManager->flush();
+        }
 
 
 
