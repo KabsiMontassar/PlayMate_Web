@@ -5,343 +5,162 @@
 <style>
     /* Additional CSS for Styling Products */
     .product-category-title {
-        background-color: #f8f9fa;
-        /* Light gray background */
+        background-color: #f8f9fa; /* Light gray background */
         padding: 10px 15px;
         margin-top: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, .05);
+        box-shadow: 0 4px 8px rgba(0,0,0,.05);
         transition: background-color 0.3s ease;
     }
-
     .product-category-title:hover {
-        background-color: #e2e6ea;
-        /* Slightly darker on hover */
+        background-color: #e2e6ea; /* Slightly darker on hover */
     }
-
     .product-item {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
     .product-item:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, .1);
+        box-shadow: 0 12px 24px rgba(0,0,0,.1);
     }
-
     .product-img {
-        height: 300px;
-        /* Fixed image height for uniformity */
-        object-fit: cover;
-        /* Ensure full cover of the image area */
+        height: 300px; /* Fixed image height for uniformity */
+        object-fit: cover; /* Ensure full cover of the image area */
     }
-
     .product-name {
-        font-size: 1.25rem;
-        /* Larger font size for product name */
-        color: #333;
-        /* Dark color for text */
+        font-size: 1.25rem; /* Larger font size for product name */
+        color: #333; /* Dark color for text */
         font-weight: bold;
         margin-top: 10px;
     }
-
     .product-description {
-        color: #666;
-        /* Lighter color for description */
+        color: #666; /* Lighter color for description */
         font-size: 0.95rem;
-        height: 60px;
-        /* Fixed height for uniformity */
-        overflow: hidden;
-        /* Hide overflow */
+        height: 60px; /* Fixed height for uniformity */
+        overflow: hidden; /* Hide overflow */
     }
-
     .product-price {
-        font-size: 1.1rem;
-        /* Larger font size for price */
-        color: #28a745;
-        /* Green color for price */
+        font-size: 1.1rem; /* Larger font size for price */
+        color: #28a745; /* Green color for price */
         font-weight: bold;
     }
-
     .icon-coins {
-        color: #ffc107;
-        /* Gold color for the coins icon */
+        color: #ffc107; /* Gold color for the coins icon */
     }
 </style>
 {% endblock %}
 {% block body %}
 
-<!-- Navbar Start -->
-<div class="container-fluid position-relative nav-bar p-0">
-    <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
-        <nav class="navbar navbar-expand-xl bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
-            <a href="{{ path('app_Home' ) }}" class="navbar-brand">
-                <h1 class="m-0 text-primary"><span class="text-dark">Play</span>Mate</h1>
-            </a>
-            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
-                <div class="navbar-nav ml-auto py-0">
-                    <a href="{{ path('app_Home' ) }}" class="nav-item nav-link">Accueil</a>
-                    <a href="{{ path('app_Apropos' ) }}" class="nav-item nav-link">À propos</a>
-                    <a href="{{ path('app_Service' ) }}" class="nav-item nav-link ">Services</a>
-                    <a href="{{ path('app_Reservation' ) }}" class="nav-item nav-link ">Réservée</a>
-                    <a href="{{ path('app_Boutique' ) }}" class="nav-item nav-link active">Boutique</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">Pages</a>
-                        <div class="dropdown-menu border-0 rounded-0 m-0">
-                            <a href="{{ path('app_Terrains' ) }}" class="dropdown-item">Nos Terrains</a>
-                            <a href="{{ path('app_Evenement' ) }}" class="dropdown-item">Nos Événement</a>
-                            <a href="{{ path('app_Historique' ) }}" class="dropdown-item">Votre Historique</a>
-                            <a href="{{ path('app_reservation_future' ) }}" class="dropdown-item">Vos
-                                Reservations</a>
-                        </div>
-                    </div>
-                    <a href="{{ path('app_Contact' ) }}" class="nav-item nav-link">Contact</a>
-                </div>
-                <div class="navbar-nav ml-auto d-lg-none">
-                    {% if app.user %}
-                    <a href="{{ path('app_user_profile') }}" class="nav-item nav-link">Voir profile</a>
-                    <a href="{{ path('app_logout') }}" class="nav-item nav-link">Se déconnecter</a>
-                    {% else %}
-                    <a href="{{ path('app_login') }}" class="nav-item nav-link">Se connecter</a>
-                    <a href="{{ path('app_register') }}" class="nav-item nav-link">S'inscrire</a>
-                    {% endif %}
-                </div>
-            </div>
-        </nav>
-    </div>
-</div>
-<!-- Navbar End -->
-
-
-<!-- Header Start -->
-<div class="container-fluid page-header">
-    <div class="container">
-        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
-            <h3 class="display-4 text-white text-uppercase">Produits</h3>
-            <div class="d-inline-flex text-white">
-                <p class="m-0 text-uppercase"><a class="text-white" href="{{ path('app_Home' ) }}">Accueil</a></p>
-                <i class="fa fa-angle-double-right pt-1 px-3"></i>
-                <p class="m-0 text-uppercase">Produits</p>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-<!-- Header End -->
-
-<!-- Boutique Start -->
-<div class="container-fluid py-5">
-    <div class="container pt-5 pb-3">
-        <div class="text-center mb-3 pb-3">
-            <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Packages</h6>
-            <h1>Pefect Tour Packages</h1>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="package-item bg-white mb-2">
-                    <img class="img-fluid" src="{{ asset('Front/img/package-1.jpg') }}" alt="">
-                    <div class="p-4">
-                        <div class="d-flex justify-content-between mb-3">
-                            <small class="m-0"><i class="fa fa-map-marker-alt text-primary mr-2"></i>Thailand</small>
-                            <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>3 days</small>
-                            <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2 Person</small>
-                        </div>
-                        <a class="h5 text-decoration-none" href="#">Discover amazing places of the world with us</a>
-                        <div class="border-top mt-4 pt-4">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small>
-                                </h6>
-                                <h5 class="m-0">$350</h5>
+    <!-- Navbar Start -->
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+            <nav class="navbar navbar-expand-xl bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
+                <a href="{{ path('app_Home' ) }}" class="navbar-brand">
+                    <h1 class="m-0 text-primary"><span class="text-dark">Play</span>Mate</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
+                    <div class="navbar-nav ml-auto py-0">
+                        <a href="{{ path('app_Home' ) }}" class="nav-item nav-link">Accueil</a>
+                        <a href="{{ path('app_Apropos' ) }}" class="nav-item nav-link">À propos</a>
+                        <a href="{{ path('app_Service' ) }}" class="nav-item nav-link ">Services</a>
+                        <a href="{{ path('app_Reservation' ) }}" class="nav-item nav-link ">Réservée</a>
+                        <a href="{{ path('app_Boutique' ) }}" class="nav-item nav-link active">Produits</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">Pages</a>
+                            <div class="dropdown-menu border-0 rounded-0 m-0">
+                                <a href="{{ path('app_Terrains' ) }}" class="dropdown-item">Nos Terrains</a>
+                                <a href="{{ path('app_Evenement' ) }}" class="dropdown-item">Nos Événement</a>
                             </div>
                         </div>
+                        <a href="{{ path('app_Contact' ) }}" class="nav-item nav-link">Contact</a>
+                    </div>
+                     <div class="navbar-nav ml-auto d-lg-none">
+                         {% if app.user %}
+                        <a href="{{ path('app_user_profile') }}" class="nav-item nav-link">Voir profile</a>
+                        <a href="{{ path('app_logout') }}" class="nav-item nav-link">Se déconnecter</a>
+                        {% else %}
+                        <a href="{{ path('app_login') }}" class="nav-item nav-link">Se connecter</a>
+                        <a href="{{ path('app_register') }}" class="nav-item nav-link">S'inscrire</a>
+                        {% endif %}
                     </div>
                 </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Header Start -->
+    <div class="container-fluid page-header">
+        <div class="container">
+            <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+                <h3 class="display-4 text-white text-uppercase">Produits</h3>
+                <div class="d-inline-flex text-white">
+                    <p class="m-0 text-uppercase"><a class="text-white" href="{{ path('app_Home' ) }}">Accueil</a></p>
+                    <i class="fa fa-angle-double-right pt-1 px-3"></i>
+                    <p class="m-0 text-uppercase">Produits</p>
+                </div>
             </div>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="package-item bg-white mb-2">
-                    <img class="img-fluid" src="{{ asset('Front/img/package-2.jpg') }}" alt="">
-                    <div class="p-4">
-                        <div class="d-flex justify-content-between mb-3">
-                            <small class="m-0"><i class="fa fa-map-marker-alt text-primary mr-2"></i>Thailand</small>
-                            <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>3 days</small>
-                            <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2 Person</small>
-                        </div>
-                        <a class="h5 text-decoration-none" href="#">Discover amazing places of the world with us</a>
-                        <div class="border-top mt-4 pt-4">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small>
-                                </h6>
-                                <h5 class="m-0">$350</h5>
-                                <div class="container-fluid py-5">
-                                    <div class="container pt-5 pb-3">
+        </div>
+    </div>
+    <!-- Header End -->
+
+<!-- Boutique Start -->
+    <div class="container-fluid py-5">
+        <div class="container pt-5 pb-3">
+
+            {% for category in categories %}
+                <h2 class="text-uppercase product-category-title">{{ category.nom }}</h2>
+                <div class="row">
+                    {% for product in products %}
+                        {% if product.getCategorie == category %}
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="card product-item">
+                                    {% if product.image %}
+                                        <img class="card-img-top product-img" src="{{ asset('uploads/images/' ~ product.image) }}" alt="Image of {{ product.getNom() }}">
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h3 class="product-name">{{ product.getNom() }}</h3>
+                                        <p class="product-description">{{ product.getDescription() }}</p>
+                                        <div class="d-flex justify-content-between align-items-center mt-4">
+                        
+                                            <h5 class="product-price"><i class="fas fa-coins icon-coins"></i> {{ product.getPrix() }} TND</h5>
+                                        </div>
+                                        <button type="button" onclick="commander({{ product.id }})">Commander</button>
+                                        <td><a href ="{{path('product_mail',{'id':product.id})}}"><button> Envoyer Mail </button></a></td>
+                                        <button type="button" onclick="generate_qr_code({{ product.getNom() }})">qr</button>
+
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                        {% endif %}
+                    {% else %}
+                        <p>No products found for {{ category.nom }}.</p>
+                    {% endfor %}
+                </div>
+                
+            {% endfor %}
 
         </div>
         
     </div>
-
+    
     <!-- Boutique End -->
 <script>
 function commander(idproduct) {
     event.preventDefault(); // Prevent default form submission
 
-                                                            <h5 class="product-price"><i
-                                                                    class="fas fa-coins icon-coins"></i> {{
-                                                                product.getPrix() }} TND</h5>
-                                                        </div>
-                                                        <button type="button"
-                                                            onclick="commander({{ product.id }})">Commander</button>
-                                                        <td><a href="{{path('product_mail',{'id':product.id})}}"><button>
-                                                                    Envoyer Mail </button></a></td>
-                                                        <button type="button"
-                                                            onclick="generate_qr_code({{ product.getNom() }})">qr</button>
+    $.post("/product/commander/" + idproduct, function(data) {
+        // Handle response
+        if (data === "success") {
+           alert("success");
+        } 
+    });     
+}
+</script>
 
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
-                                            {% endif %}
-                                            {% else %}
-                                            <p>No products found for {{ category.nom }}.</p>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 mb-4">
-                                        <div class="package-item bg-white mb-2">
-                                            <img class="img-fluid" src="{{ asset('Front/img/package-3.jpg') }}" alt="">
-                                            <div class="p-4">
-                                                <div class="d-flex justify-content-between mb-3">
-                                                    <small class="m-0"><i
-                                                            class="fa fa-map-marker-alt text-primary mr-2"></i>Thailand</small>
-                                                    <small class="m-0"><i
-                                                            class="fa fa-calendar-alt text-primary mr-2"></i>3
-                                                        days</small>
-                                                    <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2
-                                                        Person</small>
-                                                </div>
-                                                <a class="h5 text-decoration-none" href="#">Discover amazing
-                                                    places of the world with us</a>
-                                                <div class="border-top mt-4 pt-4">
-                                                    <div class="d-flex justify-content-between">
-                                                        <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5
-                                                            <small>(250)</small>
-                                                        </h6>
-                                                        <h5 class="m-0">$350</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 mb-4">
-                                        <div class="package-item bg-white mb-2">
-                                            <img class="img-fluid" src="{{ asset('Front/img/package-4.jpg') }}" alt="">
-                                            <div class="p-4">
-                                                <div class="d-flex justify-content-between mb-3">
-                                                    <small class="m-0"><i
-                                                            class="fa fa-map-marker-alt text-primary mr-2"></i>Thailand</small>
-                                                    <small class="m-0"><i
-                                                            class="fa fa-calendar-alt text-primary mr-2"></i>3
-                                                        days</small>
-                                                    <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2
-                                                        Person</small>
-                                                </div>
-                                                <a class="h5 text-decoration-none" href="#">Discover amazing
-                                                    places of the world with us</a>
-                                                <div class="border-top mt-4 pt-4">
-                                                    <div class="d-flex justify-content-between">
-                                                        <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5
-                                                            <small>(250)</small>
-                                                        </h6>
-                                                        <h5 class="m-0">$350</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 mb-4">
-                                        <div class="package-item bg-white mb-2">
-                                            <img class="img-fluid" src="{{ asset('Front/img/package-5.jpg') }}" alt="">
-                                            <div class="p-4">
-                                                <div class="d-flex justify-content-between mb-3">
-                                                    <small class="m-0"><i
-                                                            class="fa fa-map-marker-alt text-primary mr-2"></i>Thailand</small>
-                                                    <small class="m-0"><i
-                                                            class="fa fa-calendar-alt text-primary mr-2"></i>3
-                                                        days</small>
-                                                    <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2
-                                                        Person</small>
-                                                </div>
-                                                <a class="h5 text-decoration-none" href="#">Discover amazing
-                                                    places of the world with us</a>
-                                                <div class="border-top mt-4 pt-4">
-                                                    <div class="d-flex justify-content-between">
-                                                        <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5
-                                                            <small>(250)</small>
-                                                        </h6>
-                                                        <h5 class="m-0">$350</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 mb-4">
-                                        <div class="package-item bg-white mb-2">
-                                            <img class="img-fluid" src="{{ asset('Front/img/package-6.jpg') }}" alt="">
-                                            <div class="p-4">
-                                                <div class="d-flex justify-content-between mb-3">
-                                                    <small class="m-0"><i
-                                                            class="fa fa-map-marker-alt text-primary mr-2"></i>Thailand</small>
-                                                    <small class="m-0"><i
-                                                            class="fa fa-calendar-alt text-primary mr-2"></i>3
-                                                        days</small>
-                                                    <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>2
-                                                        Person</small>
-                                                </div>
-                                                <a class="h5 text-decoration-none" href="#">Discover amazing
-                                                    places of the world with us</a>
-                                                <div class="border-top mt-4 pt-4">
-                                                    <div class="d-flex justify-content-between">
-                                                        <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5
-                                                            <small>(250)</small>
-                                                        </h6>
-                                                        <h5 class="m-0">$350</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    {% endfor %}
-
-
-                                </div>
-
-                            </div>
-                        </div>
-                        <!-- Boutique End -->
-
-                        <div class="col-md-6">
-                            {% if qrCode %}
-                            <img src="{{ qrCode }}" alt="qr-code">
-                            {% endif %}
-                        </div>
-                        <!-- Boutique End -->
-                        <script>
-                            function commander(idproduct) {
-                                event.preventDefault(); // Prevent default form submission
-
-
-                                $.post("/product/commander/" + idproduct, function (data) {
-                                    // Handle response
-                                    if (data === "success") {
-                                        alert("success");
-                                    }
-                                });
-                            }
-                        </script>
-
-
-                        {% endblock %}
+{% endblock %}
