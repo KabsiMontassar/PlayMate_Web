@@ -40,6 +40,8 @@ use App\Repository\ReservationRepository;
 use BaconQrCode\Encoder\QrCode;
 use Doctrine\ORM\EntityManager;
 
+use Knp\Component\Pager\PaginatorInterface;
+
 
 class HomeController extends AbstractController
 {
@@ -53,6 +55,8 @@ class HomeController extends AbstractController
     private $serializer;
 
     private $entityManager;
+
+    
     private $security;
 
     private $liveScoreService;
@@ -62,7 +66,8 @@ class HomeController extends AbstractController
         $this->entityManager = $entityManager;
         $this->security = $security;
         $this->serializer = $serializer;
-     
+    
+
 
 
     }
@@ -85,7 +90,7 @@ class HomeController extends AbstractController
         $categorieRepository = $em->getRepository(Categorie::class);
         $products = $productRepository->findAll();
         $categories = $categorieRepository->findAll();
-        $string = implode(' ', $products);
+       
         // $qrCode = $qrcodeService->qrcode($string);
         return $this->render('Front/boutique.html.twig', [
           
