@@ -176,24 +176,14 @@
                                 <div class="container-fluid py-5">
                                     <div class="container pt-5 pb-3">
 
-                                        {% for category in categories %}
-                                        <h2 class="text-uppercase product-category-title">{{ category.nom }}</h2>
-                                        <div class="row">
-                                            {% for product in products %}
-                                            {% if product.getCategorie == category %}
-                                            <div class="col-lg-4 col-md-6 mb-4">
-                                                <div class="card product-item">
-                                                    {% if product.image %}
-                                                    <img class="card-img-top product-img"
-                                                        src="{{ asset('uploads/images/' ~ product.image) }}"
-                                                        alt="Image of {{ product.getNom() }}">
-                                                    {% endif %}
-                                                    <div class="card-body">
-                                                        <h3 class="product-name">{{ product.getNom() }}</h3>
-                                                        <p class="product-description">{{ product.getDescription() }}
-                                                        </p>
-                                                        <div
-                                                            class="d-flex justify-content-between align-items-center mt-4">
+        </div>
+        
+    </div>
+
+    <!-- Boutique End -->
+<script>
+function commander(idproduct) {
+    event.preventDefault(); // Prevent default form submission
 
                                                             <h5 class="product-price"><i
                                                                     class="fas fa-coins icon-coins"></i> {{
