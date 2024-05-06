@@ -31,6 +31,8 @@ use App\Controller\PaymentController;
 use Symfony\Component\Security\Core\Security;
 use Knp\Component\Pager\PaginatorInterface;
 
+use App\Repository\MembreparequipeRepository;
+
 #[Route('/reservation')]
 class ReservationController extends AbstractController
 {
@@ -253,24 +255,74 @@ class ReservationController extends AbstractController
 */
 
 
+    /*
+    #[Route('/equipes-par-utilisateur-ajax', name: 'equipes_par_utilisateur_ajax', methods: ['GET'])]
+    public function equipesParUtilisateurAjax(Request $request, MembreparequipeRepository $membreparequipeRepository, EntityManagerInterface $entityManager, Security $security,): JsonResponse
+    {
+        $user = $security->getUser();
+        if ($user == null) {
+            return $this->redirectToRoute('app_login');
+        } else {
+
+            $userIdentifier = $security->getUser()->getUserIdentifier();
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+            if (!$user->isStatus()) {
+                return $this->redirectToRoute('app_login');
+            } else {
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $equipes = $membreparequipeRepository->findEquipesByUserId($user->getId());
+
+                // Retourner les noms des équipes sous forme de réponse JSON
+                return new JsonResponse($equipes);
+            }
+        }
+    }
+*/
+
+    #[Route('/equipes-par-utilisateur-ajax', name: 'equipes_par_utilisateur_ajax', methods: ['GET'])]
+    public function equipesParUtilisateurAjax(Request $request, MembreparequipeRepository $membreparequipeRepository, EntityManagerInterface $entityManager, Security $security): JsonResponse
+    {
+        $user = $security->getUser();
+        if ($user == null) {
+            return $this->redirectToRoute('app_login');
+        } else {
+            $userIdentifier = $security->getUser()->getUserIdentifier();
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+            if (!$user->isStatus()) {
+                return $this->redirectToRoute('app_login');
+            } else {
+                $equipes = $membreparequipeRepository->findEquipesByUserId($user->getId());
+
+                // Récupérer uniquement les noms d'équipes
+                $equipeNames = [];
+                foreach ($equipes as $equipe) {
+                    $equipeNames[] = $equipe['nomequipe']; // Supposant que le nom de l'équipe est stocké dans une colonne "nomequipe"
+                }
+
+                // Retourner les noms des équipes sous forme de réponse JSON
+                return new JsonResponse($equipeNames);
+            }
+        }
+    }
+
     #[Route('/reservations', name: 'get_reservations', methods: ['GET'])]
     public function getReservations(EntityManagerInterface $entityManager, Security $security, ReservationRepository $reservationRepository): JsonResponse
     {
         $user = $security->getUser();
         if ($user == null) {
-            // Rediriger vers la page de connexion
+
             return new JsonResponse(['error' => 'Unauthorized'], 401);
         } else {
             $userIdentifier = $security->getUser()->getUserIdentifier();
             $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
             if (!$user->isStatus()) {
-                // Rediriger vers la page de connexion
+
                 return new JsonResponse(['error' => 'Unauthorized'], 401);
             } else {
                 // Récupérer les réservations
                 $reservations = $reservationRepository->findFutureAndUniqueReservations();
 
-                // Formatter les réservations
                 $formattedReservations = [];
                 foreach ($reservations as $reservation) {
                     $formattedReservations[] = [
