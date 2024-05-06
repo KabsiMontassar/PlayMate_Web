@@ -40,7 +40,7 @@ class ReservationController extends AbstractController
 
         $queryBuilder = $reservationRepository->createQueryBuilder('r');
 
-        $typeFilter = $request->query->get('type');
+        $typeFilter = $request->query->get('type'); // bt
         $filtertypes = ['Postuler_Comme_Adversaire', 'Creer_Partie', 'Lancer_Vous', 'Annulation'];
         if ($typeFilter && in_array($typeFilter, $filtertypes)) {
             $queryBuilder->andWhere('r.type = :type')
@@ -60,7 +60,7 @@ class ReservationController extends AbstractController
         // Sort by date de reservation
         $sortField = $request->query->get('sort', 'r.datereservation');
         $sortDirection = $request->query->get('direction', 'asc');
-        $queryBuilder->orderBy($sortField, $sortDirection);
+        $queryBuilder->orderBy($sortField, $sortDirection); // tl3 hbt
 
         // Paginate the results
         $pagination = $paginator->paginate(
@@ -80,7 +80,7 @@ class ReservationController extends AbstractController
     {
         $reservation = new Reservation();
         $form = $this->createForm(ReservationType::class, $reservation);
-        $form->handleRequest($request);
+        $form->handleRequest($request); // creation forme
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($reservation);

@@ -159,8 +159,8 @@ class ReservationRepository extends ServiceEntityRepository
     public function findByType(string $type): array
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.type = :type')
-            ->setParameter('type', $type)
+            ->andWhere('r.type = :a')
+            ->setParameter('a', $type)
             ->getQuery()
             ->getResult();
     }
