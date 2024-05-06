@@ -281,27 +281,5 @@ public function getAvis(): Collection
         return $this->nomterrain;
     }
 
-    public function addAvis(Avis $avis): self
-    {
-        if (!$this->avis->contains($avis)) {
-            $this->avis[] = $avis;
-            $avis->setTerrain($this);
-        }
-    
-        return $this;
-    }
-    
-    public function removeAvis(Avis $avis): self
-    {
-        if ($this->avis->contains($avis)) {
-            $this->avis->removeElement($avis);
-            // set the owning side to null (unless already changed)
-            if ($avis->getTerrain() === $this) {
-                $avis->setTerrain(null);
-            }
-        }
-    
-        return $this;
-    }
     
 }

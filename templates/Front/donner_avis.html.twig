@@ -46,6 +46,7 @@
     <!-- Navbar End -->
   <div class="container mt-5">
     <h1 class="text-center mb-4">Donner un avis sur {{ terrain.getNomterrain() }}</h1>
+    
     <div class="row justify-content-center">
         <div class="col-md-6">
             {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
@@ -61,7 +62,12 @@
             <div class="text-center mb-3">
                 <button type="submit" class="btn btn-primary">Envoyer</button>
             </div>
-            
+            {% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ type }}">{{ message }}</div>
+    {% endfor %}
+{% endfor %}
+
             {{ form_end(form) }}
         </div>
     </div>

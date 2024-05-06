@@ -5,12 +5,15 @@ namespace App\Controller;
 
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
+use App\Entity\Categorie;
+use App\Entity\Product;
 use App\Entity\User;
 use App\Form\UserType;
 
 use App\Form\Login;
 use App\Repository\UserRepository;
 use App\Repository\TerrainRepository;
+
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,11 +32,13 @@ use App\Entity\Historique;
 
 use App\Controller\Payment;
 
+
 use App\Repository\HistoriqueRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 
 
 use App\Repository\ReservationRepository;
+use BaconQrCode\Encoder\QrCode;
 use Doctrine\ORM\EntityManager;
 
 
@@ -53,18 +58,17 @@ class HomeController extends AbstractController
 
     private $liveScoreService;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security)
-    {
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-    }
-
-    public function __construct2(EntityManagerInterface $entityManager, Security $security, SerializerInterface $serializer)
+    public function __construct(EntityManagerInterface $entityManager, Security $security , SerializerInterface $serializer)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
         $this->serializer = $serializer;
+     
+
+
     }
+
+ 
 
     #[Route('/Apropos', name: 'app_Apropos', methods: ['GET', 'POST'])]
     public function Apropos(EntityManagerInterface $em): Response
@@ -73,11 +77,22 @@ class HomeController extends AbstractController
         return $this->render('Front/apropos.html.twig', []);
     }
     #[Route('/Boutique', name: 'app_Boutique', methods: ['GET', 'POST'])]
-    public function Boutique(EntityManagerInterface $em): Response
+    public function Boutique( EntityManagerInterface $em, $qrcodeService ): Response
     {
 
-
-        return $this->render('Front/boutique.html.twig', []);
+        $productRepository = $em->getRepository(Product::class);
+        $categorieRepository = $em->getRepository(Categorie::class);
+        $products = $productRepository->findAll();
+        $categories = $categorieRepository->findAll();
+        $string = implode(' ', $products);
+        $qrCode = $qrcodeService->qrcode($string);
+        return $this->render('Front/boutique.html.twig', [
+          
+            'products' => $products,
+            'categories' => $categories,
+            'qrCode' => $qrCode,
+        ]);
+          
     }
     #[Route('/Contact', name: 'app_Contact', methods: ['GET', 'POST'])]
     public function Contact(EntityManagerInterface $em): Response
@@ -149,12 +164,12 @@ $tournois = $entityManager
 
         return $this->render('Front/service.html.twig', []);
     }
+    /***************************************************************************** */
     #[Route('/Terrains', name: 'app_Terrains', methods: ['GET', 'POST'])]
 public function Terrains(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request, TerrainRepository $terrainRepository): Response
 {
     // Get search query parameter
     $searchQuery = $request->query->get('query');
-
     // Get order query parameter
     $order = $request->query->get('order');
 
@@ -168,7 +183,6 @@ public function Terrains(EntityManagerInterface $entityManager, PaginatorInterfa
             ->orWhere('t.gouvernorat LIKE :search')
             ->setParameter('search', '%' . $searchQuery . '%');
     }
-
     if ($order === 'price_asc') {
         $terrains = $terrainRepository->findAllOrderByPrice('ASC');
         $queryBuilder = $terrains;
@@ -182,8 +196,6 @@ public function Terrains(EntityManagerInterface $entityManager, PaginatorInterfa
         $terrains = $terrainRepository->findAllOrderByDuration('DESC');
         $queryBuilder = $terrains;
     }  
-   
-
     $query = $queryBuilder->getQuery();
 
     // Paginate the results
@@ -197,6 +209,7 @@ public function Terrains(EntityManagerInterface $entityManager, PaginatorInterfa
         'pagination' => $pagination,
     ]);
 }
+    /***************************************************************************** */
 
     
     #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]

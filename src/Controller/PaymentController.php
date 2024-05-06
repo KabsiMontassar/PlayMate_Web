@@ -169,15 +169,12 @@ class PaymentController extends AbstractController
 
     public function creerPaiement(EntityManagerInterface $entityManager, float $prix, int $membreId,  $idReservation): Payment
     {
-        // Obtenir la date et l'heure actuelles
         $dateCourante = new DateTime('now', new DateTimeZone('UTC'));
 
-        // Formater la date et l'heure
         $dateString = $dateCourante->format('Y-m-d');
         $heureEnString = $dateCourante->format('H:i:s');
 
         $dateCourante2 = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-        // Créer un nouvel objet Paiement
 
         $user = $entityManager->getRepository(User::class)->find($membreId);
         if (!$user) {

@@ -4,7 +4,6 @@
         <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#globalStatsModal"><i class="fas fa-chart-bar"></i></a>
     {% endif %}
 </div>
-
 <!-- Modal pour les statistiques globales -->
 <div class="modal" id="globalStatsModal" tabindex="-1" role="dialog" aria-labelledby="globalStatsModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -16,14 +15,19 @@
                 </button>
             </div>
             <div class="modal-body">
-<!-- Contenu des statistiques -->
-<canvas id="myChart" width="400" height="400"></canvas>
-
+                <!-- Contenu des statistiques -->
+                <canvas id="myChart" width="400" height="400"></canvas>
+                <div class="text-center mt-4">
+<!-- Bouton "Convertir en Excel" -->
+     <a href="#" class="btn btn-primary" onclick="convertToExcel();"><i class="fas fa-file-excel"></i> Convertir en Excel</a>
+  </div>
             </div>
         </div>
     </div>
 </div>
 <!-- Fin de la modal pour les statistiques globales -->
+
+
 
 <div class="box-container">
     {% for terrain in terrains %}

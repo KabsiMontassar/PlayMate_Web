@@ -59,14 +59,13 @@ class ReservationRepository extends ServiceEntityRepository
     }
 
 
-
     public function findByDisponibility($idTerrain, $heure, $date, $entityManager): bool
     {
         $qb = $this->createQueryBuilder('r')
-            ->andWhere('r.idterrain = :id')
-            ->setParameter('id', $idTerrain)
+            ->where('r.idterrain = :id')
             ->andWhere('r.datereservation = :date')
             ->andWhere('r.type NOT IN (:reservationTypes)')
+            ->setParameter('id', $idTerrain)
             ->setParameter('reservationTypes', ['Compte_desactive', 'Annulation'])
             ->setParameter('date', $date)
             ->getQuery();
@@ -75,31 +74,38 @@ class ReservationRepository extends ServiceEntityRepository
 
         if (empty($reservations)) {
             return true;
-        }
+        } else {
+            foreach ($reservations as $reservation) {
+                $reservationDate = $reservation->getDatereservation()->format('Y-m-d');
+                if ($reservationDate == $date) {
+                    $heureMatchReserve = DateTime::createFromFormat('Y-m-d H:i', $date . ' ' . $reservation->getHeureReservation());
+                    $heureNouveauMatch = DateTime::createFromFormat('Y-m-d H:i', $date . ' ' . $heure);
 
-        foreach ($reservations as $reservation) {
-            if ($reservation->getDateReservation() === $date) {
-                $heureMatchReserve = new DateTime($reservation->getHeureReservation());
-                $heureNouveauMatch = new DateTime($heure);
-
-                $duree = $entityManager->getRepository(Terrain::class)->findOneBy($idTerrain)->getDuree();
-                $seCroisent = $this->verifCroisementHoraire($heureMatchReserve, $duree, $heureNouveauMatch);
-                if ($seCroisent) {
-                    return false;
+                    $duree = $entityManager->getRepository(Terrain::class)->findOneBy(['id' => $idTerrain])->getDuree();
+                    $seCroisent = $this->verifCroisementHoraire($heureMatchReserve, $duree, $heureNouveauMatch);
+                    if ($seCroisent) {
+                        return false;
+                    }
                 }
             }
+            return true;
         }
-
-        return true;
     }
 
-    private function verifCroisementHoraire(DateTime $heureMatchReserve, $dureeAnnoce, DateTime $heureNouveauMatch): bool
+    private function verifCroisementHoraire(DateTime $heureMatchReserve, int $dureeAnnonce, DateTime $heureNouveauMatch): bool
     {
-        $finReserve = $heureMatchReserve->modify("+ $dureeAnnoce minutes");
-        $finNouveau = $heureNouveauMatch->modify("+ $dureeAnnoce minutes");
+        // Cloner les objets DateTime pour éviter de modifier les objets originaux
+        $finReserve = clone $heureMatchReserve;
+        $finNouveau = clone $heureNouveauMatch;
 
+        // Appliquer les modifications pour obtenir l'heure de fin
+        $finReserve = $finReserve->modify("+ $dureeAnnonce minutes");
+        $finNouveau = $finNouveau->modify("+ $dureeAnnonce minutes");
+
+        // Comparer les intervalles de temps pour déterminer s'ils se chevauchent
         return !($finReserve < $heureNouveauMatch || $finNouveau < $heureMatchReserve);
     }
+
 
     public function findFutureAndUniqueReservations(): array
     {
