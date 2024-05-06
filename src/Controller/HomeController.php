@@ -42,7 +42,6 @@ use BaconQrCode\Encoder\QrCode;
 use Doctrine\ORM\EntityManager;
 
 
-
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'start', methods: ['GET', 'POST'])]
