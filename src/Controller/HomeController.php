@@ -77,8 +77,10 @@ class HomeController extends AbstractController
 
         return $this->render('Front/apropos.html.twig', []);
     }
+
+
     #[Route('/Boutique', name: 'app_Boutique', methods: ['GET', 'POST'])]
-    public function Boutique( EntityManagerInterface $em, $qrcodeService ): Response
+    public function Boutique( EntityManagerInterface $em ): Response
     {
 
         $productRepository = $em->getRepository(Product::class);
@@ -86,12 +88,12 @@ class HomeController extends AbstractController
         $products = $productRepository->findAll();
         $categories = $categorieRepository->findAll();
         $string = implode(' ', $products);
-        $qrCode = $qrcodeService->qrcode($string);
+        // $qrCode = $qrcodeService->qrcode($string);
         return $this->render('Front/boutique.html.twig', [
           
             'products' => $products,
             'categories' => $categories,
-            'qrCode' => $qrCode,
+            // 'qrCode' => $qrCode,
         ]);
           
     }

@@ -196,20 +196,8 @@ public function commander(Security $security, Request $request, EntityManagerInt
         return new Response('success', Response::HTTP_OK);
  
 }
-#[Route('/generate_qr_code/{productname}', name: 'product_generate_qr_code')]
-public function generateQrCode(Request $request, QrCodeService $qrcodeService,EntityManagerInterface $entityManager): JsonResponse
-{
-    $productName = $request->attributes->get('productname');
 
-    // Générer le QR code pour le produit spécifique
-    $qrCode = $qrcodeService->qrcode($productName);
 
-     // Écrire le fichier dans le dossier spécifié
-     $qrCode->writeFile($directory . $productName . '.png');
-
-     // Retourner une réponse JSON avec le chemin du fichier
-     return new JsonResponse(['qrCodePath' => $directory . $productName . '.png']);
-}
 
 
 
