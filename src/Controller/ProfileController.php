@@ -67,6 +67,8 @@ class ProfileController extends AbstractController
         $teamsWithMembers = null;	
         $nonce = bin2hex(random_bytes(16));
         $avisCounts = [];
+        $products=null;
+        $commandes=null;
 
         if($user->getRole()== 'Membre'){
             $teams = $entityManager->getRepository(Equipe::class)->findByUser($user);
