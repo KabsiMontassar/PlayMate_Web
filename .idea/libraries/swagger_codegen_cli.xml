@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="swagger-codegen-cli">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/vendor/cloudmersive/cloudmersive_validate_api_client/swagger-codegen-cli.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
