@@ -24,7 +24,6 @@ use App\Form\UserPasswordType;
 use Symfony\Component\Runtime\Runner\Symfony\ResponseRunner;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\Historique;
 
 use App\Controller\Payment;
