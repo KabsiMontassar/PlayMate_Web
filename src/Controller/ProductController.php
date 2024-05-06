@@ -72,17 +72,16 @@ class ProductController extends AbstractController
             if (!preg_match('/^[a-zA-Z]+$/', $nom) || !preg_match('/^[a-zA-Z]+$/', $description)) {
                 // Gérer l'erreur, par exemple afficher un message à l'utilisateur
                 // Rediriger vers le formulaire avec un message d'erreur
-                return $this->render('Back/GestionProduit/Produit/new.html.twig', [
+                return $this->render('Front/ProfileElements/Forms/FormFournisseur.html.twig', [
                     'product' => $product,
                     'form' => $form->createView(),
-                    'error_message' => 'Le nom et le gouvernorat doivent contenir uniquement des lettres.'
                 ]);
             }
               // Vérifier si le prix est un entier
               if (!is_numeric($prix)) {
                 // Gérer l'erreur, par exemple afficher un message à l'utilisateur
                 // Rediriger vers le formulaire avec un message d'erreur
-                return $this->render('Back/GestionProduit/Produit/new.html.twig', [
+                return $this->render('Front/ProfileElements/Forms/FormFournisseur.html.twig', [
                     'product' => $product,
                     'form' => $form->createView(),
                     'error_message' => 'Le prix doit être un entier.'
@@ -104,10 +103,10 @@ class ProductController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('Back/GestionProduit/Produit/new.html.twig', [
+        return $this->renderForm('Front/ProfileElements/Forms/FormFournisseur.html.twig', [
             'product' => $product,
             'form' => $form,
         ]);
@@ -144,10 +143,10 @@ class ProductController extends AbstractController
                     }
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('Back/GestionProduit/Produit/edit.html.twig', [
+        return $this->renderForm('Front/ProfileElements/Forms/FormFournisseur.html.twig', [
             'product' => $product,
             'form' => $form,
         ]);
@@ -165,7 +164,7 @@ class ProductController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('First', [], Response::HTTP_SEE_OTHER);
     }
     #[Route('/commander/{idproduct}', name: 'app_commander', methods: ['GET','POST'])]
 public function commander(Security $security, Request $request, EntityManagerInterface $entityManager): Response
@@ -196,20 +195,8 @@ public function commander(Security $security, Request $request, EntityManagerInt
         return new Response('success', Response::HTTP_OK);
  
 }
-#[Route('/generate_qr_code/{productname}', name: 'product_generate_qr_code')]
-public function generateQrCode(Request $request, QrCodeService $qrcodeService,EntityManagerInterface $entityManager): JsonResponse
-{
-    $productName = $request->attributes->get('productname');
 
-    // Générer le QR code pour le produit spécifique
-    $qrCode = $qrcodeService->qrcode($productName);
 
-     // Écrire le fichier dans le dossier spécifié
-     $qrCode->writeFile($directory . $productName . '.png');
-
-     // Retourner une réponse JSON avec le chemin du fichier
-     return new JsonResponse(['qrCodePath' => $directory . $productName . '.png']);
-}
 
 
 
