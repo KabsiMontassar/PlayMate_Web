@@ -1,11 +1,15 @@
 <div class="box-container">
     {% for avi in avis %}
-    <div class="box-item">
-        <div class="flip-box-front text-center" style="background-color: white;">
-            <div class="inner color-black">
-                <h3 class="flip-box-header">{{ avi.getTerrain().getnomterrain() }}</h3>
-                <p>{{ avi.getCommentaire() }}</p>
-                  <div class="rating">
+    {% if loop.index0 % 3 == 0 %}
+    <div class="row">
+    {% endif %}
+        <div class="box-item col-4 mb-4">
+            <div class="card bg-white" style="opacity: 0.9;">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><strong>{{ avi.getTerrain().getnomterrain() }}</strong></h5>
+                    <div class="card-text border p-2">{{ avi.getCommentaire() }}</div>
+                </div>
+                <div class="card-footer text-muted">
                     {% for i in 1..5 %}
                         {% if i <= avi.getNote() %}
                             <span>&#x2605;</span>
@@ -16,21 +20,8 @@
                 </div>
             </div>
         </div>
-        <div class="flip-box-back text-center" style="background-color: white;">
-            <div class="inner color-black">
-                <h3 class="flip-box-header">{{ avi.getTerrain().getnomterrain() }}</h3>
-                <p>{{ avi.getCommentaire() }}</p>
-                  <div class="rating">
-                    {% for i in 1..5 %}
-                        {% if i <= avi.getNote() %}
-                            <span>&#x2605;</span>
-                        {% else %}
-                            <span>&#x2606;</span>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-             </div>
-        </div>
+    {% if loop.last or loop.index % 3 == 3 %}
     </div>
+    {% endif %}
     {% endfor %}
 </div>

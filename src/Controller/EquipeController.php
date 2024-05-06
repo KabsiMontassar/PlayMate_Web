@@ -55,7 +55,7 @@ class EquipeController extends AbstractController
             $queryBuilder->andWhere('e.nomequipe LIKE :search')
                 ->setParameter('search', '%' . $searchTerm . '%');
         }
-    
+        // pagination 
         $query = $queryBuilder->getQuery();
     
         $equipes = $paginator->paginate(

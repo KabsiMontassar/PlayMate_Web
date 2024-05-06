@@ -1,4 +1,26 @@
 
+<div class="event-cards-container">
+  {% for product in products %}
+    <div class="event-card" style="padding:14px; background-color:white; border-radius:20px;">
+      <div class="event-card-inner">
+        <div class="event-card-front">
+          {% if product.image %}
+            <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ product.image) }}">
+          {% endif %}
+        </div> <!-- Fermeture de event-card-front -->
+        <div class="event-card-back">
+          <h3 class="event-title">{{ product.nom}}</h3>
+          <p class="event-description">{{ product.prix }}</p>
+          {{ include('Back/GestionProduit/Produit/_delete_form.html.twig') }}
+          <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-primary">
+        <i class="fas fa-edit"></i>
+    </a>
+ <p class="event-description">{{ product.description }}</p>
+        </div> <!-- Fermeture de event-card-back -->
+      </div>
+    </div>
+  {% endfor %}
+</div>
+<a href="{{ path('app_product_new') }}" class="btn btn-more">Créer un nouveau Produit</a>
 
-   <h1 class="text-center">produit</h1>
  

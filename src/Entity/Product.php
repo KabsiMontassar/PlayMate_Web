@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Product
@@ -26,29 +27,36 @@ class Product
      * @var string|null
      *
      * @ORM\Column(name="nom", type="string", length=255, nullable=true, options={"default"="NULL"})
+     * @Assert\NotBlank(message="Le nom est obligatoire.")
      */
-    private $nom = 'NULL';
+    private $nom = NULL;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="description", type="text", length=65535, nullable=true, options={"default"="NULL"})
+     *   @Assert\NotBlank(message="La description est obligatoire.")
      */
-    private $description = 'NULL';
+    private $description = NULL;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="prix", type="decimal", precision=10, scale=2, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="prix", type="integer", precision=10, scale=2, nullable=true, options={"default"="NULL"})
+     *  @Assert\GreaterThan(value=0, message="Le prix doit être supérieur à zéro.")
+      * @Assert\Type(
+ *     type="numeric",
+ *     message="Le prix ne doit contenir que des chiffres."
+ * )
      */
-    private $prix = 'NULL';
+    private $prix = NULL;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=true, options={"default"="NULL"})
      */
-    private $image = 'NULL';
+    private $image = NULL;
 
     /**
      * @var \User
@@ -67,6 +75,7 @@ class Product
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="categorie", referencedColumnName="id")
      * })
+     
      */
     private $categorie;
 
@@ -150,6 +159,4 @@ class Product
     {
         return $this->nom;
     }
-
-
 }

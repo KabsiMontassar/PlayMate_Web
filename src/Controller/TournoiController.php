@@ -18,6 +18,7 @@ use App\Service\WeatherService;
 use Symfony\Component\Notifier\TexterInterface;
 use Twilio\Rest\Client;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface; 
 use App\Repository\TournoiRepository;
 
 #[Route('/tournoi')]
@@ -163,7 +164,7 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
     /**
      * @Route("/tournoi/{id}", name="app_tournoi_detail")
      */
-    public function detail(WeatherService $weatherService, Security $security, Request $request, $id, EntityManagerInterface $entityManager,  TexterInterface $texter)
+    public function detail(WeatherService $weatherService, Security $security, Request $request, $id, EntityManagerInterface $entityManager,  TexterInterface $texter, FlashBagInterface $flashBag)
     {
         $tournoi = $this->getDoctrine()->getRepository(Tournoi::class)->find($id);
         $city = $request->query->get('city', $tournoi->getAddress());
@@ -200,7 +201,7 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
             $participation->setIdtournoi($tournoi);
             $entityManager->persist($participation);
             $entityManager->flush();
-
+            $flashBag->add('success', 'Participation ajoutée avec succès.');
             $userPhone = $user->getPhone();
             if (!str_starts_with($userPhone, '+')) {
                 $userPhone = '+216' . $userPhone;  // Prefix for Tunisia if not already prefixed
