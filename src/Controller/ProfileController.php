@@ -5,7 +5,9 @@ use App\Entity\Tournoi;
 use App\Entity\Terrain;
 use App\Entity\Avis;
 
+use App\Entity\Commande;
 use App\Entity\User;
+use App\Entity\Product;
 use App\Form\UserType;
 
 use App\Form\Login;
@@ -19,6 +21,7 @@ use App\Repository\AvisRepository;
     
 use App\Entity\Equipe;
 use App\Entity\Membreparequipe;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -63,7 +66,7 @@ class ProfileController extends AbstractController
         $teams=null;
         $teamsWithMembers = null;	
         $nonce = bin2hex(random_bytes(16));
-
+        $avisCounts = [];
 
         if($user->getRole()== 'Membre'){
             $teams = $entityManager->getRepository(Equipe::class)->findByUser($user);
@@ -79,8 +82,12 @@ class ProfileController extends AbstractController
         if($user->getRole() == 'Proprietaire de Terrain'){
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
             $avis = $entityManager->getRepository(Avis::class)->findAll();
+            foreach ($terrains as $terrain) {
+                $avisCounts[$terrain->getId()] = count($terrain->getAvis());
         }
        
+    }
+        
 
         if($user->getRole() == 'Organisateur'){
             $tournois = $entityManager->getRepository(Tournoi::class)->findBy(['idorganisateur' => $user]);
@@ -91,8 +98,17 @@ class ProfileController extends AbstractController
             }
     
         }
-      
 
+        if($user->getRole() == 'Fournisseur'){
+           
+            $products = $entityManager->getRepository(Product::class)->findBy(['idfournisseur' => $user]);
+
+            $commandes = [];
+            foreach ($products as $product) {
+                $commandes[$product->getId()] = $entityManager->getRepository(Commande::class)->findBy(['idproduit' => $product->getId()]);
+            }
+        }
+       
 
 
 
@@ -108,7 +124,9 @@ class ProfileController extends AbstractController
                 'teamsWithMembers' => $teamsWithMembers,
                 'nonce' => $nonce,
                 'participationsById' => $participationsById,
-           
+                'avisCounts' => $avisCounts,
+                'products' =>$products, 
+                'commandes' => $commandes,
             ]);
         
       

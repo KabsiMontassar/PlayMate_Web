@@ -1,0 +1,89 @@
+{% extends 'BaseBack.html.twig' %}
+
+{% block title %}Product index{% endblock %}
+
+{% block body %}
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="#" class="logo d-flex align-items-center"> <!-- home -->
+      <img src="{{ asset('Back/assets/img/PlayMate.png') }}" alt="">
+      <span class="d-none d-lg-block">PlayMate</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn"></i>
+  </div><!-- End Logo -->
+
+</header>
+<aside id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+ <li class="nav-item">
+      <a class="nav-link" href="{{ path('app_product_index') }}"> 
+        <i class="bi bi-grid"></i>
+        <span>Produit</span>
+      </a>
+    </li>
+ 
+
+  </ul>
+
+</aside>
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Ajouter/Modifier une categorie</h1>
+    <nav>
+      <ol class="breadcrumb">
+    
+
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+
+{{ form_start(form, {'attr': {'class': 'row g-3 needs-validation p-4', 'novalidate': 'novalidate'} }) }}
+
+ <style>
+    /* CSS styles here */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px; 
+      box-sizing: border-box;
+      margin-top: 4px;
+      margin-bottom: 10px;
+    }
+
+    button.btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button.btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+  {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+</section>
+</main>
+{% endblock %}

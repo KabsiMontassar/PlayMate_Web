@@ -21,6 +21,25 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function findByidfournisseur(User $user): array
+    {
+        try {
+            $entityManager = $this->getEntityManager();
+    
+            $query = $entityManager->createQuery(
+                'SELECT c
+                FROM App\Entity\Commande c
+                JOIN App\Entity\Product p
+                WITH p = c.idproduit
+                WHERE p.idfournisseur = :user'
+            )->setParameter('user', $user);
+    
+            return $query->getResult();
+        } catch (\Exception $e) {
+            // Handle the exception, log it, or rethrow it as needed
+            throw new \RuntimeException('An error occurred while fetching data: ' . $e->getMessage());
+        }
+    }
 //    /**
 //     * @return Product[] Returns an array of Product objects
 //     */

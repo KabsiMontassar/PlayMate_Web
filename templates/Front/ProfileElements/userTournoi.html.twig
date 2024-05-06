@@ -25,8 +25,14 @@
           <p class="event-description">Adresse : {{ tournoi.getAddress() }}</p>
           <p class="event-description">Nombre maximum d'équipes : {{ tournoi.getNbmaxequipe() }}</p>
           {{ include('Back/GestionEvenement/tournoi/_delete_form.html.twig') }}
-          <a href="{{ path('app_tournoi_edit', {'id': tournoi.id}) }}" class="btn btn-more">Edit</a>
-          <a href="javascript:void(0);" onclick="shareOnFacebook('{{ url('app_tournoi_detail', {'id': tournoi.id}) }}');" class="btn btn-more">Partager sur Facebook</a>
+          <div class="card-actions">
+    <a href="{{ path('app_tournoi_edit', {'id': tournoi.id}) }}" class="btn btn-primary">
+        <i class="fas fa-edit"></i>
+    </a>
+    <a href="javascript:void(0);" onclick="shareOnFacebook('{{ url('app_tournoi_detail', {'id': tournoi.id}) }}');" class="btn btn-primary">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+</div>
         </div> <!-- Fermeture de event-card-back -->
 
       </div>

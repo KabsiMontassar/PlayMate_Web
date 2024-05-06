@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+use App\Entity\Avis;
 
 use App\Entity\Terrain;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -20,44 +21,42 @@ class TerrainRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Terrain::class);
     } 
+
+
+    
     public function findByAddress($address)
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.address LIKE :address')
-            ->setParameter('address', '%'.$address.'%')
-            ->getQuery()
-            ->getResult();
+            ->setParameter('address', '%'.$address.'%');
+             
     }
     public function findByGouvernorat($gouvernorat)
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.gouvernorat LIKE :gouvernorat')
-            ->setParameter('gouvernorat', '%'.$gouvernorat.'%')
-            ->getQuery()
-            ->getResult();
+            ->setParameter('gouvernorat', '%'.$gouvernorat.'%');
+            
     }
     public function findAllOrderByPrice($order = 'ASC')
     {
         return $this->createQueryBuilder('t')
-            ->orderBy('t.prix', $order)
-            ->getQuery()
-            ->getResult();
+            ->orderBy('t.prix', $order);
+          
     }
 
     public function findAllOrderByDuration($order = 'ASC')
     {
         return $this->createQueryBuilder('t')
-            ->orderBy('t.duree', $order)
-            ->getQuery()
-            ->getResult();
+            ->orderBy('t.duree', $order);
+            
     }
     public function findByAddressOrGouvernorat($query)
 {
     return $this->createQueryBuilder('t')
         ->andWhere('t.address LIKE :query OR t.gouvernorat LIKE :query')
-        ->setParameter('query', '%'.$query.'%')
-        ->getQuery()
-        ->getResult();
+        ->setParameter('query', '%'.$query.'%');
+  
 }
 
 }

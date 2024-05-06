@@ -5,11 +5,15 @@ namespace App\Controller;
 
 use App\Entity\Tournoi;
 use App\Entity\Terrain;
+use App\Entity\Categorie;
+use App\Entity\Product;
 use App\Entity\User;
 use App\Form\UserType;
 
 use App\Form\Login;
 use App\Repository\UserRepository;
+use App\Repository\TerrainRepository;
+
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,18 +27,20 @@ use App\Form\UserPasswordType;
 use Symfony\Component\Runtime\Runner\Symfony\ResponseRunner;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\Historique;
 
 use App\Controller\Payment;
+
 
 use App\Repository\HistoriqueRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 
 
 use App\Repository\ReservationRepository;
+use BaconQrCode\Encoder\QrCode;
 use Doctrine\ORM\EntityManager;
-use Knp\Component\Pager\PaginatorInterface;
+
 
 class HomeController extends AbstractController
 {
@@ -52,18 +58,17 @@ class HomeController extends AbstractController
 
     private $liveScoreService;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security)
-    {
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-    }
-
-    public function __construct2(EntityManagerInterface $entityManager, Security $security, SerializerInterface $serializer)
+    public function __construct(EntityManagerInterface $entityManager, Security $security , SerializerInterface $serializer)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
         $this->serializer = $serializer;
+     
+
+
     }
+
+ 
 
     #[Route('/Apropos', name: 'app_Apropos', methods: ['GET', 'POST'])]
     public function Apropos(EntityManagerInterface $em): Response
@@ -72,11 +77,22 @@ class HomeController extends AbstractController
         return $this->render('Front/apropos.html.twig', []);
     }
     #[Route('/Boutique', name: 'app_Boutique', methods: ['GET', 'POST'])]
-    public function Boutique(EntityManagerInterface $em): Response
+    public function Boutique( EntityManagerInterface $em, $qrcodeService ): Response
     {
 
-
-        return $this->render('Front/boutique.html.twig', []);
+        $productRepository = $em->getRepository(Product::class);
+        $categorieRepository = $em->getRepository(Categorie::class);
+        $products = $productRepository->findAll();
+        $categories = $categorieRepository->findAll();
+        $string = implode(' ', $products);
+        $qrCode = $qrcodeService->qrcode($string);
+        return $this->render('Front/boutique.html.twig', [
+          
+            'products' => $products,
+            'categories' => $categories,
+            'qrCode' => $qrCode,
+        ]);
+          
     }
     #[Route('/Contact', name: 'app_Contact', methods: ['GET', 'POST'])]
     public function Contact(EntityManagerInterface $em): Response
@@ -101,7 +117,7 @@ class HomeController extends AbstractController
         $pagination = $paginator->paginate(
             $query, // query NOT result
             $request->query->getInt('page', 1), // page number, 1 if not set
-            8 // limit per page
+            5 // limit per page
         );
 
 
@@ -148,21 +164,54 @@ $tournois = $entityManager
 
         return $this->render('Front/service.html.twig', []);
     }
+    /***************************************************************************** */
     #[Route('/Terrains', name: 'app_Terrains', methods: ['GET', 'POST'])]
-    public function Terrains(EntityManagerInterface $entityManager): Response
-    {
+public function Terrains(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request, TerrainRepository $terrainRepository): Response
+{
+    // Get search query parameter
+    $searchQuery = $request->query->get('query');
+    // Get order query parameter
+    $order = $request->query->get('order');
 
+    // Get filtered terrains
+    $queryBuilder = $terrainRepository->createQueryBuilder('t')
+        ->where('t.status = :status')
+        ->setParameter('status', true);
 
-        $terrainRepository = $entityManager->getRepository(Terrain::class);
-        $terrains = $terrainRepository->findAll();
-
-        return $this->render('Front/terrains.html.twig', [
-
-            'terrains' => $terrains,
-
-
-        ]);
+    if ($searchQuery) {
+         $queryBuilder->andWhere('t.address LIKE :search')
+            ->orWhere('t.gouvernorat LIKE :search')
+            ->setParameter('search', '%' . $searchQuery . '%');
     }
+    if ($order === 'price_asc') {
+        $terrains = $terrainRepository->findAllOrderByPrice('ASC');
+        $queryBuilder = $terrains;
+    } elseif ($order === 'price_desc') {
+        $terrains = $terrainRepository->findAllOrderByPrice('DESC');
+        $queryBuilder = $terrains;
+    } elseif ($order === 'duration_asc') {
+        $terrains = $terrainRepository->findAllOrderByDuration('ASC');
+        $queryBuilder = $terrains;
+    } elseif ($order === 'duration_desc') {
+        $terrains = $terrainRepository->findAllOrderByDuration('DESC');
+        $queryBuilder = $terrains;
+    }  
+    $query = $queryBuilder->getQuery();
+
+    // Paginate the results
+    $pagination = $paginator->paginate(
+        $query,
+        $request->query->getInt('page', 1),
+        2 // Items per page
+    );
+
+    return $this->render('Front/terrains.html.twig', [
+        'pagination' => $pagination,
+    ]);
+}
+    /***************************************************************************** */
+
+    
     #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
     public function Historique(Security $security, HistoriqueRepository $historiqueRepository, EntityManagerInterface $entityManager): Response
     {
@@ -209,17 +258,21 @@ $tournois = $entityManager
     }
 
 
-
-
-
     #[Route('/increment-visits/{id}', name: 'app_increment_visits', methods: ['POST'])]
     public function incrementVisits(Tournoi $tournoi, EntityManagerInterface $entityManager): Response
     {
-        $tournoi->setVisite($tournoi->getVisite() + 1);
-        $entityManager->flush();
+        $user = $this->security->getUser();
 
-        return new JsonResponse(['success' => true]);
+        if ($user && $user->getRole() == 'Membre') {
+            $tournoi->setVisite($tournoi->getVisite() + 1);
+            $entityManager->flush();
+
+            return new JsonResponse(['success' => true]);
+        }
+
+        return new JsonResponse(['success' => false, 'message' => 'User is not a member']);
     }
+    
 
     /*
 #[Route('/increment-unique-visit/{id}', name: 'app_increment_unique_visit', methods: ['POST'])]
