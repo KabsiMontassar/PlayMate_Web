@@ -35,7 +35,7 @@ use App\Controller\Payment;
 use App\Repository\HistoriqueRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 
-
+use App\Repository\MembreparequipeRepository;
 use App\Repository\ReservationRepository;
 use BaconQrCode\Encoder\QrCode;
 use Doctrine\ORM\EntityManager;
@@ -61,18 +61,14 @@ class HomeController extends AbstractController
 
     private $liveScoreService;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security , SerializerInterface $serializer)
+    public function __construct(EntityManagerInterface $entityManager, Security $security, SerializerInterface $serializer)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
         $this->serializer = $serializer;
-    
-
-
-
     }
 
- 
+
 
     #[Route('/Apropos', name: 'app_Apropos', methods: ['GET', 'POST'])]
     public function Apropos(EntityManagerInterface $em): Response
@@ -83,7 +79,7 @@ class HomeController extends AbstractController
 
 
     #[Route('/Boutique', name: 'app_Boutique', methods: ['GET', 'POST'])]
-    public function Boutique( EntityManagerInterface $em ): Response
+    public function Boutique(EntityManagerInterface $em): Response
     {
 
         $productRepository = $em->getRepository(Product::class);
@@ -93,12 +89,11 @@ class HomeController extends AbstractController
        
         // $qrCode = $qrcodeService->qrcode($string);
         return $this->render('Front/boutique.html.twig', [
-          
+
             'products' => $products,
             'categories' => $categories,
             // 'qrCode' => $qrCode,
         ]);
-          
     }
     #[Route('/Contact', name: 'app_Contact', methods: ['GET', 'POST'])]
     public function Contact(EntityManagerInterface $em): Response
@@ -108,7 +103,7 @@ class HomeController extends AbstractController
         return $this->render('Front/contact.html.twig', []);
     }
     #[Route('/Evenement', name: 'app_Evenement', methods: ['GET', 'POST'])]
-    public function Evenement(EntityManagerInterface $entityManager,  PaginatorInterface $paginator , Request $request): Response
+    public function Evenement(EntityManagerInterface $entityManager,  PaginatorInterface $paginator, Request $request): Response
     {
         $queryBuilder = $entityManager->getRepository(Tournoi::class)->createQueryBuilder('t');
 
@@ -127,7 +122,7 @@ class HomeController extends AbstractController
         );
 
 
-$tournois = $entityManager
+        $tournois = $entityManager
             ->getRepository(Tournoi::class)
             ->findAll();
         // Get the most recent 2 tournois separately if needed
@@ -139,7 +134,7 @@ $tournois = $entityManager
             'tournois' => $tournois,
         ]);
     }
-    
+
 
 
 
@@ -148,20 +143,45 @@ $tournois = $entityManager
     {
         return $this->render('Front/index.html.twig', []);
     }
+    /**********************************************/
+    /******************************************* */
+    /*****************************************  */
     #[Route('/Reservation', name: 'app_Reservation', methods: ['GET', 'POST'])]
-    public function Reservation(EntityManagerInterface $entityManager): Response
+    public function Reservation(EntityManagerInterface $entityManager, MembreparequipeRepository $membreparequipeRepository, Security $security): Response
     {
-        $terrainRepository = $entityManager->getRepository(Terrain::class);
-        $terrains = $terrainRepository->findAll();
+        $user = $security->getUser();
+        if ($user == null) {
+            return $this->redirectToRoute('app_login');
+        } else {
+            $userIdentifier = $security->getUser()->getUserIdentifier();
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
+            if (!$user->isStatus()) {
+                return $this->redirectToRoute('app_login');
+            } else {
+                $equipeNamesQuery = $entityManager->createQuery(
+                    'SELECT e.nomequipe FROM App\Entity\Membreparequipe mp
+                    JOIN App\Entity\Equipe e WITH mp.idequipe = e.idequipe
+                    WHERE mp.idmembre = :userId'
+                )->setParameter('userId', $user->getId());
 
-        return $this->render('Front/reservation.html.twig', [
+                $equipeResults = $equipeNamesQuery->getResult();
 
-            'terrains' => $terrains,
+                $equipeNames = [];
 
+                foreach ($equipeResults as $result) {
+                    $equipeNames[] = $result['nomequipe'];
+                }
+                $terrainRepository = $entityManager->getRepository(Terrain::class);
+                $terrains = $terrainRepository->findAll();
 
+                return $this->render('Front/reservation.html.twig', [
 
+                    'terrains' => $terrains,
+                    'equipes' => $equipeNames,
 
-        ]);
+                ]);
+            }
+        }
     }
     #[Route('/Service', name: 'app_Service', methods: ['GET', 'POST'])]
     public function Service(EntityManagerInterface $entityManager): Response
@@ -172,52 +192,52 @@ $tournois = $entityManager
     }
     /***************************************************************************** */
     #[Route('/Terrains', name: 'app_Terrains', methods: ['GET', 'POST'])]
-public function Terrains(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request, TerrainRepository $terrainRepository): Response
-{
-    // Get search query parameter
-    $searchQuery = $request->query->get('query');
-    // Get order query parameter
-    $order = $request->query->get('order');
+    public function Terrains(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request, TerrainRepository $terrainRepository): Response
+    {
+        // Get search query parameter
+        $searchQuery = $request->query->get('query');
+        // Get order query parameter
+        $order = $request->query->get('order');
 
-    // Get filtered terrains
-    $queryBuilder = $terrainRepository->createQueryBuilder('t')
-        ->where('t.status = :status')
-        ->setParameter('status', true);
+        // Get filtered terrains
+        $queryBuilder = $terrainRepository->createQueryBuilder('t')
+            ->where('t.status = :status')
+            ->setParameter('status', true);
 
-    if ($searchQuery) {
-         $queryBuilder->andWhere('t.address LIKE :search')
-            ->orWhere('t.gouvernorat LIKE :search')
-            ->setParameter('search', '%' . $searchQuery . '%');
+        if ($searchQuery) {
+            $queryBuilder->andWhere('t.address LIKE :search')
+                ->orWhere('t.gouvernorat LIKE :search')
+                ->setParameter('search', '%' . $searchQuery . '%');
+        }
+        if ($order === 'price_asc') {
+            $terrains = $terrainRepository->findAllOrderByPrice('ASC');
+            $queryBuilder = $terrains;
+        } elseif ($order === 'price_desc') {
+            $terrains = $terrainRepository->findAllOrderByPrice('DESC');
+            $queryBuilder = $terrains;
+        } elseif ($order === 'duration_asc') {
+            $terrains = $terrainRepository->findAllOrderByDuration('ASC');
+            $queryBuilder = $terrains;
+        } elseif ($order === 'duration_desc') {
+            $terrains = $terrainRepository->findAllOrderByDuration('DESC');
+            $queryBuilder = $terrains;
+        }
+        $query = $queryBuilder->getQuery();
+
+        // Paginate the results
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            2 // Items per page
+        );
+
+        return $this->render('Front/terrains.html.twig', [
+            'pagination' => $pagination,
+        ]);
     }
-    if ($order === 'price_asc') {
-        $terrains = $terrainRepository->findAllOrderByPrice('ASC');
-        $queryBuilder = $terrains;
-    } elseif ($order === 'price_desc') {
-        $terrains = $terrainRepository->findAllOrderByPrice('DESC');
-        $queryBuilder = $terrains;
-    } elseif ($order === 'duration_asc') {
-        $terrains = $terrainRepository->findAllOrderByDuration('ASC');
-        $queryBuilder = $terrains;
-    } elseif ($order === 'duration_desc') {
-        $terrains = $terrainRepository->findAllOrderByDuration('DESC');
-        $queryBuilder = $terrains;
-    }  
-    $query = $queryBuilder->getQuery();
-
-    // Paginate the results
-    $pagination = $paginator->paginate(
-        $query,
-        $request->query->getInt('page', 1),
-        2 // Items per page
-    );
-
-    return $this->render('Front/terrains.html.twig', [
-        'pagination' => $pagination,
-    ]);
-}
     /***************************************************************************** */
 
-    
+
     #[Route('/Historique', name: 'app_Historique', methods: ['GET', 'POST'])]
     public function Historique(Security $security, HistoriqueRepository $historiqueRepository, EntityManagerInterface $entityManager): Response
     {
@@ -278,7 +298,7 @@ public function Terrains(EntityManagerInterface $entityManager, PaginatorInterfa
 
         return new JsonResponse(['success' => false, 'message' => 'User is not a member']);
     }
-    
+
 
     /*
 #[Route('/increment-unique-visit/{id}', name: 'app_increment_unique_visit', methods: ['POST'])]
