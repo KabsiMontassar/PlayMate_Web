@@ -224,15 +224,14 @@
     <div class="container-fluid booking mt-5 pb-5 d-flex justify-content-center align-items-center invisible"
         id="bookingDiv" style="padding: 5px;">
         <div class="container pb-5">
-            <div class="bg-light shadow" style="padding: 10px;">
-                <div class="row align-items-center text-center" style="min-height: 60px;">
+            <div class="bg-light shadow" style="padding: 5px;">
+                <div class="row align-items-center text-center" style="min-height: 15px;">
                     <div class="col-md-3">
                         <div class="mb-3 mb-md-0">
-                            <select class="custom-select px-4" style="height: 47px;">
-                                <option selected id="EquipeReservationId">Equipe</option>
-                                <option value="1">equipe 1</option>
-                                <option value="2">equipe 2</option>
-                                <option value="3">equipe 3</option>
+                            <select class="custom-select px-4" style="height: 47px;" id="EquipeReservationId">
+                                {% for equipe in equipes %}
+                                <option value="{{ equipe }}">{{ equipe }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -262,25 +261,23 @@
     <div class="container-fluid booking mt-5 pb-5 d-flex justify-content-center align-items-center invisible"
         id="bookingDiv2">
         <div class="container pb-5">
-            <div class="bg-light shadow" style="padding: 30px;">
-                <div class="row align-items-center text-center" style="min-height: 60px;">
+            <div class="bg-light shadow" style="padding: 15px;">
+                <div class="row align-items-center text-center" style="min-height: 30px;">
                     <div class="col-md-2">
                         <div class="mb-3 mb-md-0">
-                            <select class="custom-select px-4" style="height: 47px;">
-                                <option selected id="EquipeReservationId1">Equipe</option>
-                                <option value="1">equipe 1</option>
-                                <option value="2">equipe 2</option>
-                                <option value="3">equipe 3</option>
+                            <select class="custom-select px-4" style="height: 47px;" id="EquipeReservationId1">
+                                {% for equipe in equipes %}
+                                <option value="{{ equipe }}">{{ equipe }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="mb-3 mb-md-0">
-                            <select class="custom-select px-4" style="height: 47px;">
-                                <option selected id="EquipeReservationId2">Equipe</option>
-                                <option value="1">equipe 1</option>
-                                <option value="2">equipe 2</option>
-                                <option value="3">equipe 3</option>
+                            <select class="custom-select px-4" style="height: 47px;" id="EquipeReservationId2">
+                                {% for equipe in equipes %}
+                                <option value="{{ equipe }}">{{ equipe }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -470,6 +467,29 @@
         });
     }
 
+    function checkEquipesDifferent() {
+        // Récupérer les identifiants des équipes
+        var equipeId1 = document.getElementById('EquipeReservationId1').value;
+        var equipeId2 = document.getElementById('EquipeReservationId2').value;
+
+        // Vérifier si les identifiants des équipes sont différents
+        var areDifferent = equipeId1 !== equipeId2;
+
+        // Afficher le résultat dans la console
+        console.log('Les équipes sont différentes : ' + areDifferent);
+
+        // Vous pouvez également effectuer une action en fonction du résultat
+        if (areDifferent) {
+            // Faire quelque chose si les équipes sont différentes
+            console.log('Les équipes sont différentes.');
+            return true;
+        } else {
+            // Faire quelque chose si les équipes sont les mêmes
+            console.log('Les équipes sont les mêmes.');
+            return false;
+        }
+    }
+
     // prendre l argument idTerrain
     function VerfivationDisponibiliteTerrain() {
 
@@ -491,6 +511,8 @@
 
                 var date = document.getElementById("dateReservationId2").value;
                 var horaire = document.getElementById("horaireReservationId2").value;
+
+                if (!checkEquipesDifferent()) { return; }
             }
             // nchofo lw9t w date
             if (!verifierHoraire()) {
@@ -499,6 +521,7 @@
             if (!verifierDate()) {
                 return;
             }
+
 
             alert(terrain + "\n" + typeReservation + "\n" + date + "\n" + horaire + "\n");
             // AJAX 
