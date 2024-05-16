@@ -81,8 +81,9 @@ class ProfileController extends AbstractController
         
       
       
-        if($user->getRole() == 'Proprietaire de Terrain'){
+        if($user->getRole() == 'Proprietaire de Terrain' || $user->getRole() == 'Proprietaire_de_Terrain'){
             $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
+ 
             $avis = $entityManager->getRepository(Avis::class)->findAll();
             foreach ($terrains as $terrain) {
                 $avisCounts[$terrain->getId()] = count($terrain->getAvis());
@@ -114,9 +115,7 @@ class ProfileController extends AbstractController
 
 
 
-        if($user->getRole() == 'Proprietaire de Terrain'){
-            $terrains = $entityManager->getRepository(Terrain::class)->findBy(['idprop' => $user]);
-        }
+        
             return $this->render('userBase.html.twig',[
                 'terrains' => $terrains,
                 'tournois' => $tournois,
