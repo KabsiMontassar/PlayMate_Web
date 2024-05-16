@@ -189,13 +189,10 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
         $form->handleRequest($request);
         $existingParticipation = $entityManager->getRepository(Participation::class)
         ->findOneBy(['idmembre' => $user, 'idtournoi' => $tournoi]);
-
-        $accountSid = $_ENV['TWILIO_ACCOUNT_SID'];
-        $authToken = $_ENV['TWILIO_AUTH_TOKEN'];
-        $twilioPhoneNumber = $_ENV['TWILIO_NUMBER'];
+ 
 
         // Initialize Twilio client
-        $twilio = new Client($accountSid, $authToken);
+     
         if ($form->isSubmitted() && $form->isValid()) {
             $participation->setIdmembre($user);
             $participation->setIdtournoi($tournoi);
@@ -203,18 +200,7 @@ public function userTournoi(Security $security, EntityManagerInterface $entityMa
             $entityManager->flush();
             $flashBag->add('success', 'Participation ajoutée avec succès.');
             $userPhone = $user->getPhone();
-            if (!str_starts_with($userPhone, '+')) {
-                $userPhone = '+216' . $userPhone;  // Prefix for Tunisia if not already prefixed
-            }
-
-            $message = $twilio->messages
-            ->create(
-                $userPhone, // Destination phone number from the form
-                [
-                    'from' => $twilioPhoneNumber, // Your Twilio phone number
-                    'body' => "Vous êtes inscrit au tournoi: {$tournoi->getNom()}, Adresse: {$tournoi->getAddress()}, Début: {$tournoi->getDatedebut()->format('Y-m-d')}, Fin: {$tournoi->getDatefin()->format('Y-m-d')}"
-                ]
-            );
+             
 
 
             return $this->redirectToRoute('app_Evenement', [], Response::HTTP_SEE_OTHER);
